@@ -243,7 +243,7 @@ foreach ($query_result as $key => $data) {
   <div class="content-wrapper p-4">
     <?php
       $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
-      $allowedPages = ['dashboard', 'transactions', 'T_Purchase_Order', 'PO_view', 'reports'];
+      $allowedPages = ['dashboard', 'transactions', 'T_Purchase_Order', 'PO_view', 'reports','ProductMasterReport'];
       if (in_array($page, $allowedPages)) {
           
           include "pages/{$page}.php";

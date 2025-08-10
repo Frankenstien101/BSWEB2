@@ -84,7 +84,7 @@
       <h1>MASTER DATA</h1>
     </header>
     <div class="app-container">
-      <a href="home.php?page=T_Purchase_Order">
+      <a href="home.php?page=ProductMasterReport">
         <div class="app-card">
           <img src="\HomePage\pages\reportsimg\dairy-products.png" alt="Developers/System Support" />
           <p>PRODUCT MASTER</p>
