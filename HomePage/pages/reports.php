@@ -90,19 +90,19 @@
           <p>PRODUCT MASTER</p>
         </div>
       </a>
-      <a href="home.php?page=PO_view">
+      <a href="home.php?page=CustomerMasterReport">
         <div class="app-card">
           <img src="\HomePage\pages\reportsimg\team.png" alt="Developers/System Support" />
           <p>CUSTOMERS</p>
         </div>
       </a>
-            <a href="#" >
+            <a href="home.php?page=SellerMasterReport" >
         <div class="app-card">
           <img src="\HomePage\pages\reportsimg\businessman.png" alt="Developers/System Support" />
           <p>SELLERS</p>
         </div>
       </a>
-      <a href="#" >
+      <a href="home.php?page=CoverageReport" >
         <div class="app-card">
           <img src="\HomePage\pages\reportsimg\map.png" alt="Developers/System Support" />
           <p>COVERAGE</p>
@@ -182,7 +182,7 @@
       <h1>SALES</h1>
     </header>
     <div class="app-container">
-      <a href="#" >
+      <a href="home.php?page=InvoiceSummaryReport" >
         <div class="app-card">
           <img src="\HomePage\pages\reportsimg\invsum.png" alt="Developers/System Support" />
           <p> INVOICE SUMMARY</p>

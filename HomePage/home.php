@@ -64,7 +64,7 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
         </a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="#" class="nav-link">Home</a>
+        <a href="home.php?page=dashboard" class="nav-link">Home</a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
         <a href="#" class="nav-link">Contact</a>
@@ -243,7 +243,8 @@ foreach ($query_result as $key => $data) {
   <div class="content-wrapper p-4">
     <?php
       $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
-      $allowedPages = ['dashboard', 'transactions', 'T_Purchase_Order', 'PO_view', 'reports','ProductMasterReport'];
+      $allowedPages = ['dashboard', 'transactions', 'T_Purchase_Order', 'PO_view', 'reports','ProductMasterReport', 'CustomerMasterReport'
+        ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport'];
       if (in_array($page, $allowedPages)) {
           
           include "pages/{$page}.php";
