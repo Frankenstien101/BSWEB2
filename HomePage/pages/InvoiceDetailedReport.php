@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-<title>Invoice Summary</title>
+<title>Invoice Detailed</title>
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" />
 <style>
@@ -125,7 +125,7 @@
 </style>
 </head>
 <body>
-<h3>INVOICE SUMMARY</h3>
+<h3>INVOICE DETAILED</h3>
 
 <!-- Filter Cards Container -->
 <div class="filter-container">
@@ -184,30 +184,47 @@
         <table id="itemsTable" class="table table-striped table-hover table-bordered table-sm" style="font-size: 9px;">
             <thead>
                 <tr>
-      <th>#</th>
-      <th>LINE_ID</th>
-      <th>COMPANY_ID</th>
-      <th>SITE_ID</th>
-      <th>TRANSACTION_ID</th>
-      <th>INVOICE_TYPE</th>
-      <th>INVOICE_NUMBER</th>
-      <th>TRANSACTION_DATE</th>
-      <th>SELLER_ID</th>
-      <th>SELLER_NAME</th>
-      <th>CUSTOMER_ID</th>
-      <th>CUSTOMER_NAME</th>
-      <th>WAREHOUSE_ID</th>
-      <th>WAREHOUSE_CODE</th>
-      <th>DISCOUNT</th>
-      <th>TOTAL_AMOUNT</th>
-      <th>TOTAL_ITEM_DISCOUNT</th>
-      <th>INVOICE_AMOUNT</th>
-      <th>STATUS</th>
-      <th>BILLING_NAME</th>
-      <th>INVOICE_DISTANCE</th>
-      <th>PO_NUMBER</th>
-    </tr>
-            </thead>
+<thead>
+<tr>
+    <th>#</th>
+    <th>COMPANY_ID</th>
+    <th>SITE_ID</th>
+    <th>SITE_CODE</th>
+    <th>TRANSACTION_ID</th>
+    <th>TRANSACTION_DATE</th>
+    <th>INVOICE_TYPE</th>
+    <th>INVOICE_NUMBER</th>
+    <th>PO_NUMBER</th>
+    <th>SELLER_ID</th>
+    <th>SB_VAN_ID</th>
+    <th>SELLER_NAME</th>
+    <th>CUSTOMER_ID</th>
+    <th>CUSTOMER_NAME</th>
+    <th>CHAIN</th>
+    <th>CHANNEL</th>
+    <th>SUB_CHANNEL</th>
+    <th>CASE_BARCODE</th>
+    <th>IT_BARCODE</th>
+    <th>ITEM_PER_CASE</th>
+    <th>BRAND2</th>
+    <th>CATEGORY_AFFIE</th>
+    <th>ITEM_ID</th>
+    <th>DESCRIPTION</th>
+    <th>QTY</th>
+    <th>UOM</th>
+    <th>COST</th>
+    <th>GROSS_SALES</th>
+    <th>DISCOUNT</th>
+    <th>SCHEME_CODE</th>
+    <th>SCHEME_DISCOUNT</th>
+    <th>NET_SALES(W/VAT)</th>
+    <th>VAT_AMOUNT</th>
+    <th>NET_SALES(EX-VAT)</th>
+</tr>
+</thead>
+
+
+
             <tbody></tbody>
         </table>
     </div>
@@ -228,6 +245,8 @@
 <!-- Export Button -->
 <div class="text-right mb-0">
     <button class="btn btn-success btn-sm mb-2" onclick="exportToCSV()">Export to CSV</button>
+    <button class="btn btn-success btn-sm mb-2" onclick="exportToCSVpurifier()">Export Purifier Format</button>
+
 </div>
 
 <!-- Loader -->
@@ -465,7 +484,7 @@ function loadItems2(page = 1) {
 
     showLoader();
 
-    fetch(`/HomePage/datafetcher/reports/getdatareports.php?action=invoicesummary&company=${companyId}&siteid=${siteid}&page=${page}&limit=${rowsPerPage}&sellers=${encodeURIComponent(sellers.join(','))}&datefrom=${encodeURIComponent(datefrom)}&dateto=${encodeURIComponent(dateto)}`)
+    fetch(`/HomePage/datafetcher/reports/getdatareports.php?action=invoicedetailedf1&company=${companyId}&siteid=${siteid}&page=${page}&limit=${rowsPerPage}&sellers=${encodeURIComponent(sellers.join(','))}&datefrom=${encodeURIComponent(datefrom)}&dateto=${encodeURIComponent(dateto)}`)
         .then(response => {
             if (!response.ok) {
                 hideLoader();
@@ -483,7 +502,7 @@ function loadItems2(page = 1) {
             }
 
             if (data.data) {
-                renderTable(data.data, page);
+               renderTable(data.data, page);
             } else {
                 renderTable(data, page);
             }
@@ -511,28 +530,41 @@ function renderTable(data, currentPage = 1) {
     data.forEach((item, index) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-        <td>${(currentPage - 1) * rowsPerPage + index + 1}</td>
-        <td>${item.LINE_ID || ''}</td>
-        <td>${item.COMPANY_ID || ''}</td>
-        <td>${item.SITE_ID || ''}</td>
-        <td>${item.TRANSACTION_ID || ''}</td>
-        <td>${item.INVOICE_TYPE || ''}</td>
-        <td>${item.INVOICE_NUMBER || ''}</td>
-        <td>${item.TRANSACTION_DATE || ''}</td>
-        <td>${item.SELLER_ID || ''}</td>
-        <td>${item.SELLER_NAME || ''}</td>
-        <td>${item.CUSTOMER_ID || ''}</td>
-        <td>${item.CUSTOMER_NAME || ''}</td>
-        <td>${item.WAREHOUSE_ID || ''}</td>
-        <td>${item.WAREHOUSE_CODE || ''}</td>
-        <td>${item.DISCOUNT || '0.00'}</td>
-        <td>${item.TOTAL_AMOUNT || '0.00'}</td>
-        <td>${item.TOTAL_ITEM_DISCOUNT || '0.00'}</td>
-        <td>${item.INVOICE_AMOUNT || '0.00'}</td>
-        <td>${item.STATUS || ''}</td>
-        <td>${item.BILLING_NAME || ''}</td>
-        <td>${item.INVOICE_DISTANCE || ''}</td>
-        <td>${item.PO_NUMBER || ''}</td>
+          <td>${(currentPage - 1) * rowsPerPage + index + 1}</td>
+            <td>${item.COMPANY_ID || ''}</td>
+            <td>${item.SITE_ID || ''}</td>
+            <td>${item.SITE_CODE || ''}</td>
+            <td>${item.TRANSACTION_ID || ''}</td>
+            <td>${item.TRANSACTION_DATE || ''}</td>
+            <td>${item.INVOICE_TYPE || ''}</td>
+            <td>${item.INVOICE_NUMBER || ''}</td>
+            <td>${item.PO_NUMBER || ''}</td>
+            <td>${item.SELLER_ID || ''}</td>
+            <td>${item.SB_VAN_ID || ''}</td>
+            <td>${item.SELLER_NAME || ''}</td>
+            <td>${item.CUSTOMER_ID || ''}</td>
+            <td>${item.CUSTOMER_NAME || ''}</td>
+            <td>${item.CHAIN || ''}</td>
+            <td>${item.CHANNEL || ''}</td>
+            <td>${item.SUB_CHANNEL || ''}</td>
+            <td>${item.CASE_BARCODE || ''}</td>
+            <td>${item.IT_BARCODE || ''}</td>
+            <td>${item.IT_PER_CS || ''}</td>
+            <td>${item.BRAND2 || ''}</td>
+            <td>${item.CATEGORY_AFFIE || ''}</td>
+            <td>${item.ITEM_ID || ''}</td>
+            <td>${item.DESCRIPTION || ''}</td>
+            <td>${item.QTY || '0.00'}</td>
+            <td>${item.UOM || ''}</td>
+             <td>${item.COST != null ? Number(item.COST).toFixed(2) : '0.00'}</td>
+        <td>${item.GROSS_SALES != null ? Number(item.GROSS_SALES).toFixed(2) : '0.00'}</td>
+        <td>${item.DISCOUNT != null ? Number(item.DISCOUNT).toFixed(2) : '0.00'}</td>
+        <td>${item.SCHEME_CODE || ''}</td>
+        <td>${item.SCHEME_DISCOUNT != null ? Number(item.SCHEME_DISCOUNT).toFixed(2) : '0.00'}</td>
+        <td>${item.SALESAMOUNT != null ? Number(item.SALESAMOUNT).toFixed(2) : '0.00'}</td>
+        <td>${item.VAT != null ? Number(item.VAT).toFixed(2) : '0.00'}</td>
+        <td>${item.SALESEXVAT != null ? Number(item.SALESEXVAT).toFixed(2) : '0.00'}</td>
+
         `;
         tbody.appendChild(tr);
     });
@@ -611,7 +643,7 @@ function renderPagination() {
     }
 
     // Build export URL dynamically with your variables, URL-encoded
-    const url = `/HomePage/datafetcher/reports/getdatareports.php?action=invoicesummarycsv&export=csv` +
+    const url = `/HomePage/datafetcher/reports/getdatareports.php?action=invoicedetailedexportcsv&export=csv` +
         `&company=${encodeURIComponent(companyId)}` +
         `&siteid=${encodeURIComponent(siteid)}` +
         `&sellers=${encodeURIComponent(sellers.join(','))}` +
@@ -623,10 +655,57 @@ function renderPagination() {
 
  $('#poprocessed').toast('show');
 
-
 }
 
+   function exportToCSVpurifier() {
+    const companyId = "<?php echo $_SESSION['COMPANY_ID'] ?? ''; ?>";
+    const siteid = "<?php echo $_SESSION['SITE_ID'] ?? ''; ?>";
 
+    const dateFrom = document.getElementById('datefrom');
+    const dateTo = document.getElementById('dateto');
+
+    if (!dateFrom || !dateTo) {
+        alert("Please ensure 'datefrom' and 'dateto' inputs exist.");
+        return;
+    }
+
+    const datefrom = dateFrom.value;
+    const dateto = dateTo.value;
+
+    if (!datefrom || !dateto) {
+        alert("Please enter valid dates.");
+        return;
+    }
+
+    const sellerCheckboxes = document.querySelectorAll('input[name="seller"]');
+    if (!sellerCheckboxes.length) {
+        alert("Please ensure seller checkboxes exist.");
+        return;
+    }
+
+    const sellers = Array.from(sellerCheckboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+
+    if (sellers.length === 0) {
+        alert("Please select at least one seller.");
+        return;
+    }
+
+    // Build export URL dynamically with your variables, URL-encoded
+    const url = `/HomePage/datafetcher/reports/getdatareports.php?action=invoicedetailedexportcsvpurifier&export=csv` +
+        `&company=${encodeURIComponent(companyId)}` +
+        `&siteid=${encodeURIComponent(siteid)}` +
+        `&sellers=${encodeURIComponent(sellers.join(','))}` +
+        `&datefrom=${encodeURIComponent(datefrom)}` +
+        `&dateto=${encodeURIComponent(dateto)}`;
+
+    // Trigger the download by navigating the browser to this URL
+    window.location.href = url;
+
+ $('#poprocessed').toast('show');
+
+}
 
     // Sorting table (placeholder)
     function sortTable(n) {

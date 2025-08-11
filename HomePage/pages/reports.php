@@ -188,7 +188,7 @@
           <p> INVOICE SUMMARY</p>
         </div>
       </a>
-      <a href="#" >
+      <a href="home.php?page=InvoiceDetailedReport" >
         <div class="app-card">
           <img src="\HomePage\pages\reportsimg\invdet.png" alt="Developers/System Support" />
           <p>INVOICE DETAILED</p>
