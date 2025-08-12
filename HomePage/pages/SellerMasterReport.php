@@ -149,7 +149,7 @@ function loaditems() {
 }
 
 
-function exportToExcel() {
+function exportToExcel1() {
     if (!loadedPOs.length) {
         alert("No data to export!");
         return;
@@ -160,10 +160,37 @@ function exportToExcel() {
 
     // Create workbook and add worksheet
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Products");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sellers");
 
     // Export the Excel file
     XLSX.writeFile(workbook, "Sellers_report.xlsx");
+}
+
+function exportToExcel() {
+    if (!loadedPOs.length) {
+        alert("No data to export!");
+        return;
+    }
+
+    // Convert array of objects to worksheet
+    const worksheet = XLSX.utils.json_to_sheet(loadedPOs);
+
+    // Generate CSV content from worksheet
+    const csvOutput = XLSX.utils.sheet_to_csv(worksheet);
+
+    // Create a Blob with CSV data
+    const blob = new Blob([csvOutput], { type: 'text/csv;charset=utf-8;' });
+
+    // Create a download link and trigger click
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", "Sellers_report.csv");
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
 }
 
 </script>

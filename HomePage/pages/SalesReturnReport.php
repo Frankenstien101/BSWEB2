@@ -125,36 +125,15 @@
 </style>
 </head>
 <body>
-<h3>INVOICE SUMMARY</h3>
+<h3>SALES RETURNS</h3>
 
 <!-- Filter Cards Container -->
 <div class="filter-container">
     <!-- Seller Selection Card -->
-    <div class="card text-bg-light mb-1" style="width: 250px; font-size: 9px;">
-        <div class="card-header d-flex justify-content-between align-items-right">
-            <span>SELECT SELLER</span>
-           
-        </div>
-        <div class="card-body" style="padding: 8px;">
-            <div class="table-container" style="height:100px;">
-                <table class="seller-table">
-                    <thead>
-                        <tr>
-                            <th>Seller</th>
-                            <th>Select</th>
-                        </tr>
-                    </thead>
-                    <tbody id="seller-table-body">
-                        <!-- Dynamic sellers will be appended here -->
-                    </tbody>
-                </table>
-            </div>
-            <div id="seller-error" class="error-message"></div>
-        </div>
-    </div>
+   
 
     <!-- Date Filter Card -->
-    <div class="card text-bg-light mb-1" style="max-width: 50%; font-size: 9px;">
+    <div class="card text-bg-light mb-1 justify-content-between" style="width: 24%; font-size: 9px;">
         <div class="card-header d-flex justify-content-between align-items-center">
             <span>SELECT DATE FILTER</span>
         </div>
@@ -164,7 +143,7 @@
                 <input type="date" id="datefrom"  value="<?php echo date('Y-m-d'); ?>" />
                 <label>to</label>
                 <input type="date" id="dateto"  value="<?php echo date('Y-m-d'); ?>" />
-                <button class="btn btn-primary btn-sm" onclick="applyFilters()">GENERATE</button>
+                <button class="btn btn-primary btn-sm" onclick="loadItems(page = 1)">GENERATE</button>
             </div>
             <div id="date-error" class="error-message"></div>
         </div>
@@ -174,36 +153,26 @@
 <!-- Summary Card -->
 
 <!-- Table Card -->
-<div class="card text-bg-light" style="max-width: 100%; height: 445px; margin-bottom: 0.5rem; font-size: 9px;">
+<div class="card text-bg-light" style="max-width: 100%; height: 540px; margin-bottom: 0.5rem; font-size: 9px;">
     <div class="card-header"></div>
     <div class="card-body card-body-scroll">
         <table id="itemsTable" class="table table-striped table-hover table-bordered table-sm" style="font-size: 9px;">
-            <thead>
-                <tr>
+    <thead>
+    <tr>
       <th>#</th>
-      <th>LINE_ID</th>
-      <th>COMPANY_ID</th>
-      <th>SITE_ID</th>
-      <th>TRANSACTION_ID</th>
-      <th>INVOICE_TYPE</th>
-      <th>INVOICE_NUMBER</th>
-      <th>TRANSACTION_DATE</th>
-      <th>SELLER_ID</th>
-      <th>SELLER_NAME</th>
-      <th>CUSTOMER_ID</th>
-      <th>CUSTOMER_NAME</th>
-      <th>WAREHOUSE_ID</th>
-      <th>WAREHOUSE_CODE</th>
-      <th>DISCOUNT</th>
-      <th>TOTAL_AMOUNT</th>
-      <th>TOTAL_ITEM_DISCOUNT</th>
-      <th>INVOICE_AMOUNT</th>
-      <th>STATUS</th>
-      <th>BILLING_NAME</th>
-      <th>INVOICE_DISTANCE</th>
-      <th>PO_NUMBER</th>
+      <th>COMPANY ID</th>
+      <th>SITE ID</th>
+      <th>TRANSACTION ID</th>
+      <th>ITEM ID</th>
+      <th>DESCRIPTION</th>
+      <th>CS</th>
+      <th>SW</th>
+      <th>IT</th>
+      <th>TOTAL AMOUNT</th>
+      <th>REASON</th>
+      <th>DESTINATION</th>
     </tr>
-            </thead>
+  </thead>
             <tbody></tbody>
         </table>
     </div>
@@ -293,74 +262,6 @@
         });
     }
 
-    // Fetch sellers on page load
-    document.addEventListener("DOMContentLoaded", function () {
-        fetchSellers();
-       // loadItems2(1);
-    });
-
-    // Fetch sellers from server
-    function fetchSellers() {
-        const companyId = "<?php echo $_SESSION['COMPANY_ID'] ?? 'default'; ?>";
-        const siteId = "<?php echo $_SESSION['SITE_ID'] ?? 'default'; ?>";
-
-        clearMessages();
-        showLoader();
-
-        fetch(`/HomePage/datafetcher/reports/getdatareports.php?action=getsellers&company=${encodeURIComponent(companyId)}&site=${encodeURIComponent(siteId)}`)
-            .then(res => {
-                if (!res.ok) return res.text().then(t => { throw new Error(t); });
-                return res.json();
-            })
-            .then(res => {
-                if (res.error) throw new Error(res.message);
-                const tbody = document.getElementById('seller-table-body');
-                tbody.innerHTML = '<tr><td>ALL</td><td><input type="checkbox" id="seller-all"></td></tr>';
-
-                res.forEach(seller => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${seller.SELLER_NAME || seller.SELLER_ID}</td>
-                        <td><input type="checkbox" name="seller" value="${seller.SELLER_ID}" class="seller-checkbox"></td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-
-                // Add event for 'All' checkbox
-                const allCheckbox = document.getElementById('seller-all');
-                allCheckbox.addEventListener('change', function () {
-                    document.querySelectorAll('input[name="seller"]').forEach(cb => cb.checked = this.checked);
-                });
-
-                // Add change event for individual checkboxes
-                document.querySelectorAll('input[name="seller"]').forEach(cb => {
-                    cb.addEventListener('change', function () {
-                        const allChecked = Array.from(document.querySelectorAll('input[name="seller"]')).every(c => c.checked);
-                        document.getElementById('seller-all').checked = allChecked;
-                    });
-                });
-            })
-            .catch(err => {
-                console.error('fetchSellers error:', err);
-                showMessage('seller-error', 'Failed to load sellers: ' + err.message);
-            })
-            .finally(() => hideLoader());
-    }
-
-    // Toggle all sellers
-    function toggleAllSellers(selectAll) {
-        document.querySelectorAll('input[name="seller"]').forEach(cb => cb.checked = selectAll);
-        document.getElementById('seller-all').checked = selectAll;
-    }
-
-    // Clear filters
-    function clearFilters() {
-        document.getElementById('datefrom').value = '';
-        document.getElementById('dateto').value = '';
-        toggleAllSellers(false);
-        clearMessages();
-    }
-
     // Validate date range
     function validateDateRange() {
         const dateFrom = document.getElementById('datefrom').value;
@@ -372,53 +273,9 @@
         return true;
     }
 
-    // Get selected sellers
-    function getSelectedSellers() {
-        const checkboxes = document.querySelectorAll('input[name="seller"]:checked');
-        const selectedSellers = Array.from(checkboxes).map(cb => cb.value);
-      // alert(selectedSellers)
-        return selectedSellers;
-    }
+window.filters = {};     
 
-    // Apply filters and fetch data
-    function applyFilters() {
-        if (!validateDateRange()) return;
-
-        const sellers = getSelectedSellers();
-
-        if (sellers.length === 0) {
-            showMessage('seller-error', 'Please select at least one seller.');
-            return;
-        }
-
-        const dateFrom = document.getElementById('datefrom').value;
-        const dateTo = document.getElementById('dateto').value;
-
-        window.filters = {
-            sellers: sellers,
-            dateFrom: dateFrom,
-            dateTo: dateTo
-        };
-
-        loadItems2(1);
-    }
-
-    // Load data based on filters
-    
-
-    // Load general data (initial load or fallback)
- // JS part
-
-// Example rowsPerPage variable (set as needed)
-//const rowsPerPage = 10;
-
-// Load items and render table
-     // Global current page tracker
-  // Rows per page, adjust as needed
-   // Total records count from server
-window.filters = {};     // Placeholder for filters object
-
-function loadItems2(page = 1) {
+function loadItems(page = 1) {
     currentPage = page;  // Update global current page
 
     const companyId = "<?php echo $_SESSION['COMPANY_ID'] ?? ''; ?>";
@@ -442,26 +299,9 @@ function loadItems2(page = 1) {
        return;
     }
 
-    const sellerCheckboxes = document.querySelectorAll('input[name="seller"]');
-    if (!sellerCheckboxes) {
-        hideLoader();
-        alert("Please ensure seller checkboxes exist.");
-        return;
-    }
-
-    const sellers = Array.from(sellerCheckboxes)
-                        .filter(cb => cb.checked)
-                        .map(cb => cb.value);
-
-   // console.log("companyId:", companyId);
-    //console.log("siteid:", siteid);
-    //console.log("page:", page);
-   // console.log("rowsPerPage:", rowsPerPage);
-   // console.log("sellers:", sellers);
-
     showLoader();
 
-    fetch(`/HomePage/datafetcher/reports/getdatareports.php?action=invoicesummary&company=${companyId}&siteid=${siteid}&page=${page}&limit=${rowsPerPage}&sellers=${encodeURIComponent(sellers.join(','))}&datefrom=${encodeURIComponent(datefrom)}&dateto=${encodeURIComponent(dateto)}`)
+    fetch(`/HomePage/datafetcher/reports/getdatareports.php?action=salesreturn&company=${companyId}&siteid=${siteid}&page=${page}&limit=${rowsPerPage}&datefrom=${encodeURIComponent(datefrom)}&dateto=${encodeURIComponent(dateto)}`)
         .then(response => {
             if (!response.ok) {
                 hideLoader();
@@ -472,7 +312,7 @@ function loadItems2(page = 1) {
         })
         .then(data => {
             hideLoader();
-           // console.log("Data received:", data);
+            console.log("Data received:", data);
 
             if (data.total !== undefined) {
                 totalRecords = data.total;  // Update total records for pagination
@@ -507,28 +347,18 @@ function renderTable(data, currentPage = 1) {
     data.forEach((item, index) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-        <td>${(currentPage - 1) * rowsPerPage + index + 1}</td>
-        <td>${item.LINE_ID || ''}</td>
-        <td>${item.COMPANY_ID || ''}</td>
-        <td>${item.SITE_ID || ''}</td>
-        <td>${item.TRANSACTION_ID || ''}</td>
-        <td>${item.INVOICE_TYPE || ''}</td>
-        <td>${item.INVOICE_NUMBER || ''}</td>
-        <td>${item.TRANSACTION_DATE || ''}</td>
-        <td>${item.SELLER_ID || ''}</td>
-        <td>${item.SELLER_NAME || ''}</td>
-        <td>${item.CUSTOMER_ID || ''}</td>
-        <td>${item.CUSTOMER_NAME || ''}</td>
-        <td>${item.WAREHOUSE_ID || ''}</td>
-        <td>${item.WAREHOUSE_CODE || ''}</td>
-        <td>${item.DISCOUNT || '0.00'}</td>
-        <td>${item.TOTAL_AMOUNT || '0.00'}</td>
-        <td>${item.TOTAL_ITEM_DISCOUNT || '0.00'}</td>
-        <td>${item.INVOICE_AMOUNT || '0.00'}</td>
-        <td>${item.STATUS || ''}</td>
-        <td>${item.BILLING_NAME || ''}</td>
-        <td>${item.INVOICE_DISTANCE || ''}</td>
-        <td>${item.PO_NUMBER || ''}</td>
+   <td>${(currentPage - 1) * rowsPerPage + index + 1}</td>
+<td>${item.COMPANY_ID || ''}</td>
+<td>${item.SITE_ID || ''}</td>
+<td>${item.TRANSACTION_ID || ''}</td>
+<td>${item.ITEM_ID || ''}</td>
+<td>${item.DESCRIPTION || ''}</td>
+<td>${item.CS || ''}</td>
+<td>${item.SW || ''}</td>
+<td>${item.IT || ''}</td>
+<td>${item.TOTAL_AMOUNT || '0.00'}</td>
+<td>${item.REASON || ''}</td>
+<td>${item.DESTINATION || ''}</td>
         `;
         tbody.appendChild(tr);
     });
@@ -553,22 +383,15 @@ function renderPagination() {
                 if (typeof loadFilteredItems === 'function') {
                     loadFilteredItems(currentPage);
                 } else {
-                    loadItems2(currentPage);
+                    loadItems(currentPage);
                 }
             } else {
-                loadItems2(currentPage);
+                loadItems(currentPage);
             }
         });
         pagination.appendChild(li);
     }
 }
-
-    // Update summary info
-    function updateSummaryInfo(total, showingStart, showingEnd) {
-        document.getElementById('total-records').textContent = total;
-        document.getElementById('showing-range').textContent = `${showingStart}-${showingEnd}`;
-        document.getElementById('total-count').textContent = total;
-    }
 
     // Export to CSV (placeholder)
    function exportToCSV() {
@@ -591,26 +414,11 @@ function renderPagination() {
         return;
     }
 
-    const sellerCheckboxes = document.querySelectorAll('input[name="seller"]');
-    if (!sellerCheckboxes.length) {
-        alert("Please ensure seller checkboxes exist.");
-        return;
-    }
-
-    const sellers = Array.from(sellerCheckboxes)
-        .filter(cb => cb.checked)
-        .map(cb => cb.value);
-
-    if (sellers.length === 0) {
-        alert("Please select at least one seller.");
-        return;
-    }
 
     // Build export URL dynamically with your variables, URL-encoded
-    const url = `/HomePage/datafetcher/reports/getdatareports.php?action=invoicesummarycsv&export=csv` +
+    const url = `/HomePage/datafetcher/reports/getdatareports.php?action=salesreturncsv&export=csv` +
         `&company=${encodeURIComponent(companyId)}` +
         `&siteid=${encodeURIComponent(siteid)}` +
-        `&sellers=${encodeURIComponent(sellers.join(','))}` +
         `&datefrom=${encodeURIComponent(datefrom)}` +
         `&dateto=${encodeURIComponent(dateto)}`;
 
@@ -619,10 +427,7 @@ function renderPagination() {
 
  $('#poprocessed').toast('show');
 
-
 }
-
-
 
     // Sorting table (placeholder)
     function sortTable(n) {

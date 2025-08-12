@@ -61,7 +61,7 @@ if (isset($_POST['login'])) {
     } catch (PDOException $e) {
         $error = "Database error: " . $e->getMessage();
     }
-    
+
 }
 ?>
 
@@ -333,7 +333,7 @@ if (isset($_POST['login'])) {
     <div class="container">
       <div class="card">
         <div class="logo">
-          <img src="MainImg/download-compresskaru.com.png" alt="BLUESYS Logo" Style = "height:100px; width:100px">
+          <img src="MainImg/download-compresskaru.com.png" alt="BLUESYS Logo" Style = "height:105px; width:100px">
           <h1>Distributor Management System</h1>
         </div>
 

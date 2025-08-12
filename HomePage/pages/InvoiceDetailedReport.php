@@ -133,10 +133,7 @@
     <div class="card text-bg-light" style="width: 250px; font-size: 9px;">
         <div class="card-header d-flex justify-content-between align-items-right">
             <span>SELECT SELLER</span>
-            <div>
-                <button class="btn btn-sm btn-outline-secondary" onclick="toggleAllSellers(true)">All</button>
-                <button class="btn btn-sm btn-outline-secondary" onclick="toggleAllSellers(false)">None</button>
-            </div>
+           
         </div>
         <div class="card-body" style="padding: 8px;">
             <div class="table-container" style="height:100px;">
@@ -160,7 +157,6 @@
     <div class="card text-bg-light" style="max-width: 50%; font-size: 9px;">
         <div class="card-header d-flex justify-content-between align-items-center">
             <span>SELECT DATE FILTER</span>
-            <button class="btn btn-sm btn-outline-secondary" onclick="clearFilters()">Clear Filters</button>
         </div>
         <div class="card-body date-filter-body">
             <div class="header">
@@ -178,7 +174,7 @@
 <!-- Summary Card -->
 
 <!-- Table Card -->
-<div class="card text-bg-light" style="max-width: 100%; height: 420px; margin-bottom: 0.5rem; font-size: 9px;">
+<div class="card text-bg-light" style="max-width: 100%; height: 450px; margin-bottom: 0.5rem; font-size: 9px;">
     <div class="card-header"></div>
     <div class="card-body card-body-scroll">
         <table id="itemsTable" class="table table-striped table-hover table-bordered table-sm" style="font-size: 9px;">

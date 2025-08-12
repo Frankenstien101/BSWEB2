@@ -11,10 +11,14 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
 
 } elseif (!isset($_SESSION['SITE_CODE']) || !isset($_SESSION['COMPANY_ID']) || !isset($_SESSION['SITE_ID'])) {
     // Fetch default site
-    $sql = "SELECT TOP 1 COMPANY_ID, SITE_ID, SITE_CODE FROM Aquila_User_Site_Mapping ORDER BY SITE_CODE ASC";
-    $stmt = $conn->prepare($sql);
-    $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+$sql = "SELECT TOP 1 COMPANY_ID, SITE_ID, SITE_CODE
+        FROM Aquila_User_Site_Mapping
+        WHERE USER_ID = :userid
+        ORDER BY SITE_CODE ASC";
+
+$stmt = $conn->prepare($sql);
+$stmt->execute(['userid' => $_SESSION['UserID']]);
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($row) {
         $_SESSION['SITE_CODE'] = $row['SITE_CODE'];
@@ -22,6 +26,44 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
         $_SESSION['SITE_ID']    = $row['SITE_ID'];
 
         header("Location: home.php?page=dashboard&site=" . urlencode($row['SITE_CODE']) . "&company=" . urlencode($row['COMPANY_ID']) . "&siteid=" . urlencode($row['SITE_ID']));
+        exit();
+    } else {
+        $_SESSION['SITE_CODE'] = 'NO_SITE';
+        $_SESSION['COMPANY_ID'] = 'NO_COMPANY';
+        $_SESSION['SITE_ID']    = 'NO_SITE_ID';
+    }
+}
+if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
+    $_SESSION['SITE_CODE'] = $_GET['site'];
+    $_SESSION['COMPANY_ID'] = $_GET['company'];
+    $_SESSION['SITE_ID']    = $_GET['siteid'];
+}
+
+// If site not set in session, get the first available site for the user
+if (!isset($_SESSION['SITE_CODE']) || !isset($_SESSION['COMPANY_ID']) || !isset($_SESSION['SITE_ID'])) {
+    $query = "SELECT 
+                USER_ID,
+                SITE_ID,
+                SITE_CODE,
+                COMPANY_ID
+              FROM Aquila_User_Site_Mapping  
+              WHERE USER_ID = :userid
+              GROUP BY USER_ID, SITE_ID, SITE_CODE, COMPANY_ID
+              ORDER BY SITE_CODE ASC"; // Get first in sorted order
+
+    $stmt = $conn->prepare($query);
+    $stmt->execute(['userid' => $_SESSION['UserID']]);
+    $firstSite = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($firstSite) {
+        $_SESSION['SITE_CODE'] = $firstSite['SITE_CODE'];
+        $_SESSION['COMPANY_ID'] = $firstSite['COMPANY_ID'];
+        $_SESSION['SITE_ID']    = $firstSite['SITE_ID'];
+
+        // Redirect so it works like dropdown click
+        header("Location: home.php?page=dashboard&site=" . urlencode($firstSite['SITE_CODE']) . 
+               "&company=" . urlencode($firstSite['COMPANY_ID']) . 
+               "&siteid=" . urlencode($firstSite['SITE_ID']));
         exit();
     } else {
         $_SESSION['SITE_CODE'] = 'NO_SITE';
@@ -242,17 +284,79 @@ foreach ($query_result as $key => $data) {
   <!-- Content Wrapper -->
   <div class="content-wrapper p-4">
     <?php
-      $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
-      $allowedPages = ['dashboard', 'transactions', 'T_Purchase_Order', 'PO_view', 'reports','ProductMasterReport', 'CustomerMasterReport'
-        ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'];
-      if (in_array($page, $allowedPages)) {
-          
-          include "pages/{$page}.php";
 
-          
+    // Suppose you get the 'role' from a request parameter 'documentid'
+    $role = $_SESSION['Role'] ?? '';
+
+    // Now check the role value and branch accordingly
+      if ($role === 'ADMIN') {
+          // do something for admin
+      
+               $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
+               $allowedPages = ['dashboard', 'transactions', 'T_Purchase_Order', 'PO_view', 'reports','ProductMasterReport', 'CustomerMasterReport'
+                 ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'
+               ,'SalesReturnReport','StockViewReport','SOReport' , 'StockLedgerReport'];
+               if (in_array($page, $allowedPages)) {
+
+                   include "pages/{$page}.php";
+
+               } else {
+              
+                   echo "<h1 class='text-center'>Page not found or not allowed</h1>";
+               }
+
+       } elseif ($role === 'ENCODER') {
+           // do something for user
+          $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
+                       $allowedPages = ['dashboard', 'transactions', 'T_Purchase_Order', 'PO_view', 'reports','ProductMasterReport', 'CustomerMasterReport'
+                         ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'
+                       ,'SalesReturnReport','StockViewReport','SOReport','StockLedgerReport'];
+                       if (in_array($page, $allowedPages)) {
+
+                           include "pages/{$page}.php";
+
+                       } else {
+                      
+                           echo "<h1 class='text-center'>Page not found or not allowed</h1>";
+                       }
+
+
+        } elseif ($role === 'IRA') {
+           // do something for user
+          $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
+                       $allowedPages = ['dashboard', 'transactions', 'PO_view', 'reports','ProductMasterReport', 'CustomerMasterReport'
+                         ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'
+                       ,'SalesReturnReport','StockViewReport','SOReport','StockLedgerReport'];
+                       if (in_array($page, $allowedPages)) {
+
+                           include "pages/{$page}.php";
+
+                       } else {
+                      
+                           echo "<h1 class='text-center'>Page not found or not allowed</h1>";
+                       }
+
+
+         } elseif ($role === 'OIC') {
+           // do something for user
+          $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
+                       $allowedPages = ['dashboard', 'transactions', 'T_Purchase_Order' , 'PO_view', 'reports','ProductMasterReport', 'CustomerMasterReport'
+                         ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'
+                       ,'SalesReturnReport','StockViewReport','SOReport', 'StockLedgerReport'];
+                       if (in_array($page, $allowedPages)) {
+
+                           include "pages/{$page}.php";
+
+                       } else {
+                      
+                           echo "<h1 class='text-center'>Page not found or not allowed</h1>";
+                       }
+
       } else {
-          echo "<h1 class='text-center'>Page not found or not allowed</h1>";
+          // default case
+          echo "Role not recognized.";
       }
+
     ?>
   </div>
 

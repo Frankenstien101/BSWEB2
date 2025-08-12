@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-<title>Invoice Summary</title>
+<title>SO Report</title>
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" />
 <style>
@@ -125,7 +125,8 @@
 </style>
 </head>
 <body>
-<h3>INVOICE SUMMARY</h3>
+
+<h3>SO REPORT</h3>
 
 <!-- Filter Cards Container -->
 <div class="filter-container">
@@ -178,31 +179,40 @@
     <div class="card-header"></div>
     <div class="card-body card-body-scroll">
         <table id="itemsTable" class="table table-striped table-hover table-bordered table-sm" style="font-size: 9px;">
-            <thead>
-                <tr>
-      <th>#</th>
-      <th>LINE_ID</th>
-      <th>COMPANY_ID</th>
-      <th>SITE_ID</th>
-      <th>TRANSACTION_ID</th>
-      <th>INVOICE_TYPE</th>
-      <th>INVOICE_NUMBER</th>
-      <th>TRANSACTION_DATE</th>
-      <th>SELLER_ID</th>
-      <th>SELLER_NAME</th>
-      <th>CUSTOMER_ID</th>
-      <th>CUSTOMER_NAME</th>
-      <th>WAREHOUSE_ID</th>
-      <th>WAREHOUSE_CODE</th>
-      <th>DISCOUNT</th>
-      <th>TOTAL_AMOUNT</th>
-      <th>TOTAL_ITEM_DISCOUNT</th>
-      <th>INVOICE_AMOUNT</th>
-      <th>STATUS</th>
-      <th>BILLING_NAME</th>
-      <th>INVOICE_DISTANCE</th>
-      <th>PO_NUMBER</th>
-    </tr>
+           <thead>
+              <tr>
+                <th>#</th>
+                <th>COMPANY_ID</th>
+                <th>SITE_ID</th>
+                <th>TRANSACTION_ID</th>
+                <th>INVOICE_TYPE</th>
+                <th>TRANSACTION_DATE</th>
+                <th>SELLER_ID</th>
+                <th>SELLER_NAME</th>
+                <th>CUSTOMER_ID</th>
+                <th>CUSTOMER_NAME</th>
+                <th>ITEM_ID</th>
+                <th>BATCH</th>
+                <th>DESCRIPTION</th>
+                <th>CS</th>
+                <th>SW</th>
+                <th>IT</th>
+                <th>ALLOCATED_CS</th>
+                <th>ALLOCATED_SW</th>
+                <th>ALLOCATED_IT</th>
+                <th>CS_AMOUNT</th>
+                <th>SW_AMOUNT</th>
+                <th>IT_AMOUNT</th>
+                <th>TOTAL_AMOUNT</th>
+                <th>TAX_AMOUNT</th>
+                <th>TOTAL</th>
+                <th>DISCOUNT</th>
+                <th>TAX</th>
+                <th>IT_PER_CS</th>
+                <th>IT_PER_SW</th>
+                <th>STATUS</th>
+                <th>DISCOUNT_AMOUNT</th>
+              </tr>
             </thead>
             <tbody></tbody>
         </table>
@@ -417,7 +427,6 @@
   // Rows per page, adjust as needed
    // Total records count from server
 window.filters = {};     // Placeholder for filters object
-
 function loadItems2(page = 1) {
     currentPage = page;  // Update global current page
 
@@ -453,35 +462,41 @@ function loadItems2(page = 1) {
                         .filter(cb => cb.checked)
                         .map(cb => cb.value);
 
-   // console.log("companyId:", companyId);
-    //console.log("siteid:", siteid);
-    //console.log("page:", page);
-   // console.log("rowsPerPage:", rowsPerPage);
-   // console.log("sellers:", sellers);
-
     showLoader();
 
-    fetch(`/HomePage/datafetcher/reports/getdatareports.php?action=invoicesummary&company=${companyId}&siteid=${siteid}&page=${page}&limit=${rowsPerPage}&sellers=${encodeURIComponent(sellers.join(','))}&datefrom=${encodeURIComponent(datefrom)}&dateto=${encodeURIComponent(dateto)}`)
+    fetch(`/HomePage/datafetcher/reports/getdatareports.php?action=SOreport&company=${companyId}&siteid=${siteid}&page=${page}&limit=${rowsPerPage}&sellers=${encodeURIComponent(sellers.join(','))}&datefrom=${encodeURIComponent(datefrom)}&dateto=${encodeURIComponent(dateto)}`)
         .then(response => {
             if (!response.ok) {
                 hideLoader();
                 console.error("HTTP error! status:", response.status);
-                return response.text().then(text => alert(`Error fetching data: ${text}`));
+                return response.text().then(text => {
+                    alert(`Error fetching data: ${text}`);
+                    throw new Error(text);
+                });
             }
             return response.json();
         })
         .then(data => {
             hideLoader();
-           // console.log("Data received:", data);
 
-            if (data.total !== undefined) {
-                totalRecords = data.total;  // Update total records for pagination
+            // Check if the response contains an error
+            if (data.error) {
+                showMessage('table-error', data.message || 'An error occurred while fetching data.');
+                renderTable([]);  // Clear table if error
+                return;
             }
 
-            if (data.data) {
+            if (data.total !== undefined) {
+                totalRecords = data.total;
+            }
+
+            if (Array.isArray(data.data)) {
                 renderTable(data.data, page);
-            } else {
+            } else if (Array.isArray(data)) {
                 renderTable(data, page);
+            } else {
+                showMessage('table-error', 'Unexpected data format received from server.');
+                renderTable([]);
             }
 
             renderPagination();
@@ -493,7 +508,8 @@ function loadItems2(page = 1) {
         .catch(error => {
             hideLoader();
             console.error("Fetch error:", error);
-            alert("Error fetching data from the server.");
+            showMessage('table-error', 'Error fetching data from the server.');
+            renderTable([]);
         });
 }
 
@@ -507,32 +523,42 @@ function renderTable(data, currentPage = 1) {
     data.forEach((item, index) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-        <td>${(currentPage - 1) * rowsPerPage + index + 1}</td>
-        <td>${item.LINE_ID || ''}</td>
-        <td>${item.COMPANY_ID || ''}</td>
-        <td>${item.SITE_ID || ''}</td>
-        <td>${item.TRANSACTION_ID || ''}</td>
-        <td>${item.INVOICE_TYPE || ''}</td>
-        <td>${item.INVOICE_NUMBER || ''}</td>
-        <td>${item.TRANSACTION_DATE || ''}</td>
-        <td>${item.SELLER_ID || ''}</td>
-        <td>${item.SELLER_NAME || ''}</td>
-        <td>${item.CUSTOMER_ID || ''}</td>
-        <td>${item.CUSTOMER_NAME || ''}</td>
-        <td>${item.WAREHOUSE_ID || ''}</td>
-        <td>${item.WAREHOUSE_CODE || ''}</td>
-        <td>${item.DISCOUNT || '0.00'}</td>
-        <td>${item.TOTAL_AMOUNT || '0.00'}</td>
-        <td>${item.TOTAL_ITEM_DISCOUNT || '0.00'}</td>
-        <td>${item.INVOICE_AMOUNT || '0.00'}</td>
-        <td>${item.STATUS || ''}</td>
-        <td>${item.BILLING_NAME || ''}</td>
-        <td>${item.INVOICE_DISTANCE || ''}</td>
-        <td>${item.PO_NUMBER || ''}</td>
+            <td>${(currentPage - 1) * rowsPerPage + index + 1}</td>
+            <td>${item.COMPANY_ID || ''}</td>
+            <td>${item.SITE_ID || ''}</td>
+            <td>${item.TRANSACTION_ID || ''}</td>
+            <td>${item.INVOICE_TYPE || ''}</td>
+            <td>${item.TRANSACTION_DATE || ''}</td>
+            <td>${item.SELLER_ID || ''}</td>
+            <td>${item.SELLER_NAME || ''}</td>
+            <td>${item.CUSTOMER_ID || ''}</td>
+            <td>${item.CUSTOMER_NAME || ''}</td>
+            <td>${item.ITEM_ID || ''}</td>
+            <td>${item.BATCH || ''}</td>
+            <td>${item.DESCRIPTION || ''}</td>
+            <td>${item.CS || ''}</td>
+            <td>${item.SW || ''}</td>
+            <td>${item.IT || ''}</td>
+            <td>${item.ALLOCATED_CS || ''}</td>
+            <td>${item.ALLOCATED_SW || ''}</td>
+            <td>${item.ALLOCATED_IT || ''}</td>
+            <td>${item.CS_AMOUNT || ''}</td>
+            <td>${item.SW_AMOUNT || ''}</td>
+            <td>${item.IT_AMOUNT || ''}</td>
+            <td>${item.TOTAL_AMOUNT || ''}</td>
+            <td>${item.TAX_AMOUNT || ''}</td>
+            <td>${item.TOTAL || ''}</td>
+            <td>${item.DISCOUNT || ''}</td>
+            <td>${item.TAX || ''}</td>
+            <td>${item.IT_PER_CS || ''}</td>
+            <td>${item.IT_PER_SW || ''}</td>
+            <td>${item.STATUS || ''}</td>
+            <td>${item.DISCOUNT_AMOUNT || ''}</td>
         `;
         tbody.appendChild(tr);
     });
 }
+
 
 // Render pagination UI
 function renderPagination() {
@@ -562,13 +588,6 @@ function renderPagination() {
         pagination.appendChild(li);
     }
 }
-
-    // Update summary info
-    function updateSummaryInfo(total, showingStart, showingEnd) {
-        document.getElementById('total-records').textContent = total;
-        document.getElementById('showing-range').textContent = `${showingStart}-${showingEnd}`;
-        document.getElementById('total-count').textContent = total;
-    }
 
     // Export to CSV (placeholder)
    function exportToCSV() {
@@ -607,7 +626,7 @@ function renderPagination() {
     }
 
     // Build export URL dynamically with your variables, URL-encoded
-    const url = `/HomePage/datafetcher/reports/getdatareports.php?action=invoicesummarycsv&export=csv` +
+    const url = `/HomePage/datafetcher/reports/getdatareports.php?action=SOreportcsv&export=csv` +
         `&company=${encodeURIComponent(companyId)}` +
         `&siteid=${encodeURIComponent(siteid)}` +
         `&sellers=${encodeURIComponent(sellers.join(','))}` +
@@ -619,11 +638,7 @@ function renderPagination() {
 
  $('#poprocessed').toast('show');
 
-
 }
-
-
-
     // Sorting table (placeholder)
     function sortTable(n) {
         // Sorting logic here

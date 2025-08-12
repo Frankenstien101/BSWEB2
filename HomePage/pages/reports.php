@@ -163,7 +163,7 @@
           <p>PURCHASE RETURN</p>
         </div>
       </a>
-      <a href="#" >
+      <a href="home.php?page=StockViewReport" >
         <div class="app-card">
           <img src="\HomePage\pages\reportsimg\stocks.png" alt="Developers/System Support" />
           <p>STOCK VIEW</p>
@@ -194,7 +194,7 @@
           <p>INVOICE DETAILED</p>
         </div>
       </a>
-            <a href="#" >
+            <a href="home.php?page=SalesReturnReport" >
         <div class="app-card">
           <img src="\HomePage\pages\reportsimg\invreturn.png" alt="Developers/System Support" />
           <p>SALES RETURN</p>
@@ -212,7 +212,7 @@
           <p>STORE BO</p>
         </div>
       </a>
-       <a href="#" >
+       <a href="home.php?page=SOReport" >
         <div class="app-card">
           <img src="\HomePage\pages\reportsimg\orders.png" alt="Developers/System Support" />
           <p>SO REPORT</p>
@@ -254,7 +254,7 @@
           <p>SFA MAPPING</p>
         </div>
       </a>
-        <a href="#" >
+        <a href="home.php?page=StockLedgerReport" >
         <div class="app-card">
           <img src="\HomePage\pages\reportsimg\ledger.png" alt="Developers/System Support" />
           <p>STOCK LEDGER</p>

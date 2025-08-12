@@ -132,7 +132,7 @@
     <!-- insert items -->
     <div class="input-item mb-2">
       <div class="input-group-text mb-2" id="visible-addon">Insert &nbsp;
-        <div class="form-group position-relative" style="width: 600px; ">
+        <div class="form-group position-relative mt-3" style="width: 600px; ">
           <input type="text" id="productSearch" class="form-control" placeholder="Search product..." style="width: 100%; font-size: 10px; ">
           <div id="productResults" class="autocomplete-list"></div>
         </div>
@@ -165,7 +165,7 @@
     <!-- item details -->
     <div class="card text-bg-light" data-bs-spy="scroll" style="max-width: 100%; height: 50%; margin-bottom: .5rem;">
       <div class="card-header">ITEM DETAILS</div>
-      <div class="card-body" style="overflow-y: auto; height: 320px;" >
+      <div class="card-body" style="overflow-y: auto; height: 310px;" >
         <table id="itemsTable" class="table table-striped table-hover table-bordered table-sm ">
           
   <thead>
