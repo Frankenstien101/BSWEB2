@@ -169,7 +169,6 @@ $query_result =  $conn->query($query);
 
 foreach ($query_result as $key => $data) {
     echo '<a class="dropdown-item" href="home.php?page=dashboard&site=' . urlencode($data['SITE_CODE']) . 
-         '&company=' . urlencode($data['COMPANY_ID']) . 
          '&siteid=' . urlencode($data['SITE_ID']) . '">' . $data['SITE_CODE'] . '</a>';
 }
 
@@ -295,7 +294,8 @@ foreach ($query_result as $key => $data) {
                $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
                $allowedPages = ['dashboard', 'transactions', 'T_Purchase_Order', 'PO_view', 'reports','ProductMasterReport', 'CustomerMasterReport'
                  ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'
-               ,'SalesReturnReport','StockViewReport','SOReport' , 'StockLedgerReport'];
+               ,'SalesReturnReport','StockViewReport','SOReport' , 'StockLedgerReport' , 'WarehouseMasterReport' , 'SchemeMasterReport'
+              ,'allsitereports' , 'allsitesalesinvoicesummary','allsitesalesinvoicedetailed'];
                if (in_array($page, $allowedPages)) {
 
                    include "pages/{$page}.php";
@@ -308,9 +308,9 @@ foreach ($query_result as $key => $data) {
        } elseif ($role === 'ENCODER') {
            // do something for user
           $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
-                       $allowedPages = ['dashboard', 'transactions', 'T_Purchase_Order', 'PO_view', 'reports','ProductMasterReport', 'CustomerMasterReport'
+                       $allowedPages = ['dashboard', 'transactions', 'PO_view', 'reports','ProductMasterReport', 'CustomerMasterReport'
                          ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'
-                       ,'SalesReturnReport','StockViewReport','SOReport','StockLedgerReport'];
+                       ,'SalesReturnReport','StockViewReport','SOReport','StockLedgerReport','WarehouseMasterReport','SchemeMasterReport'];
                        if (in_array($page, $allowedPages)) {
 
                            include "pages/{$page}.php";
@@ -324,9 +324,9 @@ foreach ($query_result as $key => $data) {
         } elseif ($role === 'IRA') {
            // do something for user
           $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
-                       $allowedPages = ['dashboard', 'transactions', 'PO_view', 'reports','ProductMasterReport', 'CustomerMasterReport'
+                       $allowedPages = ['dashboard','PO_view', 'transactions', 'reports','ProductMasterReport', 'CustomerMasterReport'
                          ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'
-                       ,'SalesReturnReport','StockViewReport','SOReport','StockLedgerReport'];
+                       ,'SalesReturnReport','StockViewReport','SOReport','StockLedgerReport','WarehouseMasterReport' , 'SchemeMasterReport'];
                        if (in_array($page, $allowedPages)) {
 
                            include "pages/{$page}.php";
@@ -342,7 +342,7 @@ foreach ($query_result as $key => $data) {
           $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
                        $allowedPages = ['dashboard', 'transactions', 'T_Purchase_Order' , 'PO_view', 'reports','ProductMasterReport', 'CustomerMasterReport'
                          ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'
-                       ,'SalesReturnReport','StockViewReport','SOReport', 'StockLedgerReport'];
+                       ,'SalesReturnReport','StockViewReport','SOReport', 'StockLedgerReport' , 'WarehouseMasterReport','SchemeMasterReport'];
                        if (in_array($page, $allowedPages)) {
 
                            include "pages/{$page}.php";
@@ -354,7 +354,10 @@ foreach ($query_result as $key => $data) {
 
       } else {
           // default case
-          echo "Role not recognized.";
+        echo "<h3 class='text-center'>Session expired or account logged out, Login again to continue</h3>";
+
+    exit();
+          
       }
 
     ?>

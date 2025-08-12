@@ -108,7 +108,7 @@
           <p>COVERAGE</p>
         </div>
       </a>
-        <a href="#" >
+        <a href="home.php?page=WarehouseMasterReport" >
         <div class="app-card">
           <img src="\HomePage\pages\reportsimg\wh.png" alt="Developers/System Support" />
           <p>WAREHOUSE MASTER</p>
@@ -116,7 +116,7 @@
       </a>
 
       </a>
-        <a href="#" >
+        <a href="home.php?page=SchemeMasterReport" >
         <div class="app-card">
           <img src="\HomePage\pages\reportsimg\bonus.png" alt="Developers/System Support" />
           <p>SCHEME MASTER</p>
@@ -242,7 +242,7 @@
           <p>A/R REPORTS</p>
         </div>
       </a>
-            <a href="#" >
+            <a href="home.php?page=allsitereports" >
         <div class="app-card">
           <img src="\HomePage\pages\reportsimg\allsite.png" alt="Developers/System Support" />
           <p>ALL SITE REPORTS</p>

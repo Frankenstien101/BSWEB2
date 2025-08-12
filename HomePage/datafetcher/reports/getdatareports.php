@@ -975,6 +975,45 @@ try {
 //ALL INVOICE DETAILED exportcsv
 
 
+if (!isset($_GET['action'])) {
+    echo json_encode(['error' => 'No action specified']);
+    exit();
+}
+
+if (!$conn || !($conn instanceof PDO)) {
+    echo json_encode(['error' => 'Database connection failed']);
+    exit();
+}
+
+/// get sites selection
+try {
+    if ($_GET['action'] === 'getsites') {
+        $companyId = $_GET['company'] ?? '';
+        
+        if (empty($companyId)) {
+            echo json_encode(['error' => 'Missing company or site ID']);
+            exit();
+        }
+
+        $sql = "SELECT SITE_CODE ,SITEID
+                FROM [dbo].[Aquila_Sites] 
+                WHERE COMPANY_ID = :companyId  
+                ORDER BY SITE_CODE ASC";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([':companyId' => $companyId]);
+        $sellers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        echo json_encode($sellers ?: []);
+        exit();
+    }
+
+
+} catch (Exception $e) {
+    echo json_encode(['error' => 'Server error', 'message' => $e->getMessage()]);
+
+}
+   
+
 
 //invoice detailes get pages
 
@@ -2066,7 +2105,7 @@ if (isset($_GET['action'])) {
         exit();
     }
 
-    /// export csv
+    /// SO report export csv
     if ($_GET['action'] === 'SOreportcsv') {
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="SO_Report.csv"');
@@ -2195,3 +2234,845 @@ if (isset($_GET['action']) && $_GET['action'] === 'stockledger') {
     }
     exit();
 }
+
+
+
+
+if (isset($_GET['action']) && $_GET['action'] === 'warehousemaster') {
+    header('Content-Type: application/json');
+    
+    if (!$conn || !($conn instanceof PDO)) {
+        echo json_encode(['error' => 'Database connection failed']);
+        exit();
+    }
+
+    try {
+        $companyId = $_GET['company'];
+
+        $sql = "SELECT * FROM Aquila_Warehouse 
+                WHERE COMPANY_ID = :companyid 
+                ORDER BY WAREHOUSE_CODE ASC";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':companyid', $companyId);
+        $stmt->execute();
+
+        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode($items ?: []);
+        
+    } catch (PDOException $e) {
+        echo json_encode(['error' => 'Database error', 'message' => $e->getMessage()]);
+    } catch (Exception $e) {
+        echo json_encode(['error' => 'Application error', 'message' => $e->getMessage()]);
+    }
+    exit();
+}
+
+
+/// Scheme Master
+
+if (isset($_GET['action']) && $_GET['action'] === 'schememaster') {
+    header('Content-Type: application/json');
+    
+    if (!$conn || !($conn instanceof PDO)) {
+        echo json_encode(['error' => 'Database connection failed']);
+        exit();
+    }
+
+    try {
+        $companyId = $_GET['company'];
+        $siteid = $_GET['siteid'];
+        $datefrom = $_GET['datefrom'];
+        $dateto = $_GET['dateto'];
+                
+
+        $sql = "SELECT * FROM Aquila_Scheme_Transaction 
+                WHERE COMPANY_ID = :companyid
+                AND SITE_ID = :siteid
+                AND DATE_ADDED BETWEEN :datefrom AND :dateto
+                ORDER BY LINEID DESC";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':companyid', $companyId);
+         $stmt->bindParam(':siteid', $siteid);
+          $stmt->bindParam(':datefrom', $datefrom);
+           $stmt->bindParam(':dateto', $dateto);
+        $stmt->execute();
+
+        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode($items ?: []);
+        
+    } catch (PDOException $e) {
+        echo json_encode(['error' => 'Database error', 'message' => $e->getMessage()]);
+    } catch (Exception $e) {
+        echo json_encode(['error' => 'Application error', 'message' => $e->getMessage()]);
+    }
+    exit();
+}
+
+/// scheme details
+if (isset($_GET['action']) && $_GET['action'] === 'schememasterdetails') {
+    header('Content-Type: application/json');
+
+    if (!$conn || !($conn instanceof PDO)) {
+        echo json_encode(['error' => 'Database connection failed']);
+        exit();
+    }
+
+    try {
+        $companyId = $_GET['company'] ?? '';
+        $schemeCode = $_GET['schemecode'] ?? ''; // matches JS request parameter
+
+        $sql = "
+            SELECT  
+                Aquila_Scheme_Details.LINEID,
+                Aquila_Scheme_Details.COMPANY_ID,
+                [SITE_ID],
+                [SCHEME_CODE],
+                [PARENT_SKU],
+                DESCRIPTION,
+                Aquila_Scheme_Details.STATUS,
+                [SELLER_GROUP]
+            FROM [dbo].[Aquila_Scheme_Details]
+            LEFT JOIN Aquila_ProductMaster 
+                ON Aquila_ProductMaster.ITEMID = Aquila_Scheme_Details.PARENT_SKU
+                AND Aquila_ProductMaster.COMPANY_ID = Aquila_Scheme_Details.COMPANY_ID
+            WHERE Aquila_ProductMaster.COMPANY_ID = :companyid
+              AND SCHEME_CODE = :schemecode
+            GROUP BY 
+                Aquila_Scheme_Details.LINEID,
+                Aquila_Scheme_Details.COMPANY_ID,
+                [SITE_ID],
+                [SCHEME_CODE],
+                [PARENT_SKU],
+                DESCRIPTION,
+                Aquila_Scheme_Details.STATUS,
+                [SELLER_GROUP]
+        ";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':companyid', $companyId, PDO::PARAM_STR);
+        $stmt->bindParam(':schemecode', $schemeCode, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode($items ?: []);
+
+    } catch (PDOException $e) {
+        echo json_encode(['error' => 'Database error', 'message' => $e->getMessage()]);
+    } catch (Exception $e) {
+        echo json_encode(['error' => 'Application error', 'message' => $e->getMessage()]);
+    }
+    exit();
+}
+
+
+
+/// ALL SITE INVOICE SUMMARY 
+
+
+
+/// final invoice summary
+if (isset($_GET['action']) && $_GET['action'] === 'allsiteinvoicesummary') {
+    header('Content-Type: application/json');
+    
+    if (!$conn || !($conn instanceof PDO)) {
+        echo json_encode(['error' => 'Database connection failed']);
+        exit();
+    }
+
+    function interpolateQuery($query, $params) {
+        foreach ($params as $key => $val) {
+            if (is_string($val)) {
+                $val = "'" . addslashes($val) . "'";
+            } elseif ($val === null) {
+                $val = 'NULL';
+            }
+            $query = str_replace($key, $val, $query);
+        }
+        return $query;
+    }
+
+    try {
+        $companyId = $_GET['company'] ?? '';
+        $all       = isset($_GET['all']) && $_GET['all'] === 'true';
+        $limit     = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
+        $page      = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $sellersRaw      = $_GET['sellers'] ?? '1';
+        $datefrom      = $_GET['datefrom'] ?? null;
+        $dateto      = $_GET['dateto'] ?? null; 
+                
+        $offset    = ($page - 1) * $limit;
+
+        $sellers = array_filter(array_map('trim', explode(',', $sellersRaw)), 'strlen');
+        $sellerPlaceholders = [];
+        $sellerParams = [];
+        foreach ($sellers as $index => $sellerId) {
+            $ph = ":seller$index";
+            $sellerPlaceholders[] = $ph;
+            $sellerParams[$ph] = $sellerId;
+        }
+        $sellerCondition = count($sellerPlaceholders) > 0 ? "AND A.SITE_ID IN (" . implode(',', $sellerPlaceholders) . ")" : "";
+
+        $total = null;
+        if (!$all) {
+            $countSql = "SELECT COUNT(*) AS total 
+                         FROM Aquila_Sales_Order_Transactions A
+                         WHERE COMPANY_ID = :companyid 
+                           AND STATUS = 'INVOICED'
+                           $sellerCondition
+                           AND A.TRANSACTION_DATE BETWEEN :datefrom AND :dateto";
+            $countStmt = $conn->prepare($countSql);
+            $countStmt->bindParam(':companyid', $companyId);
+            $countStmt->bindParam(':datefrom', $datefrom);
+            $countStmt->bindParam(':dateto', $dateto);
+            foreach ($sellerParams as $ph => $val) {
+                $countStmt->bindValue($ph, $val);
+            }
+            $countStmt->execute();
+            $total = $countStmt->fetch(PDO::FETCH_ASSOC)['total'];
+        }
+
+        $sql = "SELECT 
+                      A.LINE_ID
+                    , A.COMPANY_ID
+                    , A.SITE_ID
+                    , A.TRANSACTION_ID
+                    , A.INVOICE_TYPE
+                    , A.INVOICE_NUMBER
+                    , A.TRANSACTION_DATE
+                    , A.SELLER_ID
+                    , A.SELLER_NAME
+                    , A.CUSTOMER_ID
+                    , A.CUSTOMER_NAME
+                    , A.WAREHOUSE_ID
+                    , A.WAREHOUSE_CODE
+                    , ISNULL(TRY_CAST(A.DISCOUNT AS DECIMAL(18, 2)), 0) AS DISCOUNT
+                    , ISNULL(TRY_CAST(A.TOTAL_AMOUNT AS DECIMAL(18, 2)), 0) AS TOTAL_AMOUNT
+                    , ISNULL(SUM(TRY_CAST(B.ITEM_DISCOUNT AS DECIMAL(18, 2))), 0) AS TOTAL_ITEM_DISCOUNT
+                    , ISNULL(TRY_CAST(A.TOTAL_AMOUNT AS DECIMAL(18, 2)), 0) 
+                      - ISNULL(SUM(TRY_CAST(B.ITEM_DISCOUNT AS DECIMAL(18, 2))), 0) 
+                      - ISNULL(TRY_CAST(A.DISCOUNT AS DECIMAL(18, 2)), 0) AS INVOICE_AMOUNT
+                    , A.STATUS
+                    , A.BILLING_NAME
+                    , A.INVOICE_DISTANCE
+                    , A.PO_NUMBER
+                FROM 
+                    Aquila_Sales_Order_Transactions A
+                LEFT JOIN 
+                    Aquila_Invoice_lines B 
+                    ON B.INVOICE_NUMBER = A.INVOICE_NUMBER
+                    AND B.COMPANY_ID = A.COMPANY_ID
+                WHERE
+                    A.COMPANY_ID = :companyid
+                    AND A.STATUS = 'INVOICED'
+                    $sellerCondition
+                    AND A.TRANSACTION_DATE BETWEEN :datefrom AND :dateto
+                GROUP BY
+                      A.LINE_ID
+                    , A.COMPANY_ID
+                    , A.SITE_ID
+                    , A.TRANSACTION_ID
+                    , A.INVOICE_TYPE
+                    , A.INVOICE_NUMBER
+                    , A.TRANSACTION_DATE
+                    , A.SELLER_ID
+                    , A.SELLER_NAME
+                    , A.CUSTOMER_ID
+                    , A.CUSTOMER_NAME
+                    , A.WAREHOUSE_ID
+                    , A.WAREHOUSE_CODE
+                    , A.DISCOUNT
+                    , A.TOTAL_AMOUNT
+                    , A.STATUS
+                    , A.BILLING_NAME
+                    , A.INVOICE_DISTANCE
+                    , A.PO_NUMBER
+                ORDER BY A.SITE_ID ASC";
+
+        if (!$all) {
+            $sql .= " OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY";
+        }
+
+        $stmt = $conn->prepare($sql);
+
+        $stmt->bindParam(':companyid', $companyId, PDO::PARAM_STR);
+        $stmt->bindParam(':datefrom', $datefrom);
+        $stmt->bindParam(':dateto', $dateto);
+        foreach ($sellerParams as $ph => $val) {
+            $stmt->bindValue($ph, $val);
+        }
+        if (!$all) {
+            $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        }
+
+        $debugSql = interpolateQuery($sql, array_merge([
+            ':companyid' => $companyId,
+            ':datefrom' => $datefrom,
+            ':dateto' => $dateto,
+            ':offset' => $offset,
+            ':limit' => $limit,
+        ], $sellerParams));
+
+        $stmt->execute();
+        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($all) {
+            echo json_encode([
+                'data' => $items,
+               // 'debug_sql' => $debugSql
+            ]);
+        } else {
+            echo json_encode([
+                'total' => $total,
+                'data'  => $items,
+               // 'debug_sql' => $debugSql
+            ]);
+        }
+
+    } catch (PDOException $e) {
+        echo json_encode(['error' => 'Database error', 'message' => $e->getMessage()]);
+    }
+    exit();
+}
+
+
+/// export all site invoice summary 
+
+if (isset($_GET['action']) && $_GET['action'] === 'allsiteinvoicesummarycsv') {
+    $exportCsv = (isset($_GET['export']) && $_GET['export'] === 'csv');
+
+    if ($exportCsv) {
+        header('Content-Type: text/csv; charset=UTF-8');
+        header('Content-Disposition: attachment; filename=All_Site_Invoice_Summary_Export.csv');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+        echo "\xEF\xBB\xBF"; // UTF-8 BOM
+    } else {
+        header('Content-Type: application/json');
+    }
+
+    if (!$conn || !($conn instanceof PDO)) {
+        if ($exportCsv) {
+            die("Database connection failed");
+        } else {
+            echo json_encode(['error' => 'Database connection failed']);
+            exit();
+        }
+    }
+
+    function interpolateQuery($query, $params) {
+        foreach ($params as $key => $val) {
+            if (is_string($val)) {
+                $val = "'" . addslashes($val) . "'";
+            } elseif ($val === null) {
+                $val = 'NULL';
+            }
+            $query = str_replace($key, $val, $query);
+        }
+        return $query;
+    }
+
+    try {
+        $companyId = $_GET['company'] ?? '';
+        $all = isset($_GET['all']) && $_GET['all'] === 'true';
+        $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $sellersRaw = $_GET['sellers'] ?? '1';
+        $datefrom = $_GET['datefrom'] ?? null;
+        $dateto = $_GET['dateto'] ?? null;
+
+        $offset = ($page - 1) * $limit;
+
+        $sellers = array_filter(array_map('trim', explode(',', $sellersRaw)), 'strlen');
+        $sellerPlaceholders = [];
+        $sellerParams = [];
+        foreach ($sellers as $index => $sellerId) {
+            $ph = ":seller$index";
+            $sellerPlaceholders[] = $ph;
+            $sellerParams[$ph] = $sellerId;
+        }
+        $sellerCondition = count($sellerPlaceholders) > 0 ? "AND A.SITE_ID IN (" . implode(',', $sellerPlaceholders) . ")" : "";
+
+        $total = null;
+        if (!$all && !$exportCsv) {
+            $countSql = "SELECT COUNT(*) AS total 
+                         FROM Aquila_Sales_Order_Transactions A
+                         WHERE COMPANY_ID = :companyid 
+                           AND STATUS = 'INVOICED'
+                           $sellerCondition
+                           AND A.TRANSACTION_DATE BETWEEN :datefrom AND :dateto";
+            $countStmt = $conn->prepare($countSql);
+            $countStmt->bindParam(':companyid', $companyId);
+            $countStmt->bindParam(':datefrom', $datefrom);
+            $countStmt->bindParam(':dateto', $dateto);
+            foreach ($sellerParams as $ph => $val) {
+                $countStmt->bindValue($ph, $val);
+            }
+            $countStmt->execute();
+            $total = $countStmt->fetch(PDO::FETCH_ASSOC)['total'];
+        }
+
+        $sql = "SELECT 
+                      A.LINE_ID
+                    , A.COMPANY_ID
+                    , A.SITE_ID
+                    , A.TRANSACTION_ID
+                    , A.INVOICE_TYPE
+                    , A.INVOICE_NUMBER
+                    , A.TRANSACTION_DATE
+                    , A.SELLER_ID
+                    , A.SELLER_NAME
+                    , A.CUSTOMER_ID
+                    , A.CUSTOMER_NAME
+                    , A.WAREHOUSE_ID
+                    , A.WAREHOUSE_CODE
+                    , ISNULL(TRY_CAST(A.DISCOUNT AS DECIMAL(18, 2)), 0) AS DISCOUNT
+                    , ISNULL(TRY_CAST(A.TOTAL_AMOUNT AS DECIMAL(18, 2)), 0) AS TOTAL_AMOUNT
+                    , ISNULL(SUM(TRY_CAST(B.ITEM_DISCOUNT AS DECIMAL(18, 2))), 0) AS TOTAL_ITEM_DISCOUNT
+                    , ISNULL(TRY_CAST(A.TOTAL_AMOUNT AS DECIMAL(18, 2)), 0) 
+                      - ISNULL(SUM(TRY_CAST(B.ITEM_DISCOUNT AS DECIMAL(18, 2))), 0) 
+                      - ISNULL(TRY_CAST(A.DISCOUNT AS DECIMAL(18, 2)), 0) AS INVOICE_AMOUNT
+                    , A.STATUS
+                    , A.BILLING_NAME
+                    , A.INVOICE_DISTANCE
+                    , A.PO_NUMBER
+                FROM 
+                    Aquila_Sales_Order_Transactions A
+                LEFT JOIN 
+                    Aquila_Invoice_lines B 
+                    ON B.INVOICE_NUMBER = A.INVOICE_NUMBER
+                    AND B.COMPANY_ID = A.COMPANY_ID
+                WHERE
+                    A.COMPANY_ID = :companyid
+                    AND A.STATUS = 'INVOICED'
+                    $sellerCondition
+                    AND A.TRANSACTION_DATE BETWEEN :datefrom AND :dateto
+                GROUP BY
+                      A.LINE_ID
+                    , A.COMPANY_ID
+                    , A.SITE_ID
+                    , A.TRANSACTION_ID
+                    , A.INVOICE_TYPE
+                    , A.INVOICE_NUMBER
+                    , A.TRANSACTION_DATE
+                    , A.SELLER_ID
+                    , A.SELLER_NAME
+                    , A.CUSTOMER_ID
+                    , A.CUSTOMER_NAME
+                    , A.WAREHOUSE_ID
+                    , A.WAREHOUSE_CODE
+                    , A.DISCOUNT
+                    , A.TOTAL_AMOUNT
+                    , A.STATUS
+                    , A.BILLING_NAME
+                    , A.INVOICE_DISTANCE
+                    , A.PO_NUMBER
+                ORDER BY A.SITE_ID ASC";
+
+        if (!$all && !$exportCsv) {
+            $sql .= " OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY";
+        }
+
+        $stmt = $conn->prepare($sql);
+
+        $stmt->bindParam(':companyid', $companyId, PDO::PARAM_STR);
+        $stmt->bindParam(':datefrom', $datefrom);
+        $stmt->bindParam(':dateto', $dateto);
+        foreach ($sellerParams as $ph => $val) {
+            $stmt->bindValue($ph, $val);
+        }
+        if (!$all && !$exportCsv) {
+            $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        }
+
+        $stmt->execute();
+        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($exportCsv) {
+            $output = fopen('php://output', 'w');
+            if (count($items) > 0) {
+                fputcsv($output, array_keys($items[0]));
+                foreach ($items as $row) {
+                    fputcsv($output, $row);
+                }
+            }
+            fclose($output);
+            exit();
+        } else {
+            if ($all) {
+                echo json_encode(['data' => $items]);
+            } else {
+                echo json_encode(['total' => $total, 'data' => $items]);
+            }
+        }
+    } catch (PDOException $e) {
+        if ($exportCsv) {
+            die("Database error: " . $e->getMessage());
+        } else {
+            echo json_encode(['error' => 'Database error', 'message' => $e->getMessage()]);
+        }
+    }
+    exit();
+}
+
+//// ALL SITE INVOICE DETAILED
+
+if (isset($_GET['action']) && $_GET['action'] === 'allsiteinvoicedetailed') {
+    header('Content-Type: application/json');
+
+    if (!$conn || !($conn instanceof PDO)) {
+        echo json_encode(['error' => 'Database connection failed']);
+        exit();
+    }
+
+    function interpolateQuery($query, $params) {
+        foreach ($params as $key => $val) {
+            if (is_string($val)) {
+                $val = "'" . addslashes($val) . "'";
+            } elseif ($val === null) {
+                $val = 'NULL';
+            }
+            $query = str_replace($key, $val, $query);
+        }
+        return $query;
+    }
+
+    try {
+        // Parameters
+        $companyId = $_GET['company'] ?? '';
+        $all       = isset($_GET['all']) && $_GET['all'] === 'true';
+        $limit     = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
+        $page      = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $sellersRaw = $_GET['sellers'] ?? '1';
+        $datefrom  = $_GET['datefrom'] ?? null;
+        $dateto    = $_GET['dateto'] ?? null;
+
+        $offset = ($page - 1) * $limit;
+
+        // Seller filter
+        $sellers = array_filter(array_map('trim', explode(',', $sellersRaw)), 'strlen');
+        $sellerPlaceholders = [];
+        $sellerParams = [];
+        foreach ($sellers as $index => $sellerId) {
+            $ph = ":seller$index";
+            $sellerPlaceholders[] = $ph;
+            $sellerParams[$ph] = $sellerId;
+        }
+        $sellerCondition = count($sellerPlaceholders) > 0
+            ? "AND Aquila_Sales_Order_Transactions.SITE_ID IN (" . implode(',', $sellerPlaceholders) . ")"
+            : "";
+
+        // Paging total
+        $total = null;
+        if (!$all) {
+            $countSql = "SELECT COUNT(*) AS total 
+                         FROM Aquila_Sales_Order_Transactions
+                         WHERE COMPANY_ID = :companyid 
+                           AND STATUS = 'INVOICED'
+                           $sellerCondition
+                           AND TRANSACTION_DATE BETWEEN :datefrom AND :dateto";
+            $countStmt = $conn->prepare($countSql);
+            $countStmt->bindParam(':companyid', $companyId);
+            $countStmt->bindParam(':datefrom', $datefrom);
+            $countStmt->bindParam(':dateto', $dateto);
+            foreach ($sellerParams as $ph => $val) {
+                $countStmt->bindValue($ph, $val);
+            }
+            $countStmt->execute();
+            $total = $countStmt->fetch(PDO::FETCH_ASSOC)['total'];
+        }
+
+        // Main query
+        $sql = "SELECT 
+                    Aquila_Sales_Order_Transactions.COMPANY_ID ,
+                    Aquila_Sales_Order_Transactions.SITE_ID ,
+                    SITE_CODE ,
+                    Aquila_Invoice_lines.TRANSACTION_DATE ,
+                    Aquila_Sales_Order_Transactions.SELLER_ID ,
+                    Aquila_Sales_Order_Transactions.SELLER_NAME ,
+                    Aquila_Sales_Order_Transactions.CUSTOMER_ID ,
+                    Aquila_Sales_Order_Transactions.CUSTOMER_NAME ,
+                    COALESCE(CHAIN, '-') ,
+                    Aquila_Invoice_lines.ITEM_ID ,
+                    SCHEME_CODE ,
+                    Aquila_Sales_Order_Transactions.TRANSACTION_ID,
+                    INVOICE_TYPE,
+                    SCHEME_CODE ,
+                    SCHEME_CODE ,
+                    IT_BARCODE ,
+                    CASE_BARCODE ,
+                    DESCRIPTION ,
+                    BRAND2 ,
+                    CATEGORY_AFFIE ,
+                    BRAND2 ,
+                    PO_NUMBER,
+                    CHANNEL ,
+                    QTY,
+                    UOM,
+                    IT_PER_CS,
+                    AMOUNT AS COST,
+                    Aquila_Invoice_lines.TOTAL_AMOUNT AS GROSS_SALES,
+                    Aquila_Invoice_lines.INVOICE_NUMBER ,
+                    CAST(
+                        CASE 
+                            WHEN UOM = 'CS' THEN COALESCE(CAST(QTY AS DECIMAL(10, 2)), 0)
+                            WHEN UOM IN ('SW', 'IT') THEN 
+                                CASE 
+                                    WHEN COALESCE(Aquila_Item_Barcodes.IT_PER_CS, 0) = 0 THEN 0 
+                                    ELSE COALESCE(CAST(QTY AS DECIMAL(10, 2)), 0) / CAST(Aquila_Item_Barcodes.IT_PER_CS AS DECIMAL(10, 2)) 
+                                END
+                            ELSE 0 
+                        END AS DECIMAL(10, 2)
+                    ) AS cs,
+                    '0' as msu,
+                    TOTAL * 0.12 AS VAT,
+                    COALESCE(Aquila_Invoice_lines.DISCOUNT, 0) AS DISCOUNT,
+                    CASE 
+                        WHEN SCHEME_DISCOUNT IS NULL THEN 0
+                        ELSE SCHEME_DISCOUNT
+                    END AS SCHEME_DISCOUNT,
+                    (TOTAL-Aquila_Invoice_lines.DISCOUNT) - ((TOTAL-Aquila_Invoice_lines.DISCOUNT)-((TOTAL-Aquila_Invoice_lines.DISCOUNT) / 1.12)) as sales_ex_vat,
+                    (TOTAL-Aquila_Invoice_lines.DISCOUNT)-((TOTAL-Aquila_Invoice_lines.DISCOUNT) / 1.12) as vat_amount,
+                    (COALESCE(Aquila_Invoice_lines.TOTAL_AMOUNT, 0) - COALESCE(ITEM_DISCOUNT, 0)) - COALESCE(SCHEME_DISCOUNT, 0) AS SALESAMOUNT,
+                    FORMAT(Aquila_Invoice_lines.TRANSACTION_DATE, 'MMMM') AS monthly_transaction,
+                    SUB_CHANNEL as pg_local_subsegment,
+                    DSS as sales_supervisor,
+                    (CASE 
+                        WHEN UOM = 'CS' THEN QTY * IT_PER_CS 
+                        WHEN UOM = 'SW' THEN QTY * IT_PER_CS 
+                        WHEN UOM = 'IT' THEN QTY 
+                        ELSE 0 
+                    END) AS item_qty,
+                    Aquila_Sales_Order_Transactions.PO_NUMBER as aso#,
+                    Aquila_Invoice_lines.TRANSACTION_DATE as actual_cm_date,
+                    TOTAL / 1.12 as SALESEXVAT,
+                    (TOTAL-Aquila_Invoice_lines.DISCOUNT) - ((TOTAL-Aquila_Invoice_lines.DISCOUNT)-((TOTAL-Aquila_Invoice_lines.DISCOUNT) / 1.12)) as niv,
+                    '' as actual_delivery_date,
+                    (CASE WHEN UOM = 'CS' THEN QTY ELSE 0 END) AS item_qty_cs,
+                    (CASE WHEN UOM = 'SW' THEN QTY ELSE 0 END) AS item_qty_sw,
+                    (CASE WHEN UOM = 'IT' THEN QTY ELSE 0 END) AS item_qty_it,
+                    'COD' as payment_terms,
+                    DISCOUNT_RATE as promo_percentage,
+                    '' as trade_percentage
+                FROM Aquila_Invoice_lines
+                INNER JOIN Aquila_Sales_Order_Transactions
+                    ON Aquila_Sales_Order_Transactions.TRANSACTION_ID = Aquila_Invoice_lines.TRANSACTION_ID
+                LEFT JOIN Aquila_Sites ON Aquila_Sites.SITEID = Aquila_Invoice_lines.SITE_ID 
+                LEFT JOIN Aquila_Item_Barcodes ON Aquila_Item_Barcodes.ITEM_ID = Aquila_Invoice_lines.ITEM_ID
+                LEFT JOIN Aquila_Customer_Channel ON Aquila_Customer_Channel.CUSTOMER_ID = Aquila_Sales_Order_Transactions.CUSTOMER_ID 
+                    AND Aquila_Customer_Channel.COMPANY_ID = Aquila_Sales_Order_Transactions.COMPANY_ID 
+                LEFT JOIN Aquila_Seller ON Aquila_Seller.SELLER_SUB_ID = Aquila_Sales_Order_Transactions.SELLER_ID 
+                    AND Aquila_Seller.COMPANY_ID = Aquila_Sales_Order_Transactions.COMPANY_ID 
+                WHERE Aquila_Invoice_lines.COMPANY_ID = :companyid
+                    $sellerCondition
+                    AND Aquila_Invoice_lines.TRANSACTION_DATE BETWEEN :datefrom AND :dateto
+                    AND Aquila_Sales_Order_Transactions.STATUS = 'INVOICED'
+                ORDER BY Aquila_Sales_Order_Transactions.SITE_ID  ASC";
+
+        if (!$all) {
+            $sql .= " OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY";
+        }
+
+        $stmt = $conn->prepare($sql);
+
+        // Bind params
+        $stmt->bindParam(':companyid', $companyId, PDO::PARAM_STR);
+        $stmt->bindParam(':datefrom', $datefrom);
+        $stmt->bindParam(':dateto', $dateto);
+        foreach ($sellerParams as $ph => $val) {
+            $stmt->bindValue($ph, $val);
+        }
+        if (!$all) {
+            $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        }
+
+        // Debug SQL output
+        $debugSql = interpolateQuery($sql, array_merge([
+            ':companyid' => $companyId,
+            ':datefrom' => $datefrom,
+            ':dateto' => $dateto,
+            ':offset' => $offset,
+            ':limit' => $limit,
+        ], $sellerParams));
+
+        $stmt->execute();
+        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode($all ? [
+            'data' => $items,
+           // 'debug_sql' => $debugSql
+        ] : [
+            'total' => $total,
+            'data'  => $items,
+           // 'debug_sql' => $debugSql
+        ]);
+
+    } catch (PDOException $e) {
+        echo json_encode(['error' => 'Database error', 'message' => $e->getMessage()]);
+    }
+    exit();
+}
+
+/// export all site sales invoice detailedif (isset($_GET['action']) && $_GET['action'] === 'allsiteinvoicedetailedcsv') {
+    set_time_limit(300); // Allow up to 5 minutes
+
+    if (!$conn || !($conn instanceof PDO)) {
+        die("Database connection failed");
+    }
+
+    // Parameters
+    $companyId  = $_GET['company'] ?? '';
+    $sellersRaw = $_GET['sellers'] ?? '1';
+    $datefrom   = $_GET['datefrom'] ?? null;
+    $dateto     = $_GET['dateto'] ?? null;
+
+    // Seller filter
+    $sellers = array_filter(array_map('trim', explode(',', $sellersRaw)), 'strlen');
+    $sellerPlaceholders = [];
+    $sellerParams = [];
+    foreach ($sellers as $index => $sellerId) {
+        $ph = ":seller$index";
+        $sellerPlaceholders[] = $ph;
+        $sellerParams[$ph] = $sellerId;
+    }
+    $sellerCondition = count($sellerPlaceholders) > 0
+        ? "AND Aquila_Sales_Order_Transactions.SITE_ID IN (" . implode(',', $sellerPlaceholders) . ")"
+        : "";
+
+    try {
+        // SQL copied from working query
+        $sql = "SELECT 
+                    Aquila_Sales_Order_Transactions.COMPANY_ID,
+                    Aquila_Sales_Order_Transactions.SITE_ID,
+                    SITE_CODE,
+                    Aquila_Invoice_lines.TRANSACTION_DATE,
+                    Aquila_Sales_Order_Transactions.SELLER_ID,
+                    Aquila_Sales_Order_Transactions.SELLER_NAME,
+                    Aquila_Sales_Order_Transactions.CUSTOMER_ID,
+                    Aquila_Sales_Order_Transactions.CUSTOMER_NAME,
+                    COALESCE(CHAIN, '-') AS CHAIN,
+                    Aquila_Invoice_lines.ITEM_ID,
+                    SCHEME_CODE,
+                    Aquila_Sales_Order_Transactions.TRANSACTION_ID,
+                    INVOICE_TYPE,
+                    IT_BARCODE,
+                    CASE_BARCODE,
+                    DESCRIPTION,
+                    BRAND2,
+                    CATEGORY_AFFIE,
+                    PO_NUMBER,
+                    CHANNEL,
+                    QTY,
+                    UOM,
+                    IT_PER_CS,
+                    AMOUNT AS COST,
+                    Aquila_Invoice_lines.TOTAL_AMOUNT AS GROSS_SALES,
+                    Aquila_Invoice_lines.INVOICE_NUMBER,
+                    CAST(
+                        CASE 
+                            WHEN UOM = 'CS' THEN COALESCE(CAST(QTY AS DECIMAL(10, 2)), 0)
+                            WHEN UOM IN ('SW', 'IT') THEN 
+                                CASE 
+                                    WHEN COALESCE(Aquila_Item_Barcodes.IT_PER_CS, 0) = 0 THEN 0 
+                                    ELSE COALESCE(CAST(QTY AS DECIMAL(10, 2)), 0) / CAST(Aquila_Item_Barcodes.IT_PER_CS AS DECIMAL(10, 2)) 
+                                END
+                            ELSE 0 
+                        END AS DECIMAL(10, 2)
+                    ) AS cs,
+                    '0' as msu,
+                    TOTAL * 0.12 AS VAT,
+                    COALESCE(Aquila_Invoice_lines.DISCOUNT, 0) AS DISCOUNT,
+                    CASE 
+                        WHEN SCHEME_DISCOUNT IS NULL THEN 0
+                        ELSE SCHEME_DISCOUNT
+                    END AS SCHEME_DISCOUNT,
+                    (TOTAL - Aquila_Invoice_lines.DISCOUNT) - ((TOTAL - Aquila_Invoice_lines.DISCOUNT) - ((TOTAL - Aquila_Invoice_lines.DISCOUNT) / 1.12)) AS sales_ex_vat,
+                    (TOTAL - Aquila_Invoice_lines.DISCOUNT) - ((TOTAL - Aquila_Invoice_lines.DISCOUNT) / 1.12) AS vat_amount,
+                    (COALESCE(Aquila_Invoice_lines.TOTAL_AMOUNT, 0) - COALESCE(ITEM_DISCOUNT, 0)) - COALESCE(SCHEME_DISCOUNT, 0) AS SALESAMOUNT,
+                    FORMAT(Aquila_Invoice_lines.TRANSACTION_DATE, 'MMMM') AS monthly_transaction,
+                    SUB_CHANNEL AS pg_local_subsegment,
+                    DSS AS sales_supervisor,
+                    CASE 
+                        WHEN UOM = 'CS' THEN QTY * IT_PER_CS 
+                        WHEN UOM = 'SW' THEN QTY * IT_PER_CS 
+                        WHEN UOM = 'IT' THEN QTY 
+                        ELSE 0 
+                    END AS item_qty,
+                    Aquila_Sales_Order_Transactions.PO_NUMBER AS aso#,
+                    Aquila_Invoice_lines.TRANSACTION_DATE AS actual_cm_date,
+                    TOTAL / 1.12 AS SALESEXVAT,
+                    (TOTAL - Aquila_Invoice_lines.DISCOUNT) - ((TOTAL - Aquila_Invoice_lines.DISCOUNT) - ((TOTAL - Aquila_Invoice_lines.DISCOUNT) / 1.12)) AS niv,
+                    '' AS actual_delivery_date,
+                    CASE WHEN UOM = 'CS' THEN QTY ELSE 0 END AS item_qty_cs,
+                    CASE WHEN UOM = 'SW' THEN QTY ELSE 0 END AS item_qty_sw,
+                    CASE WHEN UOM = 'IT' THEN QTY ELSE 0 END AS item_qty_it,
+                    'COD' AS payment_terms,
+                    DISCOUNT_RATE AS promo_percentage,
+                    '' AS trade_percentage
+                FROM Aquila_Invoice_lines
+                INNER JOIN Aquila_Sales_Order_Transactions
+                    ON Aquila_Sales_Order_Transactions.TRANSACTION_ID = Aquila_Invoice_lines.TRANSACTION_ID
+                LEFT JOIN Aquila_Sites 
+                    ON Aquila_Sites.SITEID = Aquila_Invoice_lines.SITE_ID 
+                LEFT JOIN Aquila_Item_Barcodes 
+                    ON Aquila_Item_Barcodes.ITEM_ID = Aquila_Invoice_lines.ITEM_ID
+                LEFT JOIN Aquila_Customer_Channel 
+                    ON Aquila_Customer_Channel.CUSTOMER_ID = Aquila_Sales_Order_Transactions.CUSTOMER_ID 
+                    AND Aquila_Customer_Channel.COMPANY_ID = Aquila_Sales_Order_Transactions.COMPANY_ID 
+                LEFT JOIN Aquila_Seller 
+                    ON Aquila_Seller.SELLER_SUB_ID = Aquila_Sales_Order_Transactions.SELLER_ID 
+                    AND Aquila_Seller.COMPANY_ID = Aquila_Sales_Order_Transactions.COMPANY_ID 
+                WHERE Aquila_Invoice_lines.COMPANY_ID = :companyid
+                    $sellerCondition
+                    AND Aquila_Invoice_lines.TRANSACTION_DATE BETWEEN :datefrom AND :dateto
+                    AND Aquila_Sales_Order_Transactions.STATUS = 'INVOICED'
+                ORDER BY Aquila_Sales_Order_Transactions.SITE_ID ASC";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':companyid', $companyId, PDO::PARAM_STR);
+        $stmt->bindParam(':datefrom', $datefrom);
+        $stmt->bindParam(':dateto', $dateto);
+        foreach ($sellerParams as $ph => $val) {
+            $stmt->bindValue($ph, $val);
+        }
+        $stmt->execute();
+
+        // Fetch all rows at once so we can modify ITEM_ID before output
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Format ITEM_ID for Excel safety
+        foreach ($rows as &$row) {
+            if (isset($row['ITEM_ID']) && preg_match('/^\d+(-\d+)?$/', $row['ITEM_ID'])) {
+                $row['ITEM_ID'] = '="' . $row['ITEM_ID'] . '"';
+            }
+        }
+
+        // Output CSV
+        header('Content-Type: text/csv; charset=UTF-8');
+        header('Content-Disposition: attachment; filename=allsiteinvoicedetailed.csv');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        $output = fopen('php://output', 'w');
+        fwrite($output, "\xEF\xBB\xBF"); // UTF-8 BOM
+
+        if (!empty($rows)) {
+            fputcsv($output, array_keys($rows[0])); // headers
+            foreach ($rows as $row) {
+                fputcsv($output, $row);
+            }
+        }
+
+        fclose($output);
+        exit;
+
+    } catch (PDOException $e) {
+        die("Database error: " . $e->getMessage());
+    }
+
