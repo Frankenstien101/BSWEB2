@@ -320,8 +320,8 @@
                 res.forEach(seller => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td>${seller.SELLER_NAME || seller.SELLER_ID}</td>
-                        <td><input type="checkbox" name="seller" value="${seller.SELLER_ID}" class="seller-checkbox"></td>
+                        <td>${seller.SELLER_SUB_ID || seller.SELLER_SUB_ID}</td>
+                        <td><input type="checkbox" name="seller" value="${seller.SELLER_SUB_ID}" class="seller-checkbox"></td>
                     `;
                     tbody.appendChild(tr);
                 });

@@ -339,8 +339,8 @@
                 res.forEach(seller => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td>${seller.SELLER_NAME || seller.SELLER_ID}</td>
-                        <td><input type="checkbox" name="seller" value="${seller.SELLER_ID}" class="seller-checkbox"></td>
+                        <td>${seller.SELLER_SUB_ID || seller.SELLER_SUB_ID}</td>
+                        <td><input type="checkbox" name="seller" value="${seller.SELLER_SUB_ID}" class="seller-checkbox"></td>
                     `;
                     tbody.appendChild(tr);
                 });
@@ -438,6 +438,7 @@
 window.filters = {};     // Placeholder for filters object
 
 function loadItems2(page = 1) {
+
     currentPage = page;  // Update global current page
 
     const companyId = "<?php echo $_SESSION['COMPANY_ID'] ?? ''; ?>";
@@ -480,7 +481,7 @@ function loadItems2(page = 1) {
 
     showLoader();
 
-    fetch(`/HomePage/datafetcher/reports/getdatareports.php?action=invoicedetailedf1&company=${companyId}&siteid=${siteid}&page=${page}&limit=${rowsPerPage}&sellers=${encodeURIComponent(sellers.join(','))}&datefrom=${encodeURIComponent(datefrom)}&dateto=${encodeURIComponent(dateto)}`)
+    fetch(`/HomePage/datafetcher/reports/getdatareports.php?action=invoicedetailed1&company=${companyId}&siteid=${siteid}&page=${page}&limit=${rowsPerPage}&sellers=${encodeURIComponent(sellers.join(','))}&datefrom=${encodeURIComponent(datefrom)}&dateto=${encodeURIComponent(dateto)}`)
         .then(response => {
             if (!response.ok) {
                 hideLoader();
