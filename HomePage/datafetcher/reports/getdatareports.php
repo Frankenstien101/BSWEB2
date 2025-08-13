@@ -986,6 +986,7 @@ if (!$conn || !($conn instanceof PDO)) {
 }
 
 /// get sites selection
+
 try {
     if ($_GET['action'] === 'getsites') {
         $companyId = $_GET['company'] ?? '';
@@ -1013,7 +1014,6 @@ try {
 
 }
    
-
 
 //invoice detailes get pages
 

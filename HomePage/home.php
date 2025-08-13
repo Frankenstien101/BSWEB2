@@ -165,13 +165,15 @@ FROM Aquila_User_Site_Mapping
 WHERE USER_ID = '" . $_SESSION['UserID'] . "' 
   AND COMPANY_ID = '" . $_SESSION['Company_ID'] . "'
 GROUP BY USER_ID, SITE_ID, SITE_CODE, COMPANY_ID";
-$query_result =  $conn->query($query);
+$query_result = $conn->query($query);
 
-foreach ($query_result as $key => $data) {
-    echo '<a class="dropdown-item" href="home.php?page=dashboard&site=' . urlencode($data['SITE_CODE']) . 
-         '&siteid=' . urlencode($data['SITE_ID']) . '">' . $data['SITE_CODE'] . '</a>';
+foreach ($query_result as $data) {
+    echo '<a class="dropdown-item" href="home.php?page=dashboard'
+       . '&site=' . urlencode($data['SITE_CODE'])
+       . '&company=' . urlencode($data['COMPANY_ID'])
+       . '&siteid=' . urlencode($data['SITE_ID']) . '">'
+       . htmlspecialchars($data['SITE_CODE']) . '</a>';
 }
-
 ?>
 
   </div>
