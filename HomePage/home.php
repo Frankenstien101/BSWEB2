@@ -295,7 +295,7 @@ foreach ($query_result as $key => $data) {
                $allowedPages = ['dashboard', 'transactions', 'T_Purchase_Order', 'PO_view', 'reports','ProductMasterReport', 'CustomerMasterReport'
                  ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'
                ,'SalesReturnReport','StockViewReport','SOReport' , 'StockLedgerReport' , 'WarehouseMasterReport' , 'SchemeMasterReport'
-              ,'allsitereports' , 'allsitesalesinvoicesummary','allsitesalesinvoicedetailed'];
+              ,'allsitereports' , 'allsitesalesinvoicesummary','allsitesalesinvoicedetailed' , 'allsiteSOReport'];
                if (in_array($page, $allowedPages)) {
 
                    include "pages/{$page}.php";

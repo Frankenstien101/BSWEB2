@@ -146,9 +146,9 @@
           <p>STORE ENDING</p>
         </div>
       </a>
-        <a href="#" >
+        <a href="home.php?page=allsiteSOReport" >
         <div class="app-card">
-          <img src="\HomePage\pages\transactionsImg\uploadso.png" alt="Developers/System Support" />
+          <img src="\HomePage\pages\reportsimg\orders.png" alt="Developers/System Support" />
           <p>SO REPORT</p>
         </div>
       </a>

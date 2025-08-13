@@ -183,39 +183,39 @@
 <thead>
 <tr>
     <th>#</th>
-    <th>COMPANY_ID</th>
-    <th>SITE_ID</th>
-    <th>SITE_CODE</th>
-    <th>TRANSACTION_ID</th>
-    <th>TRANSACTION_DATE</th>
-    <th>INVOICE_TYPE</th>
-    <th>INVOICE_NUMBER</th>
-    <th>PO_NUMBER</th>
-    <th>SELLER_ID</th>
-    <th>SB_VAN_ID</th>
-    <th>SELLER_NAME</th>
-    <th>CUSTOMER_ID</th>
-    <th>CUSTOMER_NAME</th>
+    <th>COMPANY ID</th>
+    <th>SITE ID</th>
+    <th>SITE CODE</th>
+    <th>TRANSACTION ID</th>
+    <th>TRANSACTION DATE</th>
+    <th>INVOICE TYPE</th>
+    <th>INVOICE NUMBER</th>
+    <th>PO NUMBER</th>
+    <th>SELLER ID</th>
+    <th>SB VAN ID</th>
+    <th>SELLER NAME</th>
+    <th>CUSTOMER ID</th>
+    <th>CUSTOMER NAME</th>
     <th>CHAIN</th>
     <th>CHANNEL</th>
-    <th>SUB_CHANNEL</th>
-    <th>CASE_BARCODE</th>
-    <th>IT_BARCODE</th>
-    <th>ITEM_PER_CASE</th>
+    <th>SUB CHANNEL</th>
+    <th>CASE BARCODE</th>
+    <th>IT BARCODE</th>
+    <th>ITEM PER CASE</th>
     <th>BRAND2</th>
-    <th>CATEGORY_AFFIE</th>
-    <th>ITEM_ID</th>
+    <th>CATEGORY AFFIE</th>
+    <th>ITEM ID</th>
     <th>DESCRIPTION</th>
     <th>QTY</th>
     <th>UOM</th>
     <th>COST</th>
-    <th>GROSS_SALES</th>
+    <th>GROSS SALES</th>
     <th>DISCOUNT</th>
-    <th>SCHEME_CODE</th>
-    <th>SCHEME_DISCOUNT</th>
-    <th>NET_SALES(W/VAT)</th>
-    <th>VAT_AMOUNT</th>
-    <th>NET_SALES(EX-VAT)</th>
+    <th>SCHEME CODE</th>
+    <th>SCHEME DISCOUNT</th>
+    <th>NET SALES(W/VAT)</th>
+    <th>VAT AMOUNT</th>
+    <th>NET SALES(EX-VAT)</th>
 </tr>
 </thead>
 
@@ -360,7 +360,7 @@
             })
             .catch(err => {
                 console.error('fetchSellers error:', err);
-                showMessage('seller-error', 'Failed to load sellers: ' + err.message);
+                showMessage('seller-error', 'Failed to load sites: ' + err.message);
             })
             .finally(() => hideLoader());
     }
@@ -405,7 +405,7 @@
         const sellers = getSelectedSellers();
 
         if (sellers.length === 0) {
-            showMessage('seller-error', 'Please select at least one seller.');
+            showMessage('seller-error', 'Please select at least one site.');
             return;
         }
 
@@ -688,7 +688,7 @@ function renderPagination() {
     }
 
     // Build export URL dynamically with your variables, URL-encoded
-    const url = `/HomePage/datafetcher/reports/getdatareports.php?action=invoicedetailedexportcsvpurifier&export=csv` +
+    const url = `/HomePage/datafetcher/reports/getdatareports.php?action=allsiteinvoicedetailedcsv&export=csv` +
         `&company=${encodeURIComponent(companyId)}` +
         `&siteid=${encodeURIComponent(siteid)}` +
         `&sellers=${encodeURIComponent(sellers.join(','))}` +
