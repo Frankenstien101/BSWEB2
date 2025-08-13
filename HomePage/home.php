@@ -77,6 +77,7 @@ if (!isset($_SESSION['SITE_CODE']) || !isset($_SESSION['COMPANY_ID']) || !isset(
 <!doctype html>
 <html lang="en">
 <head>
+  <link rel="icon" type="image/x-icon" href="MainImg\bscr.ico">
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -297,7 +298,8 @@ foreach ($query_result as $data) {
                $allowedPages = ['dashboard', 'transactions', 'T_Purchase_Order', 'PO_view', 'reports','ProductMasterReport', 'CustomerMasterReport'
                  ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'
                ,'SalesReturnReport','StockViewReport','SOReport' , 'StockLedgerReport' , 'WarehouseMasterReport' , 'SchemeMasterReport'
-              ,'allsitereports' , 'allsitesalesinvoicesummary','allsitesalesinvoicedetailed' , 'allsiteSOReport'];
+              ,'allsitereports' , 'allsitesalesinvoicesummary','allsitesalesinvoicedetailed' , 'allsiteSOReport' , 'IntransitSummary'
+            ,'intransitdetailedReport','PurchasereturnReport', 'VanAllocationReport' ,'allsiteVanAllocation'];
                if (in_array($page, $allowedPages)) {
 
                    include "pages/{$page}.php";
@@ -312,7 +314,8 @@ foreach ($query_result as $data) {
           $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
                        $allowedPages = ['dashboard', 'transactions', 'PO_view', 'reports','ProductMasterReport', 'CustomerMasterReport'
                          ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'
-                       ,'SalesReturnReport','StockViewReport','SOReport','StockLedgerReport','WarehouseMasterReport','SchemeMasterReport'];
+                       ,'SalesReturnReport','StockViewReport','SOReport','StockLedgerReport','WarehouseMasterReport','SchemeMasterReport','IntransitSummary'
+                      ,'intransitdetailedReport','PurchasereturnReport','VanAllocationReport'];
                        if (in_array($page, $allowedPages)) {
 
                            include "pages/{$page}.php";
@@ -328,7 +331,8 @@ foreach ($query_result as $data) {
           $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
                        $allowedPages = ['dashboard','PO_view', 'transactions', 'reports','ProductMasterReport', 'CustomerMasterReport'
                          ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'
-                       ,'SalesReturnReport','StockViewReport','SOReport','StockLedgerReport','WarehouseMasterReport' , 'SchemeMasterReport'];
+                       ,'SalesReturnReport','StockViewReport','SOReport','StockLedgerReport','WarehouseMasterReport' , 'SchemeMasterReport','IntransitSummary'
+                      ,'intransitdetailedReport','PurchasereturnReport','VanAllocationReport'];
                        if (in_array($page, $allowedPages)) {
 
                            include "pages/{$page}.php";
@@ -344,7 +348,8 @@ foreach ($query_result as $data) {
           $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
                        $allowedPages = ['dashboard', 'transactions', 'T_Purchase_Order' , 'PO_view', 'reports','ProductMasterReport', 'CustomerMasterReport'
                          ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'
-                       ,'SalesReturnReport','StockViewReport','SOReport', 'StockLedgerReport' , 'WarehouseMasterReport','SchemeMasterReport'];
+                       ,'SalesReturnReport','StockViewReport','SOReport', 'StockLedgerReport' , 'WarehouseMasterReport','SchemeMasterReport','IntransitSummary'
+                      ,'intransitdetailedReport','PurchasereturnReport','VanAllocationReport'];
                        if (in_array($page, $allowedPages)) {
 
                            include "pages/{$page}.php";

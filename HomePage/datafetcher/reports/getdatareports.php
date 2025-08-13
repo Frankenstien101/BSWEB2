@@ -972,6 +972,48 @@ try {
 }
    
 
+// get HFS ONLY 
+
+
+if (!isset($_GET['action'])) {
+    echo json_encode(['error' => 'No action specified']);
+    exit();
+}
+
+if (!$conn || !($conn instanceof PDO)) {
+    echo json_encode(['error' => 'Database connection failed']);
+    exit();
+}
+
+try {
+    if ($_GET['action'] === 'GETHFS') {
+        $companyId = $_GET['company'] ?? '';
+        $siteId = $_GET['site'] ?? '';
+        
+        if (empty($companyId) || empty($siteId)) {
+            echo json_encode(['error' => 'Missing company or site ID']);
+            exit();
+        }
+
+        $sql = "SELECT COMPANY_ID, SITE_ID, SELLER_ID 
+                FROM [dbo].[Aquila_Seller] 
+                WHERE COMPANY_ID = :companyId AND SITE_ID = :siteId AND  SELLER_TYPE = 'VAN SELLER'
+                GROUP BY COMPANY_ID, SITE_ID,SELLER_ID 
+                ORDER BY SELLER_ID ASC";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([':companyId' => $companyId, ':siteId' => $siteId]);
+        $sellers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        echo json_encode($sellers ?: []);
+        exit();
+    }
+
+
+} catch (Exception $e) {
+    echo json_encode(['error' => 'Server error', 'message' => $e->getMessage()]);
+
+}
+
 //ALL INVOICE DETAILED exportcsv
 
 
@@ -1253,38 +1295,38 @@ if (isset($_GET['action']) && $_GET['action'] === 'invoicedetailedexportcsv') {
         // Same SQL as your detailed query but without pagination (export all)
         $sql = "SELECT 
                    Aquila_Invoice_lines.COMPANY_ID,
-Aquila_Invoice_lines.SITE_ID,
-SITE_CODE,
-Aquila_Invoice_lines.TRANSACTION_ID,
-Aquila_Invoice_lines.TRANSACTION_DATE,
-INVOICE_TYPE,
-Aquila_Invoice_lines.INVOICE_NUMBER,
-Aquila_Sales_Order_Transactions.PO_NUMBER,
-Aquila_Sales_Order_Transactions.SELLER_ID,
-COALESCE(SB_VAN_ID, '-') AS SB_VAN_ID,
-Aquila_Sales_Order_Transactions.SELLER_NAME,
-Aquila_Sales_Order_Transactions.CUSTOMER_ID,
-Aquila_Sales_Order_Transactions.CUSTOMER_NAME,
-COALESCE(CHAIN, '-') AS CHAIN,
-CHANNEL,
-SUB_CHANNEL,
-CASE_BARCODE,
-IT_BARCODE,
-IT_PER_CS AS 'ITEM_PER_CASE',
-BRAND2,
-CATEGORY_AFFIE,
-Aquila_Invoice_lines.ITEM_ID,
-DESCRIPTION,
-QTY,
-UOM,
-AMOUNT AS COST,
-TOTAL AS GROSS_SALES,
-Aquila_Invoice_lines.DISCOUNT,
-SCHEME_CODE,
-COALESCE(SCHEME_DISCOUNT, 0) AS SCHEME_DISCOUNT,  -- Use COALESCE to set default to 0
-(TOTAL - Aquila_Invoice_lines.DISCOUNT) - COALESCE(SCHEME_DISCOUNT, 0) AS [NET_SALES(W/VAT)],
-(TOTAL - Aquila_Invoice_lines.DISCOUNT) - ((TOTAL - Aquila_Invoice_lines.DISCOUNT) / 1.12) AS VAT_AMOUNT,
-(TOTAL - Aquila_Invoice_lines.DISCOUNT) - ((TOTAL - Aquila_Invoice_lines.DISCOUNT) - ((TOTAL - Aquila_Invoice_lines.DISCOUNT) / 1.12)) AS 'NET_SALES(EX-VAT)'
+                    Aquila_Invoice_lines.SITE_ID,
+                    SITE_CODE,
+                    Aquila_Invoice_lines.TRANSACTION_ID,
+                    Aquila_Invoice_lines.TRANSACTION_DATE,
+                    INVOICE_TYPE,
+                    Aquila_Invoice_lines.INVOICE_NUMBER,
+                    Aquila_Sales_Order_Transactions.PO_NUMBER,
+                    Aquila_Sales_Order_Transactions.SELLER_ID,
+                    COALESCE(SB_VAN_ID, '-') AS SB_VAN_ID,
+                    Aquila_Sales_Order_Transactions.SELLER_NAME,
+                    Aquila_Sales_Order_Transactions.CUSTOMER_ID,
+                    Aquila_Sales_Order_Transactions.CUSTOMER_NAME,
+                    COALESCE(CHAIN, '-') AS CHAIN,
+                    CHANNEL,
+                    SUB_CHANNEL,
+                    CASE_BARCODE,
+                    IT_BARCODE,
+                    IT_PER_CS AS 'ITEM_PER_CASE',
+                    BRAND2,
+                    CATEGORY_AFFIE,
+                    Aquila_Invoice_lines.ITEM_ID,
+                    DESCRIPTION,
+                    QTY,
+                    UOM,
+                    AMOUNT AS COST,
+                    TOTAL AS GROSS_SALES,
+                    Aquila_Invoice_lines.DISCOUNT,
+                    SCHEME_CODE,
+                    COALESCE(SCHEME_DISCOUNT, 0) AS SCHEME_DISCOUNT,  -- Use COALESCE to set default to 0
+                    (TOTAL - Aquila_Invoice_lines.DISCOUNT) - COALESCE(SCHEME_DISCOUNT, 0) AS [NET_SALES(W/VAT)],
+                    (TOTAL - Aquila_Invoice_lines.DISCOUNT) - ((TOTAL - Aquila_Invoice_lines.DISCOUNT) / 1.12) AS VAT_AMOUNT,
+                    (TOTAL - Aquila_Invoice_lines.DISCOUNT) - ((TOTAL - Aquila_Invoice_lines.DISCOUNT) - ((TOTAL - Aquila_Invoice_lines.DISCOUNT) / 1.12)) AS 'NET_SALES(EX-VAT)'
 
                     
 
@@ -3420,3 +3462,600 @@ if (isset($_GET['action']) && $_GET['action'] === 'invoicedetailed1') {
     }
     exit();
 }
+
+
+/// IN TRANSIT SUMMARY 
+
+
+if (isset($_GET['action']) && $_GET['action'] === 'intransitsummary') {
+    header('Content-Type: application/json');
+    
+    if (!$conn || !($conn instanceof PDO)) {
+        echo json_encode(['error' => 'Database connection failed']);
+        exit();
+    }
+
+    try {
+        $companyId = $_GET['company'];
+        $siteid = $_GET['siteid'];
+        $datefrom = $_GET['datefrom'];
+        $dateto = $_GET['dateto'];
+                
+
+        $sql = "SELECT * FROM Aquila_PO_Transaction 
+                WHERE COMPANY_ID = :companyid
+                AND SITE_ID = :siteid
+                AND PO_DATE BETWEEN :datefrom AND :dateto
+                AND STATUS != 'DRAFT'
+                ORDER BY LINE_ID DESC";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':companyid', $companyId);
+         $stmt->bindParam(':siteid', $siteid);
+          $stmt->bindParam(':datefrom', $datefrom);
+           $stmt->bindParam(':dateto', $dateto);
+        $stmt->execute();
+
+        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode($items ?: []);
+        
+    } catch (PDOException $e) {
+        echo json_encode(['error' => 'Database error', 'message' => $e->getMessage()]);
+    } catch (Exception $e) {
+        echo json_encode(['error' => 'Application error', 'message' => $e->getMessage()]);
+    }
+    exit();
+}
+
+
+/// IN TRANSIT DETAILED 
+
+if (isset($_GET['action']) && $_GET['action'] === 'intransitdetailed') {
+    header('Content-Type: application/json');
+    
+    if (!$conn || !($conn instanceof PDO)) {
+        echo json_encode(['error' => 'Database connection failed']);
+        exit();
+    }
+
+    try {
+        $companyId = $_GET['company'];
+        $siteid = $_GET['siteid'];
+        $datefrom = $_GET['datefrom'];
+        $dateto = $_GET['dateto'];
+                
+
+        $sql = "SELECT [LINEID],PO_DATE,DATE_RECEIVED,[Aquila_PO_Details].[PO_NUMBER],[GRN_NUMBER],[CASE_BARCODE],[IT_BARCODE],[ITEM_ID],[BATCH],[DESCRIPTION],[AMOUNT],[PO_CS],[PO_SW],[PO_IT],[SERVE_CS],[SERVE_SW],[SERVE_IT],[AMOUNT_SERVED],[ACTUAL_CS],[ACTUAL_SW],[ACTUAL_IT],Aquila_PO_Transaction.STATUS
+         FROM [dbo].[Aquila_PO_Details]
+         INNER JOIN Aquila_PO_Transaction ON Aquila_PO_Transaction.PO_NUMBER = [Aquila_PO_Details].PO_NUMBER 
+                WHERE COMPANY_ID = :companyid
+                AND SITE_ID = :siteid
+                AND PO_DATE BETWEEN :datefrom AND :dateto
+                AND Aquila_PO_Transaction.STATUS != 'DRAFT'
+                ORDER BY LINEID DESC";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':companyid', $companyId);
+         $stmt->bindParam(':siteid', $siteid);
+          $stmt->bindParam(':datefrom', $datefrom);
+           $stmt->bindParam(':dateto', $dateto);
+        $stmt->execute();
+
+        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode($items ?: []);
+        
+    } catch (PDOException $e) {
+        echo json_encode(['error' => 'Database error', 'message' => $e->getMessage()]);
+    } catch (Exception $e) {
+        echo json_encode(['error' => 'Application error', 'message' => $e->getMessage()]);
+    }
+    exit();
+}
+
+
+/// PURCHASE RETURN REPORT
+
+if (isset($_GET['action']) && $_GET['action'] === 'purchasereturnreport') {
+    header('Content-Type: application/json');
+    
+    if (!$conn || !($conn instanceof PDO)) {
+        echo json_encode(['error' => 'Database connection failed']);
+        exit();
+    }
+
+    try {
+        $companyId = $_GET['company'];
+        $siteid = $_GET['siteid'];
+        $datefrom = $_GET['datefrom'];
+        $dateto = $_GET['dateto'];
+                
+
+        $sql = "SELECT [COMPANY_ID],[SITE_ID],[DATE_PROCESSED],[GRN_TRANSACTION_ID],[ITEM_ID],[DESCRIPTION],[DAMAGE_CS],[DAMAGE_SW],[DAMAGE_IT],[EXCESS_CS],[EXCESS_SW],[EXCESS_IT],[MISSING_CS],[MISSING_SW],[MISSING_IT],[STATUS]
+         FROM [dbo].[Aquila_GRN_PR_Details] 
+         INNER JOIN Aquila_GRN_Transaction ON Aquila_GRN_Transaction.GRN_NUMBER = [Aquila_GRN_PR_Details].[GRN_TRANSACTION_ID]
+         WHERE [STATUS] = 'PROCESS'
+                AND COMPANY_ID = :companyid
+                AND SITE_ID = :siteid
+                AND DATE_PROCESSED BETWEEN :datefrom AND :dateto
+                ORDER BY DATE_PROCESSED DESC";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':companyid', $companyId);
+         $stmt->bindParam(':siteid', $siteid);
+          $stmt->bindParam(':datefrom', $datefrom);
+           $stmt->bindParam(':dateto', $dateto);
+        $stmt->execute();
+
+        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode($items ?: []);
+        
+    } catch (PDOException $e) {
+        echo json_encode(['error' => 'Database error', 'message' => $e->getMessage()]);
+    } catch (Exception $e) {
+        echo json_encode(['error' => 'Application error', 'message' => $e->getMessage()]);
+    }
+    exit();
+}
+
+// VAN ALLOCATION REPORT
+
+if (isset($_GET['action'])) {
+    if (!$conn || !($conn instanceof PDO)) {
+        header('Content-Type: application/json');
+        echo json_encode(['error' => true, 'message' => 'Database connection failed']);
+        exit();
+    }
+
+    if ($_GET['action'] === 'vanalloc') {
+        header('Content-Type: application/json');
+
+        try {
+            $companyId = $_GET['company'] ?? '';
+            $siteid = $_GET['siteid'] ?? '';
+            $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+            $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
+            $offset = ($page - 1) * $limit;
+            $datefrom = $_GET['datefrom'] ?? null;
+            $dateto = $_GET['dateto'] ?? null;
+            $sellersRaw = $_GET['sellers'] ?? '';
+
+            if (!$companyId || !$siteid || !$datefrom || !$dateto) {
+                echo json_encode(['error' => true, 'message' => 'Missing required parameters']);
+                exit();
+            }
+
+            $sellers = array_filter(array_map('trim', explode(',', $sellersRaw)), 'strlen');
+            if (empty($sellers)) {
+                echo json_encode(['error' => true, 'message' => 'No sellers selected']);
+                exit();
+            }
+            $placeholders = implode(',', array_fill(0, count($sellers), '?'));
+
+            // Count total matching records
+      
+             $countSql = "
+               SELECT COUNT(*) AS total
+                         FROM [dbo].[Aquila_Van_Loading_Details]
+                         INNER JOIN Aquila_Van_Loading_Transaction 
+                            ON Aquila_Van_Loading_Transaction.LOADING_ID = Aquila_Van_Loading_Details.TRANSACTION_ID
+                         WHERE COMPANY_ID = ?
+                           AND SITE_ID = ?
+                           AND Aquila_Van_Loading_Transaction.DATE_CREATED BETWEEN ? AND ?
+                           AND Aquila_Van_Loading_Transaction.SELLER_ID IN ($placeholders)
+            ";
+
+
+
+            $countStmt = $conn->prepare($countSql);
+            $countParams = array_merge([$companyId, $siteid, $datefrom, $dateto], $sellers);
+            $countStmt->execute($countParams);
+            $total = (int) $countStmt->fetchColumn();
+
+            $offsetInt = (int)$offset;
+            $limitInt = (int)$limit;
+
+            // Fetch paginated data
+
+
+ $dataSql = " SELECT
+                COMPANY_ID,
+                    SITE_ID,
+                    Aquila_Van_Loading_Transaction.SELLER_ID,
+                    Aquila_Van_Loading_Transaction.DATE_CREATED,
+                    [TRANSACTION_ID],
+                    [BARCODE],
+                    [ITEM_CODE],
+                    [DESCRIPTION],
+                    [BATCH],
+                    [CS],
+                    [SW],
+                    [IT],
+                    [PRICE],
+                    [ITEM_PER_CASE],
+                    [ITEM_PER_SW],
+                    [SIH_IT],
+                    [TOTAL_CS_AMOUNT],
+                    [TOTAL_IT_AMOUNT],
+                    STATUS
+                FROM [dbo].[Aquila_Van_Loading_Details]
+                INNER JOIN Aquila_Van_Loading_Transaction 
+                    ON Aquila_Van_Loading_Transaction.LOADING_ID = Aquila_Van_Loading_Details.TRANSACTION_ID
+                WHERE COMPANY_ID = ?
+                  AND SITE_ID = ?
+
+                  AND Aquila_Van_Loading_Transaction.DATE_CREATED BETWEEN ? AND ?
+       
+              AND Aquila_Van_Loading_Transaction.SELLER_ID IN ($placeholders)
+
+                     AND STATUS != 'DRAFT'
+
+                ORDER BY Aquila_Van_Loading_Transaction.DATE_CREATED DESC
+
+                OFFSET $offsetInt ROWS FETCH NEXT $limitInt ROWS ONLY";
+
+
+            $dataStmt = $conn->prepare($dataSql);
+            $dataParams = array_merge([$companyId, $siteid, $datefrom, $dateto], $sellers);
+            $dataStmt->execute($dataParams);
+            $items = $dataStmt->fetchAll(PDO::FETCH_ASSOC);
+
+            echo json_encode([
+                'total' => $total,
+                'data' => $items,
+            ]);
+        } catch (PDOException $e) {
+            echo json_encode(['error' => true, 'message' => 'Database error: ' . $e->getMessage()]);
+        }
+        exit();
+    }
+
+    /// SO report export csv
+    if ($_GET['action'] === 'SOreportcsv') {
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="SO_Report.csv"');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        try {
+            $companyId = $_GET['company'] ?? '';
+            $siteid = $_GET['siteid'] ?? '';
+            $datefrom = $_GET['datefrom'] ?? null;
+            $dateto = $_GET['dateto'] ?? null;
+            $sellersRaw = $_GET['sellers'] ?? '';
+
+            if (!$companyId || !$siteid || !$datefrom || !$dateto) {
+                echo 'Missing required parameters';
+                exit();
+            }
+
+            $sellers = array_filter(array_map('trim', explode(',', $sellersRaw)), 'strlen');
+            if (empty($sellers)) {
+                echo 'No sellers selected';
+                exit();
+            }
+            $placeholders = implode(',', array_fill(0, count($sellers), '?'));
+
+            $dataSql = "
+                SELECT 
+                    t.COMPANY_ID,
+                    t.SITE_ID,
+                    t.TRANSACTION_ID,
+                    t.INVOICE_TYPE,
+                    t.TRANSACTION_DATE,
+                    t.SELLER_ID,
+                    t.SELLER_NAME,
+                    t.CUSTOMER_ID,
+                    t.CUSTOMER_NAME,
+                    d.ITEM_ID,
+                    d.BATCH,
+                    d.DESCRIPTION,
+                    d.CS,
+                    d.SW,
+                    d.IT,
+                    d.ALLOCATED_CS,
+                    d.ALLOCATED_SW,
+                    d.ALLOCATED_IT,
+                    d.CS_AMOUNT,
+                    d.SW_AMOUNT,
+                    d.IT_AMOUNT,
+                    d.TOTAL_AMOUNT,
+                    d.TAX_AMOUNT,
+                    d.TOTAL,
+                    d.DISCOUNT,
+                    d.TAX,
+                    d.IT_PER_CS,
+                    d.IT_PER_SW,
+                    t.STATUS,
+                    d.DISCOUNT_AMOUNT
+                FROM Aquila_Sales_Order_Details d
+                LEFT JOIN Aquila_Sales_Order_Transactions t 
+                  ON t.TRANSACTION_ID = d.TRANSACTION_ID 
+                  AND d.COMPANY_ID = t.COMPANY_ID
+                WHERE d.COMPANY_ID = ?
+                  AND d.SITE_ID = ?
+                  AND t.TRANSACTION_DATE BETWEEN ? AND ?
+                  AND t.SELLER_ID IN ($placeholders)
+                ORDER BY t.CUSTOMER_NAME ASC
+            ";
+            $dataStmt = $conn->prepare($dataSql);
+            $dataParams = array_merge([$companyId, $siteid, $datefrom, $dateto], $sellers);
+            $dataStmt->execute($dataParams);
+            $items = $dataStmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $output = fopen('php://output', 'w');
+            if (!empty($items)) {
+                // output header row
+                fputcsv($output, array_keys($items[0]));
+                // output data rows
+                foreach ($items as $row) {
+                    fputcsv($output, $row);
+                }
+            }
+            fclose($output);
+        } catch (PDOException $e) {
+            echo 'Database error: ' . $e->getMessage();
+        }
+        exit();
+    }
+
+
+    // New CSV export function
+   if ($_GET['action'] === 'vanalloccsv') {
+    // CSV headers
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment; filename="van_allocation.csv"');
+
+    $companyId = $_GET['company'] ?? '';
+    $siteid = $_GET['siteid'] ?? '';
+    $datefrom = $_GET['datefrom'] ?? null;
+    $dateto = $_GET['dateto'] ?? null;
+    $sellersRaw = $_GET['sellers'] ?? '';
+
+    if (!$companyId || !$siteid || !$datefrom || !$dateto) {
+        echo "Missing required parameters";
+        exit();
+    }
+
+    $sellers = array_filter(array_map('trim', explode(',', $sellersRaw)), 'strlen');
+    if (empty($sellers)) {
+        echo "No sellers selected";
+        exit();
+    }
+
+    $placeholders = implode(',', array_fill(0, count($sellers), '?'));
+
+    // Fetch all data without pagination
+    $dataSql = "SELECT
+                    COMPANY_ID,
+                    SITE_ID,
+                    Aquila_Van_Loading_Transaction.SELLER_ID,
+                    Aquila_Van_Loading_Transaction.DATE_CREATED,
+                    [TRANSACTION_ID],
+                    [BARCODE],
+                    [ITEM_CODE],
+                    [DESCRIPTION],
+                    [BATCH],
+                    [CS],
+                    [SW],
+                    [IT],
+                    [PRICE],
+                    [ITEM_PER_CASE],
+                    [ITEM_PER_SW],
+                    [SIH_IT],
+                    [TOTAL_CS_AMOUNT],
+                    [TOTAL_IT_AMOUNT],
+                    STATUS
+                FROM [dbo].[Aquila_Van_Loading_Details]
+                INNER JOIN Aquila_Van_Loading_Transaction 
+                    ON Aquila_Van_Loading_Transaction.LOADING_ID = Aquila_Van_Loading_Details.TRANSACTION_ID
+                WHERE COMPANY_ID = ?
+                  AND SITE_ID = ?
+                  AND Aquila_Van_Loading_Transaction.DATE_CREATED BETWEEN ? AND ?
+                  AND Aquila_Van_Loading_Transaction.SELLER_ID IN ($placeholders)
+                         AND STATUS != 'DRAFT'
+                ORDER BY Aquila_Van_Loading_Transaction.DATE_CREATED DESC";
+
+    $dataStmt = $conn->prepare($dataSql);
+    $dataParams = array_merge([$companyId, $siteid, $datefrom, $dateto], $sellers);
+    $dataStmt->execute($dataParams);
+
+    $output = fopen('php://output', 'w');
+
+    // CSV header row
+    fputcsv($output, [
+        'COMPANY_ID', 'SITE_ID', 'SELLER_ID', 'DATE_CREATED', 'TRANSACTION_ID',
+        'BARCODE', 'ITEM_CODE', 'DESCRIPTION', 'BATCH', 'CS', 'SW', 'IT', 'PRICE',
+        'ITEM_PER_CASE', 'ITEM_PER_SW', 'SIH_IT', 'TOTAL_CS_AMOUNT', 'TOTAL_IT_AMOUNT', 'STATUS'
+    ]);
+
+    // CSV data rows
+    while ($row = $dataStmt->fetch(PDO::FETCH_ASSOC)) {
+        // Force ITEM_CODE to be treated as text in Excel
+        $row['ITEM_CODE'] = '="' . $row['ITEM_CODE'] . '"';
+        fputcsv($output, $row);
+    }
+
+    fclose($output);
+    exit();
+}
+}
+
+// VAN ALLOCATION REPORT ALL SITE
+if (isset($_GET['action'])) {
+    if (!$conn || !($conn instanceof PDO)) {
+        header('Content-Type: application/json');
+        echo json_encode(['error' => true, 'message' => 'Database connection failed']);
+        exit();
+    }
+
+    // JSON Pagination Fetch
+    if ($_GET['action'] === 'vanallocallsite') {
+        header('Content-Type: application/json');
+
+        try {
+            $companyId = $_GET['company'] ?? '';
+            $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+            $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
+            $offset = ($page - 1) * $limit;
+            $datefrom = $_GET['datefrom'] ?? null;
+            $dateto = $_GET['dateto'] ?? null;
+            $sellersRaw = $_GET['sellers'] ?? '';
+
+            if (!$companyId || !$datefrom || !$dateto) {
+                echo json_encode(['error' => true, 'message' => 'Missing required parameters']);
+                exit();
+            }
+
+            $sellers = array_filter(array_map('trim', explode(',', $sellersRaw)), 'strlen');
+            if (empty($sellers)) {
+                echo json_encode(['error' => true, 'message' => 'No sellers selected']);
+                exit();
+            }
+            $placeholders = implode(',', array_fill(0, count($sellers), '?'));
+
+            // Count total records
+            $countSql = "
+                SELECT COUNT(*) AS total
+                FROM [dbo].[Aquila_Van_Loading_Details]
+                INNER JOIN Aquila_Van_Loading_Transaction 
+                    ON Aquila_Van_Loading_Transaction.LOADING_ID = Aquila_Van_Loading_Details.TRANSACTION_ID
+                WHERE COMPANY_ID = ?
+                  AND Aquila_Van_Loading_Transaction.DATE_CREATED BETWEEN ? AND ?
+                  AND SITE_ID IN ($placeholders)
+            ";
+            $countStmt = $conn->prepare($countSql);
+            $countParams = array_merge([$companyId, $datefrom, $dateto], $sellers);
+            $countStmt->execute($countParams);
+            $total = (int) $countStmt->fetchColumn();
+
+            // Fetch paginated data
+            $offsetInt = (int)$offset;
+            $limitInt = (int)$limit;
+            $dataSql = " 
+                SELECT
+                    COMPANY_ID,
+                    SITE_ID,
+                    Aquila_Van_Loading_Transaction.SELLER_ID,
+                    Aquila_Van_Loading_Transaction.DATE_CREATED,
+                    [TRANSACTION_ID],
+                    [BARCODE],
+                    [ITEM_CODE],
+                    [DESCRIPTION],
+                    [BATCH],
+                    [CS],
+                    [SW],
+                    [IT],
+                    [PRICE],
+                    [ITEM_PER_CASE],
+                    [ITEM_PER_SW],
+                    [SIH_IT],
+                    [TOTAL_CS_AMOUNT],
+                    [TOTAL_IT_AMOUNT],
+                    STATUS
+                FROM [dbo].[Aquila_Van_Loading_Details]
+                INNER JOIN Aquila_Van_Loading_Transaction 
+                    ON Aquila_Van_Loading_Transaction.LOADING_ID = Aquila_Van_Loading_Details.TRANSACTION_ID
+                WHERE COMPANY_ID = ?
+                  AND Aquila_Van_Loading_Transaction.DATE_CREATED BETWEEN ? AND ?
+                  AND SITE_ID IN ($placeholders)
+                    AND STATUS != 'DRAFT'
+                ORDER BY Aquila_Van_Loading_Transaction.DATE_CREATED DESC
+              
+                OFFSET $offsetInt ROWS FETCH NEXT $limitInt ROWS ONLY
+            ";
+            $dataStmt = $conn->prepare($dataSql);
+            $dataParams = array_merge([$companyId, $datefrom, $dateto], $sellers);
+            $dataStmt->execute($dataParams);
+            $items = $dataStmt->fetchAll(PDO::FETCH_ASSOC);
+
+            echo json_encode([
+                'total' => $total,
+                'data' => $items
+            ]);
+        } catch (PDOException $e) {
+            echo json_encode(['error' => true, 'message' => 'Database error: ' . $e->getMessage()]);
+        }
+        exit();
+    }
+
+    // CSV Export
+    if ($_GET['action'] === 'allsitvanalloccsv') {
+        try {
+            $companyId = $_GET['company'] ?? '';
+            $datefrom = $_GET['datefrom'] ?? null;
+            $dateto = $_GET['dateto'] ?? null;
+            $sellersRaw = $_GET['sellers'] ?? '';
+
+            if (!$companyId || !$datefrom || !$dateto) {
+                die('Missing required parameters');
+            }
+
+            $sellers = array_filter(array_map('trim', explode(',', $sellersRaw)), 'strlen');
+            if (empty($sellers)) {
+                die('No sellers selected');
+            }
+            $placeholders = implode(',', array_fill(0, count($sellers), '?'));
+
+            $sql = "
+                SELECT
+                    COMPANY_ID,
+                    SITE_ID,
+                    Aquila_Van_Loading_Transaction.SELLER_ID,
+                    Aquila_Van_Loading_Transaction.DATE_CREATED,
+                    [TRANSACTION_ID],
+                    [BARCODE],
+                    CAST([ITEM_CODE] AS NVARCHAR) AS ITEM_CODE, -- Prevents Excel date conversion
+                    [DESCRIPTION],
+                    [BATCH],
+                    [CS],
+                    [SW],
+                    [IT],
+                    [PRICE],
+                    [ITEM_PER_CASE],
+                    [ITEM_PER_SW],
+                    [SIH_IT],
+                    [TOTAL_CS_AMOUNT],
+                    [TOTAL_IT_AMOUNT],
+                    STATUS
+                FROM [dbo].[Aquila_Van_Loading_Details]
+                INNER JOIN Aquila_Van_Loading_Transaction 
+                    ON Aquila_Van_Loading_Transaction.LOADING_ID = Aquila_Van_Loading_Details.TRANSACTION_ID
+                WHERE COMPANY_ID = ?
+                  AND Aquila_Van_Loading_Transaction.DATE_CREATED BETWEEN ? AND ?
+                  AND SITE_ID IN ($placeholders)
+                         AND STATUS != 'DRAFT'
+                ORDER BY Aquila_Van_Loading_Transaction.DATE_CREATED DESC
+            ";
+            $stmt = $conn->prepare($sql);
+            $params = array_merge([$companyId, $datefrom, $dateto], $sellers);
+            $stmt->execute($params);
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Output CSV headers
+            header('Content-Type: text/csv; charset=utf-8');
+            header('Content-Disposition: attachment; filename="Allsite_van_allocation.csv"');
+
+            $output = fopen('php://output', 'w');
+            if (!empty($rows)) {
+                fputcsv($output, array_keys($rows[0]));
+                foreach ($rows as $row) {
+                    // Add tab before ITEM_CODE to keep Excel from converting to date
+                    if (isset($row['ITEM_CODE'])) {
+                        $row['ITEM_CODE'] = "\t" . $row['ITEM_CODE'];
+                    }
+                    fputcsv($output, $row);
+                }
+            }
+            fclose($output);
+            exit();
+        } catch (PDOException $e) {
+            die('Database error: ' . $e->getMessage());
+        }
+    }
+}
+
+
+

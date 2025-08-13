@@ -145,19 +145,19 @@
       <h1>PURCHASES</h1>
     </header>
     <div class="app-container">
-      <a href="#" >
+      <a href="home.php?page=IntransitSummary" >
         <div class="app-card">
           <img src="\HomePage\pages\reportsimg\express-delivery.png" alt="Developers/System Support" />
           <p> IN-TRANSIT SUMMARY</p>
         </div>
       </a>
-      <a href="#" >
+      <a href="home.php?page=intransitdetailedReport" >
         <div class="app-card">
           <img src="\HomePage\pages\reportsimg\distribution.png" alt="Developers/System Support" />
           <p>IN-TRANSIT DETAILED</p>
         </div>
       </a>
-            <a href="#" >
+            <a href="home.php?page=PurchasereturnReport" >
         <div class="app-card">
           <img src="\HomePage\pages\reportsimg\bo.png" alt="Developers/System Support" />
           <p>PURCHASE RETURN</p>
@@ -169,7 +169,7 @@
           <p>STOCK VIEW</p>
         </div>
       </a>
-        <a href="#" >
+        <a href="home.php?page=VanAllocationReport" >
         <div class="app-card">
           <img src="\HomePage\pages\reportsimg\v1.png" alt="Developers/System Support" />
           <p>VAN ALLOCATION</p>

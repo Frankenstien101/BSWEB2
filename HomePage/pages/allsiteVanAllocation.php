@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-<title>Invoice Summary</title>
+<title>Invoice Detailed</title>
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" />
 <style>
@@ -125,14 +125,14 @@
 </style>
 </head>
 <body>
-<h3>INVOICE SUMMARY</h3>
+<h3>ALL SITE VAN ALLOCATION REPORT</h3>
 
 <!-- Filter Cards Container -->
 <div class="filter-container">
     <!-- Seller Selection Card -->
-    <div class="card text-bg-light mb-1" style="width: 250px; font-size: 9px;">
+    <div class="card text-bg-light" style="width: 250px; font-size: 9px;">
         <div class="card-header d-flex justify-content-between align-items-right">
-            <span>SELECT SELLER</span>
+            <span>SELECT SITE</span>
            
         </div>
         <div class="card-body" style="padding: 8px;">
@@ -140,7 +140,7 @@
                 <table class="seller-table">
                     <thead>
                         <tr>
-                            <th>Seller</th>
+                            <th>Site</th>
                             <th>Select</th>
                         </tr>
                     </thead>
@@ -154,7 +154,7 @@
     </div>
 
     <!-- Date Filter Card -->
-    <div class="card text-bg-light mb-1" style="max-width: 50%; font-size: 9px;">
+    <div class="card text-bg-light" style="max-width: 50%; font-size: 9px;">
         <div class="card-header d-flex justify-content-between align-items-center">
             <span>SELECT DATE FILTER</span>
         </div>
@@ -174,36 +174,39 @@
 <!-- Summary Card -->
 
 <!-- Table Card -->
-<div class="card text-bg-light" style="max-width: 100%; height: 445px; margin-bottom: 0.5rem; font-size: 9px;">
+<div class="card text-bg-light" style="max-width: 100%; height: 450px; margin-bottom: 0.5rem; font-size: 9px;">
     <div class="card-header"></div>
     <div class="card-body card-body-scroll">
         <table id="itemsTable" class="table table-striped table-hover table-bordered table-sm" style="font-size: 9px;">
             <thead>
                 <tr>
-      <th>#</th>
-      <th>LINE_ID</th>
-      <th>COMPANY_ID</th>
-      <th>SITE_ID</th>
-      <th>TRANSACTION_ID</th>
-      <th>INVOICE_TYPE</th>
-      <th>INVOICE_NUMBER</th>
-      <th>TRANSACTION_DATE</th>
-      <th>SELLER_ID</th>
-      <th>SELLER_NAME</th>
-      <th>CUSTOMER_ID</th>
-      <th>CUSTOMER_NAME</th>
-      <th>WAREHOUSE_ID</th>
-      <th>WAREHOUSE_CODE</th>
-      <th>DISCOUNT</th>
-      <th>TOTAL_AMOUNT</th>
-      <th>TOTAL_ITEM_DISCOUNT</th>
-      <th>INVOICE_AMOUNT</th>
-      <th>STATUS</th>
-      <th>BILLING_NAME</th>
-      <th>INVOICE_DISTANCE</th>
-      <th>PO_NUMBER</th>
-    </tr>
-            </thead>
+<thead>
+<tr>
+    <th>#</th>
+   <th>COMPANY_ID</th>
+<th>SITE_ID</th>
+<th>SELLER_ID</th>
+<th>DATE_CREATED</th>
+<th>TRANSACTION_ID</th>
+<th>BARCODE</th>
+<th>ITEM_CODE</th>
+<th>DESCRIPTION</th>
+<th>BATCH</th>
+<th>CS</th>
+<th>SW</th>
+<th>IT</th>
+<th>PRICE</th>
+<th>ITEM_PER_CASE</th>
+<th>ITEM_PER_SW</th>
+<th>SIH_IT</th>
+<th>TOTAL_CS_AMOUNT</th>
+<th>TOTAL_IT_AMOUNT</th>
+<th>STATUS</th>
+</tr>
+</thead>
+
+
+
             <tbody></tbody>
         </table>
     </div>
@@ -224,6 +227,7 @@
 <!-- Export Button -->
 <div class="text-right mb-0">
     <button class="btn btn-success btn-sm mb-2" onclick="exportToCSV()">Export to CSV</button>
+
 </div>
 
 <!-- Loader -->
@@ -307,7 +311,7 @@
         clearMessages();
         showLoader();
 
-        fetch(`/HomePage/datafetcher/reports/getdatareports.php?action=getsellers&company=${encodeURIComponent(companyId)}&site=${encodeURIComponent(siteId)}`)
+        fetch(`/HomePage/datafetcher/reports/getdatareports.php?action=getsites&company=${encodeURIComponent(companyId)}&site=${encodeURIComponent(siteId)}`)
             .then(res => {
                 if (!res.ok) return res.text().then(t => { throw new Error(t); });
                 return res.json();
@@ -320,8 +324,8 @@
                 res.forEach(seller => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td>${seller.SELLER_SUB_ID || seller.SELLER_SUB_ID}</td>
-                        <td><input type="checkbox" name="seller" value="${seller.SELLER_SUB_ID}" class="seller-checkbox"></td>
+                        <td>${seller.SITE_CODE || seller.SITE_CODE}</td>
+                        <td><input type="checkbox" name="seller" value="${seller.SITEID}" class="seller-checkbox"></td>
                     `;
                     tbody.appendChild(tr);
                 });
@@ -404,10 +408,22 @@
     }
 
     // Load data based on filters
+    
 
+    // Load general data (initial load or fallback)
+ // JS part
+
+// Example rowsPerPage variable (set as needed)
+//const rowsPerPage = 10;
+
+// Load items and render table
+     // Global current page tracker
+  // Rows per page, adjust as needed
+   // Total records count from server
 window.filters = {};     // Placeholder for filters object
 
 function loadItems2(page = 1) {
+
     currentPage = page;  // Update global current page
 
     const companyId = "<?php echo $_SESSION['COMPANY_ID'] ?? ''; ?>";
@@ -442,10 +458,15 @@ function loadItems2(page = 1) {
                         .filter(cb => cb.checked)
                         .map(cb => cb.value);
 
+    console.log("companyId:", companyId);
+    console.log("siteid:", siteid);
+    console.log("page:", page);
+    console.log("rowsPerPage:", rowsPerPage);
+    console.log("sellers:", sellers);
 
     showLoader();
 
-    fetch(`/HomePage/datafetcher/reports/getdatareports.php?action=invoicesummary&company=${companyId}&siteid=${siteid}&page=${page}&limit=${rowsPerPage}&sellers=${encodeURIComponent(sellers.join(','))}&datefrom=${encodeURIComponent(datefrom)}&dateto=${encodeURIComponent(dateto)}`)
+    fetch(`/HomePage/datafetcher/reports/getdatareports.php?action=vanallocallsite&company=${companyId}&siteid=${siteid}&page=${page}&limit=${rowsPerPage}&sellers=${encodeURIComponent(sellers.join(','))}&datefrom=${encodeURIComponent(datefrom)}&dateto=${encodeURIComponent(dateto)}`)
         .then(response => {
             if (!response.ok) {
                 hideLoader();
@@ -456,14 +477,14 @@ function loadItems2(page = 1) {
         })
         .then(data => {
             hideLoader();
-           // console.log("Data received:", data);
+            console.log("Data received:", data);
 
             if (data.total !== undefined) {
                 totalRecords = data.total;  // Update total records for pagination
             }
 
             if (data.data) {
-                renderTable(data.data, page);
+               renderTable(data.data, page);
             } else {
                 renderTable(data, page);
             }
@@ -491,28 +512,28 @@ function renderTable(data, currentPage = 1) {
     data.forEach((item, index) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-        <td>${(currentPage - 1) * rowsPerPage + index + 1}</td>
-        <td>${item.LINE_ID || ''}</td>
-        <td>${item.COMPANY_ID || ''}</td>
-        <td>${item.SITE_ID || ''}</td>
-        <td>${item.TRANSACTION_ID || ''}</td>
-        <td>${item.INVOICE_TYPE || ''}</td>
-        <td>${item.INVOICE_NUMBER || ''}</td>
-        <td>${item.TRANSACTION_DATE || ''}</td>
-        <td>${item.SELLER_ID || ''}</td>
-        <td>${item.SELLER_NAME || ''}</td>
-        <td>${item.CUSTOMER_ID || ''}</td>
-        <td>${item.CUSTOMER_NAME || ''}</td>
-        <td>${item.WAREHOUSE_ID || ''}</td>
-        <td>${item.WAREHOUSE_CODE || ''}</td>
-        <td>${item.DISCOUNT || '0.00'}</td>
-        <td>${item.TOTAL_AMOUNT || '0.00'}</td>
-        <td>${item.TOTAL_ITEM_DISCOUNT || '0.00'}</td>
-        <td>${item.INVOICE_AMOUNT || '0.00'}</td>
-        <td>${item.STATUS || ''}</td>
-        <td>${item.BILLING_NAME || ''}</td>
-        <td>${item.INVOICE_DISTANCE || ''}</td>
-        <td>${item.PO_NUMBER || ''}</td>
+          <td>${(currentPage - 1) * rowsPerPage + index + 1}</td>
+          <td>${item.COMPANY_ID || ''}</td>
+            <td>${item.SITE_ID || ''}</td>
+            <td>${item.SELLER_ID || ''}</td>
+            <td>${item.DATE_CREATED || ''}</td>
+            <td>${item.TRANSACTION_ID || ''}</td>
+            <td>${item.BARCODE || ''}</td>
+            <td>${item.ITEM_CODE || ''}</td>
+            <td>${item.DESCRIPTION || ''}</td>
+            <td>${item.BATCH || ''}</td>
+            <td>${item.CS != null ? Number(item.CS).toFixed(0) : '0'}</td>
+            <td>${item.SW != null ? Number(item.SW).toFixed(0) : '0'}</td>
+            <td>${item.IT != null ? Number(item.IT).toFixed(0) : '0'}</td>
+            <td>${item.PRICE != null ? Number(item.PRICE).toFixed(0) : '0'}</td>
+            <td>${item.ITEM_PER_CASE != null ? Number(item.ITEM_PER_CASE).toFixed(0) : '0'}</td>
+            <td>${item.ITEM_PER_SW != null ? Number(item.ITEM_PER_SW).toFixed(0) : '0'}</td>
+            <td>${item.SIH_IT != null ? Number(item.SIH_IT).toFixed(0) : '0'}</td>
+            <td>${item.TOTAL_CS_AMOUNT != null ? Number(item.TOTAL_CS_AMOUNT).toFixed(2) : '0'}</td>
+            <td>${item.TOTAL_IT_AMOUNT != null ? Number(item.TOTAL_IT_AMOUNT).toFixed(2) : '0'}</td>
+            <td>${item.STATUS || ''}</td>
+
+
         `;
         tbody.appendChild(tr);
     });
@@ -591,7 +612,7 @@ function renderPagination() {
     }
 
     // Build export URL dynamically with your variables, URL-encoded
-    const url = `/HomePage/datafetcher/reports/getdatareports.php?action=invoicesummarycsv&export=csv` +
+    const url = `/HomePage/datafetcher/reports/getdatareports.php?action=allsitvanalloccsv&export=csv` +
         `&company=${encodeURIComponent(companyId)}` +
         `&siteid=${encodeURIComponent(siteid)}` +
         `&sellers=${encodeURIComponent(sellers.join(','))}` +
@@ -603,10 +624,57 @@ function renderPagination() {
 
  $('#poprocessed').toast('show');
 
-
 }
 
+   function exportToCSVpurifier() {
+    const companyId = "<?php echo $_SESSION['COMPANY_ID'] ?? ''; ?>";
+    const siteid = "<?php echo $_SESSION['SITE_ID'] ?? ''; ?>";
 
+    const dateFrom = document.getElementById('datefrom');
+    const dateTo = document.getElementById('dateto');
+
+    if (!dateFrom || !dateTo) {
+        alert("Please ensure 'datefrom' and 'dateto' inputs exist.");
+        return;
+    }
+
+    const datefrom = dateFrom.value;
+    const dateto = dateTo.value;
+
+    if (!datefrom || !dateto) {
+        alert("Please enter valid dates.");
+        return;
+    }
+
+    const sellerCheckboxes = document.querySelectorAll('input[name="seller"]');
+    if (!sellerCheckboxes.length) {
+        alert("Please ensure seller checkboxes exist.");
+        return;
+    }
+
+    const sellers = Array.from(sellerCheckboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+
+    if (sellers.length === 0) {
+        alert("Please select at least one seller.");
+        return;
+    }
+
+    // Build export URL dynamically with your variables, URL-encoded
+    const url = `/HomePage/datafetcher/reports/getdatareports.php?action=invoicedetailedexportcsvpurifier&export=csv` +
+        `&company=${encodeURIComponent(companyId)}` +
+        `&siteid=${encodeURIComponent(siteid)}` +
+        `&sellers=${encodeURIComponent(sellers.join(','))}` +
+        `&datefrom=${encodeURIComponent(datefrom)}` +
+        `&dateto=${encodeURIComponent(dateto)}`;
+
+    // Trigger the download by navigating the browser to this URL
+    window.location.href = url;
+
+ $('#poprocessed').toast('show');
+
+}
 
     // Sorting table (placeholder)
     function sortTable(n) {

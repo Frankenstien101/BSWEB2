@@ -158,7 +158,7 @@
       <h1>OTHER INVENTORY REPORT</h1>
     </header>
     <div class="app-container">
-      <a href="#" >
+      <a href="home.php?page=allsiteVanAllocation" >
         <div class="app-card">
           <img src="\HomePage\pages\transactionsImg\alloc.png" alt="Developers/System Support" />
           <p> VAN ALLOCATION</p>
