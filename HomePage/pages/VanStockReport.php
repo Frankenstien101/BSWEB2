@@ -125,14 +125,14 @@
 </style>
 </head>
 <body>
-<h3>ALL SITE VAN ALLOCATION REPORT</h3>
+<h3>VAN STOCK REPORT</h3>
 
 <!-- Filter Cards Container -->
 <div class="filter-container">
     <!-- Seller Selection Card -->
     <div class="card text-bg-light" style="width: 250px; font-size: 9px;">
         <div class="card-header d-flex justify-content-between align-items-right">
-            <span>SELECT SITE</span>
+            <span>SELECT SELLER</span>
            
         </div>
         <div class="card-body" style="padding: 8px;">
@@ -140,7 +140,7 @@
                 <table class="seller-table">
                     <thead>
                         <tr>
-                            <th>Site</th>
+                            <th>Seller</th>
                             <th>Select</th>
                         </tr>
                     </thead>
@@ -311,7 +311,7 @@
         clearMessages();
         showLoader();
 
-        fetch(`/HomePage/datafetcher/reports/getdatareports.php?action=getsites&company=${encodeURIComponent(companyId)}&site=${encodeURIComponent(siteId)}`)
+        fetch(`/HomePage/datafetcher/reports/getdatareports.php?action=GETHFS&company=${encodeURIComponent(companyId)}&site=${encodeURIComponent(siteId)}`)
             .then(res => {
                 if (!res.ok) return res.text().then(t => { throw new Error(t); });
                 return res.json();
@@ -324,8 +324,8 @@
                 res.forEach(seller => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td>${seller.SITE_CODE || seller.SITE_CODE}</td>
-                        <td><input type="checkbox" name="seller" value="${seller.SITEID}" class="seller-checkbox"></td>
+                        <td>${seller.SELLER_ID || seller.SELLER_ID}</td>
+                        <td><input type="checkbox" name="seller" value="${seller.SELLER_ID}" class="seller-checkbox"></td>
                     `;
                     tbody.appendChild(tr);
                 });
@@ -466,7 +466,7 @@ function loadItems2(page = 1) {
 
     showLoader();
 
-    fetch(`/HomePage/datafetcher/reports/getdatareports.php?action=vanallocallsite&company=${companyId}&siteid=${siteid}&page=${page}&limit=${rowsPerPage}&sellers=${encodeURIComponent(sellers.join(','))}&datefrom=${encodeURIComponent(datefrom)}&dateto=${encodeURIComponent(dateto)}`)
+    fetch(`/HomePage/datafetcher/reports/getdatareports.php?action=vanalloc&company=${companyId}&siteid=${siteid}&page=${page}&limit=${rowsPerPage}&sellers=${encodeURIComponent(sellers.join(','))}&datefrom=${encodeURIComponent(datefrom)}&dateto=${encodeURIComponent(dateto)}`)
         .then(response => {
             if (!response.ok) {
                 hideLoader();
@@ -612,7 +612,7 @@ function renderPagination() {
     }
 
     // Build export URL dynamically with your variables, URL-encoded
-    const url = `/HomePage/datafetcher/reports/getdatareports.php?action=allsitvanalloccsv&export=csv` +
+    const url = `/HomePage/datafetcher/reports/getdatareports.php?action=vanalloccsv&export=csv` +
         `&company=${encodeURIComponent(companyId)}` +
         `&siteid=${encodeURIComponent(siteid)}` +
         `&sellers=${encodeURIComponent(sellers.join(','))}` +
@@ -662,7 +662,7 @@ function renderPagination() {
     }
 
     // Build export URL dynamically with your variables, URL-encoded
-    const url = `/HomePage/datafetcher/reports/getdatareports.php?action=allsitvanalloccsv&export=csv` +
+    const url = `/HomePage/datafetcher/reports/getdatareports.php?action=&export=csv` +
         `&company=${encodeURIComponent(companyId)}` +
         `&siteid=${encodeURIComponent(siteid)}` +
         `&sellers=${encodeURIComponent(sellers.join(','))}` +

@@ -15,16 +15,6 @@
   <body>
     <h1>Dashboard</h1>
 
-    <script>
-  $(document).on('click', '#click_me', function(){
-  
-  let site_id = $(this).data("id");
-  $("#site_name").text(site_id);
-      alert(site_id);
-
-    });
-
-</script>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

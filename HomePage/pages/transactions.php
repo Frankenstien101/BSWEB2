@@ -171,7 +171,7 @@
       <h1>VAN MANAGEMENT</h1>
     </header>
     <div class="app-container">
-      <a href="#" >
+      <a href="home.php?page=T_Vanloading" >
         <div class="app-card">
           <img src="\HomePage\pages\transactionsImg\alloc.png" alt="Developers/System Support" />
           <p> VAN ALLOCATION</p>

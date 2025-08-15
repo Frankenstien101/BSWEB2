@@ -1,6 +1,9 @@
 <?php
 session_start();
+
+
 include '../DB/dbcon.php';
+   // Unset all session variables
 
 // Check if site is passed via GET
 if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
@@ -299,7 +302,8 @@ foreach ($query_result as $data) {
                  ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'
                ,'SalesReturnReport','StockViewReport','SOReport' , 'StockLedgerReport' , 'WarehouseMasterReport' , 'SchemeMasterReport'
               ,'allsitereports' , 'allsitesalesinvoicesummary','allsitesalesinvoicedetailed' , 'allsiteSOReport' , 'IntransitSummary'
-            ,'intransitdetailedReport','PurchasereturnReport', 'VanAllocationReport' ,'allsiteVanAllocation'];
+            ,'intransitdetailedReport','PurchasereturnReport', 'VanAllocationReport' ,'allsiteVanAllocation' , 'VanStockReport'
+          ,'SFAMappingReport' , 'T_Vanloading'];
                if (in_array($page, $allowedPages)) {
 
                    include "pages/{$page}.php";
@@ -315,7 +319,8 @@ foreach ($query_result as $data) {
                        $allowedPages = ['dashboard', 'transactions', 'PO_view', 'reports','ProductMasterReport', 'CustomerMasterReport'
                          ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'
                        ,'SalesReturnReport','StockViewReport','SOReport','StockLedgerReport','WarehouseMasterReport','SchemeMasterReport','IntransitSummary'
-                      ,'intransitdetailedReport','PurchasereturnReport','VanAllocationReport'];
+                      ,'intransitdetailedReport','PurchasereturnReport','VanAllocationReport','VanStockReport'
+                    ,'SFAMappingReport','T_Vanloading'];
                        if (in_array($page, $allowedPages)) {
 
                            include "pages/{$page}.php";
@@ -332,7 +337,7 @@ foreach ($query_result as $data) {
                        $allowedPages = ['dashboard','PO_view', 'transactions', 'reports','ProductMasterReport', 'CustomerMasterReport'
                          ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'
                        ,'SalesReturnReport','StockViewReport','SOReport','StockLedgerReport','WarehouseMasterReport' , 'SchemeMasterReport','IntransitSummary'
-                      ,'intransitdetailedReport','PurchasereturnReport','VanAllocationReport'];
+                      ,'intransitdetailedReport','PurchasereturnReport','VanAllocationReport','VanStockReport','SFAMappingReport'];
                        if (in_array($page, $allowedPages)) {
 
                            include "pages/{$page}.php";
@@ -349,7 +354,7 @@ foreach ($query_result as $data) {
                        $allowedPages = ['dashboard', 'transactions', 'T_Purchase_Order' , 'PO_view', 'reports','ProductMasterReport', 'CustomerMasterReport'
                          ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'
                        ,'SalesReturnReport','StockViewReport','SOReport', 'StockLedgerReport' , 'WarehouseMasterReport','SchemeMasterReport','IntransitSummary'
-                      ,'intransitdetailedReport','PurchasereturnReport','VanAllocationReport'];
+                      ,'intransitdetailedReport','PurchasereturnReport','VanAllocationReport','VanStockReport','SFAMappingReport'];
                        if (in_array($page, $allowedPages)) {
 
                            include "pages/{$page}.php";
@@ -361,7 +366,17 @@ foreach ($query_result as $data) {
 
       } else {
           // default case
-        echo "<h3 class='text-center'>Session expired or account logged out, Login again to continue</h3>";
+          echo "<h3 class='text-center'>
+                  Session expired or account logged out, 
+                  <a href='verify.php' onclick='handleLoginClick(event)'>Login again</a> to continue
+                </h3>";
+
+          echo "<script>
+          function handleLoginClick(event) {
+              event.preventDefault(); // stop direct navigation
+              window.location.href = 'verify.php'; // navigate after action
+          }
+          </script>";
 
     exit();
           
@@ -369,6 +384,7 @@ foreach ($query_result as $data) {
 
     ?>
   </div>
+
 
 </div> <!-- /.wrapper -->
 

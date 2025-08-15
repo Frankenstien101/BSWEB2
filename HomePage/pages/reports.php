@@ -230,7 +230,7 @@
       <h1>OTHER REPORTS</h1>
     </header>
     <div class="app-container">
-      <a href="#" >
+      <a href="home.php?page=VanStockReport" >
         <div class="app-card">
           <img src="\HomePage\pages\reportsimg\vanstock.png" alt="Developers/System Support" />
           <p> VAN STOCK REPORT</p>
@@ -242,13 +242,13 @@
           <p>A/R REPORTS</p>
         </div>
       </a>
-            <a href="home.php?page=allsitereports" >
+      <a href="home.php?page=allsitereports" >
         <div class="app-card">
           <img src="\HomePage\pages\reportsimg\allsite.png" alt="Developers/System Support" />
           <p>ALL SITE REPORTS</p>
         </div>
       </a>
-      <a href="#" >
+      <a href="home.php?page=SFAMappingReport" >
         <div class="app-card">
           <img src="\HomePage\pages\reportsimg\sfa.png" alt="Developers/System Support" />
           <p>SFA MAPPING</p>

@@ -132,15 +132,14 @@
     <!-- Seller Selection Card -->
     <div class="card text-bg-light" style="width: 250px; font-size: 9px;">
         <div class="card-header d-flex justify-content-between align-items-right">
-            <span>SELECT SELLER</span>
-           
+            <span>SELECT SITE</span>
         </div>
         <div class="card-body" style="padding: 8px;">
             <div class="table-container" style="height:100px;">
                 <table class="seller-table">
                     <thead>
                         <tr>
-                            <th>Seller</th>
+                            <th>Site</th>
                             <th>Select</th>
                         </tr>
                     </thead>
