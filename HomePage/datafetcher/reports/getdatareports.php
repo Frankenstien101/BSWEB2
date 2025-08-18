@@ -2914,9 +2914,10 @@ if (isset($_GET['action']) && $_GET['action'] === 'allsiteinvoicedetailed') {
 }
 
 /// export all site sales invoice detailed
-
 if (isset($_GET['action']) && $_GET['action'] === 'allsiteinvoicedetailedcsv') {
-    set_time_limit(300); // Allow up to 5 minutes
+    // Increase PHP limits
+    set_time_limit(300);  // 5 minutes
+    ini_set('memory_limit', '512M'); // adjust as needed
 
     if (!$conn || !($conn instanceof PDO)) {
         die("Database connection failed");
@@ -2924,11 +2925,11 @@ if (isset($_GET['action']) && $_GET['action'] === 'allsiteinvoicedetailedcsv') {
 
     // Parameters
     $companyId  = $_GET['company'] ?? '';
-    $sellersRaw = $_GET['sellers'] ?? '1';
+    $sellersRaw = $_GET['sellers'] ?? '';
     $datefrom   = $_GET['datefrom'] ?? null;
     $dateto     = $_GET['dateto'] ?? null;
 
-    // Seller filter
+    // Prepare seller filter
     $sellers = array_filter(array_map('trim', explode(',', $sellersRaw)), 'strlen');
     $sellerPlaceholders = [];
     $sellerParams = [];
@@ -2942,41 +2943,41 @@ if (isset($_GET['action']) && $_GET['action'] === 'allsiteinvoicedetailedcsv') {
         : "";
 
     try {
-        // SQL copied from working query
+        // SQL query
         $sql = "SELECT 
                    Aquila_Invoice_lines.COMPANY_ID,
-Aquila_Invoice_lines.SITE_ID,
-SITE_CODE,
-Aquila_Invoice_lines.TRANSACTION_ID,
-Aquila_Invoice_lines.TRANSACTION_DATE,
-INVOICE_TYPE,
-Aquila_Invoice_lines.INVOICE_NUMBER,
-Aquila_Sales_Order_Transactions.PO_NUMBER,
-Aquila_Sales_Order_Transactions.SELLER_ID,
-COALESCE(SB_VAN_ID, '-') AS SB_VAN_ID,
-Aquila_Sales_Order_Transactions.SELLER_NAME,
-Aquila_Sales_Order_Transactions.CUSTOMER_ID,
-Aquila_Sales_Order_Transactions.CUSTOMER_NAME,
-COALESCE(CHAIN, '-') AS CHAIN,
-CHANNEL,
-SUB_CHANNEL,
-CASE_BARCODE,
-IT_BARCODE,
-IT_PER_CS AS 'ITEM_PER_CASE',
-BRAND2,
-CATEGORY_AFFIE,
-Aquila_Invoice_lines.ITEM_ID,
-DESCRIPTION,
-QTY,
-UOM,
-AMOUNT AS COST,
-TOTAL AS GROSS_SALES,
-Aquila_Invoice_lines.DISCOUNT,
-SCHEME_CODE,
-COALESCE(SCHEME_DISCOUNT, 0) AS SCHEME_DISCOUNT,  -- Use COALESCE to set default to 0
-(TOTAL - Aquila_Invoice_lines.DISCOUNT) - COALESCE(SCHEME_DISCOUNT, 0) AS [NET_SALES(W/VAT)],
-(TOTAL - Aquila_Invoice_lines.DISCOUNT) - ((TOTAL - Aquila_Invoice_lines.DISCOUNT) / 1.12) AS VAT_AMOUNT,
-(TOTAL - Aquila_Invoice_lines.DISCOUNT) - ((TOTAL - Aquila_Invoice_lines.DISCOUNT) - ((TOTAL - Aquila_Invoice_lines.DISCOUNT) / 1.12)) AS 'NET_SALES(EX-VAT)'
+                   Aquila_Invoice_lines.SITE_ID,
+                   SITE_CODE,
+                   Aquila_Invoice_lines.TRANSACTION_ID,
+                   Aquila_Invoice_lines.TRANSACTION_DATE,
+                   INVOICE_TYPE,
+                   Aquila_Invoice_lines.INVOICE_NUMBER,
+                   Aquila_Sales_Order_Transactions.PO_NUMBER,
+                   Aquila_Sales_Order_Transactions.SELLER_ID,
+                   COALESCE(SB_VAN_ID, '-') AS SB_VAN_ID,
+                   Aquila_Sales_Order_Transactions.SELLER_NAME,
+                   Aquila_Sales_Order_Transactions.CUSTOMER_ID,
+                   Aquila_Sales_Order_Transactions.CUSTOMER_NAME,
+                   COALESCE(CHAIN, '-') AS CHAIN,
+                   CHANNEL,
+                   SUB_CHANNEL,
+                   CASE_BARCODE,
+                   IT_BARCODE,
+                   IT_PER_CS AS 'ITEM_PER_CASE',
+                   BRAND2,
+                   CATEGORY_AFFIE,
+                   Aquila_Invoice_lines.ITEM_ID,
+                   DESCRIPTION,
+                   QTY,
+                   UOM,
+                   AMOUNT AS COST,
+                   TOTAL AS GROSS_SALES,
+                   Aquila_Invoice_lines.DISCOUNT,
+                   SCHEME_CODE,
+                   COALESCE(SCHEME_DISCOUNT, 0) AS SCHEME_DISCOUNT,
+                   (TOTAL - Aquila_Invoice_lines.DISCOUNT) - COALESCE(SCHEME_DISCOUNT, 0) AS [NET_SALES(W/VAT)],
+                   (TOTAL - Aquila_Invoice_lines.DISCOUNT) - ((TOTAL - Aquila_Invoice_lines.DISCOUNT) / 1.12) AS VAT_AMOUNT,
+                   (TOTAL - Aquila_Invoice_lines.DISCOUNT) - ((TOTAL - Aquila_Invoice_lines.DISCOUNT) - ((TOTAL - Aquila_Invoice_lines.DISCOUNT) / 1.12)) AS 'NET_SALES(EX-VAT)'
                 FROM Aquila_Invoice_lines
                 INNER JOIN Aquila_Sales_Order_Transactions
                     ON Aquila_Sales_Order_Transactions.TRANSACTION_ID = Aquila_Invoice_lines.TRANSACTION_ID
@@ -3005,17 +3006,7 @@ COALESCE(SCHEME_DISCOUNT, 0) AS SCHEME_DISCOUNT,  -- Use COALESCE to set default
         }
         $stmt->execute();
 
-        // Fetch all rows at once so we can modify ITEM_ID before output
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        // Format ITEM_ID for Excel safety
-        foreach ($rows as &$row) {
-            if (isset($row['ITEM_ID']) && preg_match('/^\d+(-\d+)?$/', $row['ITEM_ID'])) {
-                $row['ITEM_ID'] = '="' . $row['ITEM_ID'] . '"';
-            }
-        }
-
-        // Output CSV
+        // Stream CSV output
         header('Content-Type: text/csv; charset=UTF-8');
         header('Content-Disposition: attachment; filename=allsiteinvoicedetailed.csv');
         header('Pragma: no-cache');
@@ -3024,9 +3015,20 @@ COALESCE(SCHEME_DISCOUNT, 0) AS SCHEME_DISCOUNT,  -- Use COALESCE to set default
         $output = fopen('php://output', 'w');
         fwrite($output, "\xEF\xBB\xBF"); // UTF-8 BOM
 
-        if (!empty($rows)) {
-            fputcsv($output, array_keys($rows[0])); // headers
-            foreach ($rows as $row) {
+        $firstRow = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($firstRow) {
+            // Format ITEM_ID for Excel safety
+            if (isset($firstRow['ITEM_ID']) && preg_match('/^\d+(-\d+)?$/', $firstRow['ITEM_ID'])) {
+                $firstRow['ITEM_ID'] = '="' . $firstRow['ITEM_ID'] . '"';
+            }
+            // Write headers
+            fputcsv($output, array_keys($firstRow));
+            fputcsv($output, $firstRow);
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                if (isset($row['ITEM_ID']) && preg_match('/^\d+(-\d+)?$/', $row['ITEM_ID'])) {
+                    $row['ITEM_ID'] = '="' . $row['ITEM_ID'] . '"';
+                }
                 fputcsv($output, $row);
             }
         }
@@ -3038,6 +3040,7 @@ COALESCE(SCHEME_DISCOUNT, 0) AS SCHEME_DISCOUNT,  -- Use COALESCE to set default
         die("Database error: " . $e->getMessage());
     }
 }
+
 
 
 /// ALL SITE SO REPORT 

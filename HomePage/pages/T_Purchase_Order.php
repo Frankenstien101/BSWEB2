@@ -1182,13 +1182,11 @@ function showToast(type, message) {
     }
 }
 
-// Usage examples:
 // 1. Load pricing when page loads
 document.addEventListener('DOMContentLoaded', getPricing);
 
 // 2. Add refresh button
 document.getElementById('refreshPricingBtn')?.addEventListener('click', getPricing);
-
 
     </script>
 <script src="https://cdn.jsdelivr.net/npm/vanilla-datatables@latest/dist/vanilla-dataTables.min.js"></script>
