@@ -27,7 +27,7 @@
         body {
             color: var(--text);
             min-height: 100vh;
-            background-image: url('MainImg/vertudo_system-hintergrund_2880x1952-1024x694.jpg');
+            background-image: url('MainImg/44.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
