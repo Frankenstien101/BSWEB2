@@ -252,7 +252,7 @@
                         Web-based delivery management platform that optimizes delivery routes
                         and tracks deliveries in real time. It ensures faster more efficient operations
                     </p>
-                    <a href="#" class="app-button">Visit Site</a>
+                    <a href="/DeliveryDash.php" class="app-button">Visit Site</a>
                 </div>
 
                 <!-- Card 3 -->
