@@ -325,9 +325,9 @@ if (isset($_POST['login'])) {
         <span>BLUESYS APPLICATIONS</span>
       </div>
       <div class="nav-links">
-        <a href="#">Contact</a>
-        <a href="#">About</a>
-        <a href="#">Services</a>
+        <a href="/Services/contact.php">Contact</a>
+        <a href="/Services/abouts.php">About</a>
+        <a href="/Services/apps.php">Services</a>
       </div>
     </nav>
 
