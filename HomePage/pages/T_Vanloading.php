@@ -35,6 +35,9 @@
     }
 
 </style>
+
+ <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 <h3>VAN LOADING TRANSACTION</h3>
@@ -45,8 +48,17 @@
 
 
 <!-- Filter Cards Container -->
-<button class="btn btn-primary btn-sm" id="newTransBtn">New transaction</button>
-<button class="btn btn-primary btn-sm" onclick="">Load transaction</button>
+<div class="d-flex flex-wrap gap-2 mb-1">
+  <!-- New Transaction Button with icon -->
+  <button class="btn btn-primary btn-sm" id="newTransBtn">
+    <i class="fas fa-plus"></i> New Transaction
+  </button>
+
+  <!-- Load Transaction Button with icon -->
+  <button type="button" style="height: 32px; font-size: 13px;" class="btn btn-primary mb-0 ml-1" data-toggle="modal" data-target="#loadmodal">
+    <i class="fas fa-folder-open"></i> Load Transaction
+  </button>
+</div>
 
 <div class="filter-container">
     <!-- Transaction Details Card -->
@@ -83,7 +95,7 @@
                     </div>
                     <div class="col-md-6 col-sm-6 col-12 mb-0">
                         <label for="remarks" class="mb-0">REMARKS</label>
-                        <input type="text" id="remarks" style = "max-width: 100%;" class="form-control form-control-sm" placeholder="Remarks">
+                        <input type="text" id="remarks" style = "max-width: 100%; font-size : 10px;" class="form-control form-control-sm" placeholder="Remarks">
                     </div>
                 </div>
             </div>
@@ -97,17 +109,28 @@
   <div class="card-header"  style= "height : 50px;">
 
 <!-- Show Button -->
-<button id="showBtn" onclick = "loaditems()" class="btn btn-success btn-sm mb-2">
-    Insert Item
-</button>
+<div class="d-flex flex-wrap gap-2 mb-3">
+  <!-- Insert Item Button -->
+  <!-- Make sure to include Font Awesome CDN in your HTML head if not already included -->
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> -->
 
-<!-- Hide Button -->
-<button id="hideBtn" class="btn btn-danger btn-sm mb-2" style="display: none;">
-    Hide Selection
-</button>
+<div class="d-flex flex-wrap gap-2 mb-3">
+  <!-- Insert Item Button with icon -->
+  <button id="showBtn" onclick="loaditems()" class="btn btn-success btn-sm mr-1">
+    <i class="fas fa-plus"></i> Insert Item
+  </button>
 
-   <button type="button" style="height: 30px; font-size:12px;" class="btn btn-primary mb-2" data-toggle="modal" data-target="#loadTransModal">Load from proposal</button>
+  <!-- Hide Button with icon (initially hidden) -->
+  <button id="hideBtn" class="btn btn-danger btn-sm" style="display: none;">
+    <i class="fas fa-eye-slash"></i> Hide Selection
+  </button>
 
+  <!-- Load from proposal Button with icon -->
+  <button type="button" onclick="loadfromproposal()" style="height: 32px; font-size: 13px;" class="btn btn-primary" data-toggle="modal" data-target="#loadTransModal">
+    <i class="fas fa-file-upload"></i> Load from proposal
+  </button>
+</div>
+</div>
 <!-- Collapse Content -->
  
 <div class="collapse" id="transactionDetailsCard">
@@ -185,16 +208,15 @@
     showBtn.addEventListener('click', showDetails);
     hideBtn.addEventListener('click', hideDetails);
 </script>
-
-      </div>
-      <div class="card-body" style="overflow-y: auto; max-width: 100%; height: 450px;"  >
-        <table id="itemsTable" class="table table-striped table-hover table-bordered table-sm " style="font-size: 10px;">
-          
-        <thead>
-    <tr>
-      <th>#</th>
+</div>
+<div class="card-body" style="overflow-y: auto; max-width: 100%; height: 440px; padding: 10px;">
+  <table id="itemsTable" class="table table-striped table-hover table-bordered table-sm mb-0" style="font-size: 10px;">
+    <thead class="thead-light">
+      <tr>
+        <th>#</th>
         <th>BARCODE</th>
         <th>ITEM ID</th>
+        <th>BATCH</th>
         <th>DESCRIPTION</th>
         <th>CS</th>
         <th>SW</th>
@@ -203,79 +225,178 @@
         <th>TOTAL IT AMOUNT</th>
         <th>TOTAL SIH</th>
         <th>ACTION</th>
-    </tr>
-  </thead>
-  <tbody>
-    <!-- Filled dynamically -->
-  </tbody>
-
-            <!-- ...repeat rows as needed... -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-<!-- Export Button -->
-<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2px; font-size: 10px;">
-    <!-- Totals on the left -->
-    <div>
-        <label style="margin-right: 10px;">TOTAL CASE AMOUNT 
-            <input type="text" id="totalCSAmount" readonly style="width:80px; font-size: 10px;">
-        </label>
-        <label style="margin-right: 10px;">TOTAL IT AMOUNT 
-            <input type="text" id="totalITAmount" readonly style="width:80px; font-size: 10px;">
-        </label>
-        <label>TOTAL SIH: 
-            <input type="text" id="totalSIH" readonly style="width:80px; font-size: 10px;">
-        </label>
-    </div>
-
-    <!-- Button on the right -->
-    <div>
-        <button class="btn btn-success btn-sm" onclick="">PROCESS VAN LOADING</button>
-    </div>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Filled dynamically -->
+    </tbody>
+  </table>
+</div>
 </div>
 
+<!-- Export Button -->
+ 
+<!-- Totals & Action Buttons -->
+<div class="card mt-2">
+  <div class="card-body p-2">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center" style="font-size: 0.65rem;">
+      
+      <!-- Totals on the left -->
+      <div class="d-flex flex-wrap align-items-center mb-2 mb-md-0" style="font-size: 0.65rem;">
+        <!-- Total Lines -->
+        <div class="mr-3 mb-2 d-flex align-items-center">
+          <label class="mb-0 mr-2 font-weight-semibold">TOTAL LINES:</label>
+          <input type="text" id="totalines" readonly class="form-control form-control-sm" style="width: 70px; font-size: 0.65rem;">
+        </div>
+        <!-- Total Case Amount -->
+        <div class="mr-3 mb-2 d-flex align-items-center">
+          <label class="mb-0 mr-2 font-weight-semibold">TOTAL CASE AMOUNT:</label>
+          <input type="text" id="totalCSAmount" readonly class="form-control form-control-sm" style="width: 120px; font-size: 0.65rem;">
+        </div>
+        <!-- Total IT Amount -->
+        <div class="mr-3 mb-2 d-flex align-items-center">
+          <label class="mb-0 mr-2 font-weight-semibold">TOTAL IT AMOUNT:</label>
+          <input type="text" id="totalITAmount" readonly class="form-control form-control-sm" style="width: 120px; font-size: 0.65rem;">
+        </div>
+        <!-- Total SIH -->
+        <div class="mb-2 d-flex align-items-center">
+          <label class="mb-0 mr-2 font-weight-semibold">TOTAL SIH:</label>
+          <input type="text" id="totalSIH" readonly class="form-control form-control-sm" style="width: 70px; font-size: 0.65rem;">
+        </div>
+      </div>
 
+      <!-- Buttons on the right -->
+      <div class="d-flex flex-wrap justify-content-end gap-2" style="font-size: 0.65rem;">
+  <button class="btn btn-warning btn-sm mr-1" onclick="saveasdraft()">
+    <i class="fas fa-save"></i> Save as Draft & Print Picklist
+  </button>
+  <button class="btn btn-success btn-sm mr-1" onclick="processLoadingAllInOne()">
+    <i class="fas fa-cogs"></i> Process Van Loading
+  </button>
+  <button class="btn btn-info btn-sm" onclick="print()">
+    <i class="fas fa-print"></i> Print
+  </button>
+</div>
+    </div>
+  </div>
+</div>
 <!-- Modal -->
 <!-- Modal -->
 <div class="modal fade" id="loadTransModal" tabindex="-1" aria-labelledby="loadTransModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 400px;">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 600px;">
     <div class="modal-content">
-
+      
       <!-- Modal Header -->
-      <div class="modal-header" style = "100px">
-        <h6 class="modal-title" id="loadTransModalLabel">Stock proposal</h6>
+      <div class="modal-header">
+        <h6 class="modal-title" id="loadTransModalLabel">Stock Proposal</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
 
-       <table id="stockproposallist" class="table table-striped table-hover table-bordered table-sm " style="font-size: 10px;">
-          
-  <thead>
-    <tr>
-      <th>#</th>
-        <th>Proposal ID</th>
-        <th>Amount</th>
-        <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <!-- Filled dynamically -->
-  </tbody>
-
-            <!-- ...repeat rows as needed... -->
-          </tbody>
-        </table>
-
       <!-- Modal Body -->
-      <div class="modal-body" style="max-height: 500px; overflow-y: auto;">
-        <div class="container-fluid">
-          
+      <div class="modal-body">
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+          <table id="stockproposallist" 
+                 class="table table-striped table-hover table-bordered table-sm text-center" 
+                 style="font-size: 10px;">
+            <thead class="thead-light">
+              <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Proposal ID</th>
+                <th>Amount</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Rows inserted dynamically -->
+            </tbody>
+          </table>
         </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
       </div>
 
     </div>
   </div>
 </div>
+
+
+
+<!-- modal load trans -->
+<div class="modal fade" id="loadmodal" tabindex="-1" aria-labelledby="loadTransModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 700px; height: 500px;">
+    <div class="modal-content">
+      
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h6 class="modal-title" id="loadTransModalLabel">Load Transactions</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+
+        <!-- Filter Section -->
+        <div class="form-row mb-3 align-items-end">
+          <div class="col-auto">
+            <label for="fromDate" class="small mb-1">From Date</label>
+            <input type="date" style="width: 150px;" id="fromDate" 
+                   class="form-control form-control-sm"  
+                   value="<?php echo date('Y-m-d'); ?>">
+          </div>
+          <div class="col-auto">
+            <label for="toDate" class="small mb-1">To Date</label>
+            <input type="date" style="width: 150px;" id="toDate" 
+                   class="form-control form-control-sm"  
+                   value="<?php echo date('Y-m-d'); ?>">
+          </div>
+          <div class="col-auto">
+            <button id="btnLoadTransactions" class="btn btn-primary btn-sm">
+              <i class="fa fa-search"></i> Load
+            </button>
+          </div>
+        </div> <!-- ✅ closed form-row -->
+
+        <!-- Table Section -->
+        <div class="table-responsive" style="height: 350px; overflow-y: auto;">
+          <table id="loadtranstbl" 
+                 class="table table-striped table-hover table-bordered table-sm text-center" 
+                 style="font-size: 10px;">
+            <thead class="thead-light">
+              <tr>
+                <th>#</th>
+                <th>DATE CREATED</th>
+                <th>SELLER ID</th>
+                <th>TRANSACTION ID</th>
+                <th>AMOUNT</th>
+                <th>TOTAL LINES</th>
+                <th>REMARKS</th>
+                <th>ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Rows inserted dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div> <!-- ✅ end modal-body -->
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+      </div>
+
+    </div> <!-- ✅ end modal-content -->
+  </div>   <!-- ✅ end modal-dialog -->
+</div>     <!-- ✅ end modal -->
+
 
 
 <!-- Modal insert item -->
@@ -296,21 +417,6 @@
 </div>
 
 
-<div aria-live="polite" aria-atomic="true" style="position: fixed; bottom: 80px; right: 20px; min-width: 250px; z-index: 1080; pointer-events: none;">
-  <div class="toast" id="poprocessed" data-delay="3000">
-    <div class="toast-header bg-success text-white">
-      <strong class="mr-auto">Exporting Data</strong>
-      <small>Just now</small>
-      <button type="button" class="ml-2 mb-1 close text-white" data-dismiss="toast">&times;</button>
-    </div>
-    <div class="toast-body">
-      Generating Report, Data will be sent to download list. 
-    </div>
-  </div>
-</div>
-
-
-
 
 
 <script>
@@ -321,18 +427,6 @@ function showLoader() {
     const transactionEl = document.getElementById('transaction_id');
     const warehouseEl = document.getElementById('warehouse');
     const warehousecode = warehouseEl ? warehouseEl.value.trim() : "";
-
-    // Check if transaction exists & has a value
-    if (!transactionEl || !transactionEl.value.trim()) {
-        alert("No transaction found");
-        return false;  // stop function
-    }
-
-    // Check if warehouse is selected
-    if (!warehousecode) {
-        alert("No warehouse selected");
-        return false;  // stop function
-    }
 
     // ✅ Show loader only if both checks passed
     document.getElementById("loading").style.display = "flex";
@@ -410,140 +504,201 @@ function loadWarehouses() {
 }
 
 function loaditems() {
-    const companyId = "<?php echo $_SESSION['COMPANY_ID'] ?? ''; ?>";
-    const siteid = "<?php echo $_SESSION['SITE_ID'] ?? ''; ?>";
-    const warehousecode = document.getElementById('warehouse').value;
-    const categorytxt = document.getElementById('categorytxt').value;
-    const transactionid  = document.getElementById('transaction_id').value;
-    const vanid  = document.getElementById('cmbvan').value;
+    return new Promise((resolve, reject) => {
+        const companyId = "<?php echo $_SESSION['COMPANY_ID'] ?? ''; ?>";
+        const siteid = "<?php echo $_SESSION['SITE_ID'] ?? ''; ?>";
+        const warehousecode = document.getElementById('warehouse').value;
+        const categorytxt = document.getElementById('categorytxt').value;
+        const transactionid  = document.getElementById('transaction_id').value;
+        const vanid  = document.getElementById('cmbvan').value;
 
+         const status = document.getElementById('status')?.value;
 
+    if (!transactionid) { alert('No transaction selected'); return; }
+    if (!vanid) { alert('No van selected'); return; }
+    if (!warehousecode) { alert('No warehouse selected'); return; }
 
-    const tbody = document.querySelector('#tblskus tbody');
-    if (!tbody) return;
+    if (status === 'ALLOCATED') {
+  alert('Cannot process allocated transaction');
+  return;
+    }
 
-    tbody.innerHTML = ''; // Clear previous rows
-    showLoader();
+        const tbody = document.querySelector('#tblskus tbody');
+        if (!tbody) return resolve([]);
 
-    fetch(`/HomePage/datafetcher/transactions/Van_Loading_getdata.php?action=loadskus&company=${encodeURIComponent(companyId)}&siteid=${encodeURIComponent(siteid)}&warehousecode=${encodeURIComponent(warehousecode)}&category=${encodeURIComponent(categorytxt)}`)
-        .then(response => {
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            return response.json(); 
-        })
-        .then(data => {
-            loadedPOs = data;
-            if (!data || data.length === 0) {
-                const tr = document.createElement('tr');
-                tr.innerHTML = '<td colspan="12" class="text-center">No items found.</td>';
-                tbody.appendChild(tr);
-                return;
-            }
+        tbody.innerHTML = ''; // Clear previous rows
+        showLoader();
 
-                   data.forEach((item, index) => {
-            const tr = document.createElement('tr');
-
-             tr.dataset.itemsPerCase = item.ITEMS_PER_CASE || 0;
-              tr.dataset.itemsPerSw   = item.ITEMS_PER_SW || 0;
-              tr.dataset.itemCost     = item.ITEM_COST || 0;
-              tr.dataset.caseCost     = item.CASE_COST || 0;
-
-
-            tr.innerHTML = `
-                <td>${index + 1}</td>
-                <td>${item.CS_BARCODE || ''}</td>
-                <td>${item.IT_BARCODE || ''}</td>
-                <td>${item.ITEM_ID || ''}</td>
-                <td>${item.BATCH || ''}</td>
-                <td>${item.DESCRIPTION || ''}</td>
-                <td>${item.CS || 0}</td>
-                <td>${item.SW || 0}</td>
-                <td>${item.IT || 0}</td>
-                <td><input type="number" class="form-control form-control-sm cs-input" style="width:50px" value="0" min="0"></td>
-                <td><input type="number" class="form-control form-control-sm sw-input" style="width:50px" value="0" min="0"></td>
-                <td><input type="number" class="form-control form-control-sm it-input" style="width:50px" value="0" min="0"></td>
-                <td><button class="btn btn-sm btn-primary add-to-list-btn">Add to List</button></td>
-            `;
-            tbody.appendChild(tr);
-                
-            // Add click event for the button
-            const addBtn = tr.querySelector('.add-to-list-btn');
-            addBtn.addEventListener('click', () => {
-                const cs = parseInt(tr.querySelector('.cs-input').value, 10) || 0;
-                const sw = parseInt(tr.querySelector('.sw-input').value, 10) || 0;
-                const it = parseInt(tr.querySelector('.it-input').value, 10) || 0;
-            
-                const availcs = item.CS || 0;
-                const availsw = item.SW || 0;
-                const availit = item.IT || 0;
-                const barcode = item.IT_BARCODE || 0;
-                const description = item.DESCRIPTION || 0;
-                const batch = item.BATCH || 'DEFAULT';
-                const itemid = item.ITEM_ID || 0;
-
-
-                // Example check: prevent exceeding available stock
-                if (cs > availcs || sw > availsw || it > availit) {
-                    alert("Quantity exceeds available stock!");
-                    return;
+        fetch(`/HomePage/datafetcher/transactions/Van_Loading_getdata.php?action=loadskus&company=${encodeURIComponent(companyId)}&siteid=${encodeURIComponent(siteid)}&warehousecode=${encodeURIComponent(warehousecode)}&category=${encodeURIComponent(categorytxt)}`)
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                return response.json(); 
+            })
+            .then(data => {
+                if (!data || data.length === 0) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = '<td colspan="12" class="text-center">No items found.</td>';
+                    tbody.appendChild(tr);
+                    return resolve([]);
                 }
 
-                 const itemsPerCase = parseInt(tr.dataset.itemsPerCase, 10) || 0;
-                 const itemsPerSw   = parseInt(tr.dataset.itemsPerSw, 10) || 0;
-                 const itemCost     = parseFloat(tr.dataset.itemCost) || 0;
-                 const caseCost     = parseFloat(tr.dataset.caseCost) || 0;
-                             
-                 const csinit  = cs * itemsPerCase;   // total items from cases
-                 const swinit  = sw * itemsPerSw;     // total items from SW
-                 const totalit = csinit + swinit + it; // grand total items
-                             
-                 const swandit = swinit + it;         
-                             
-                 const caseamount = cs * caseCost;                          // total cost of cases
-                 const itamount   = (swinit + it) * itemCost;               // total cost of sw+it
-                 const grandTotal = caseamount + itamount;                  // final combined cost
+                data.forEach((item, index) => {
+                    const tr = document.createElement('tr');
 
-                // Example: push to some array or handle as needed
-                console.log(`Added: ITEM_ID=${item.ITEM_ID}, CS=${cs}, SW=${sw}, IT=${it}`);
-            
+                    tr.dataset.itemsPerCase = item.ITEMS_PER_CASE || 0;
+                    tr.dataset.itemsPerSw   = item.ITEMS_PER_SW || 0;
+                    tr.dataset.itemCost     = item.ITEM_COST || 0;
+                    tr.dataset.caseCost     = item.CASE_COST || 0;
 
-                     // SAVE TO VAN LOADING DETAILS 
+                    const batch = item.BATCH || 'DEFAULT';
 
-                    fetch(`/HomePage/datafetcher/transactions/Van_Loading_getdata.php?action=saveonvanloaddetails&company=${encodeURIComponent(companyId)}&siteid=${encodeURIComponent(siteid)}&transactionid=${encodeURIComponent(transactionid)}
-                    &vanid=${encodeURIComponent(vanid)}&transactionid=${encodeURIComponent(transactionid)}&barcode=${encodeURIComponent(barcode)}&itemid=${encodeURIComponent(itemid)}
-                    &description=${encodeURIComponent(description)}&batch=${encodeURIComponent(batch)}&description=${encodeURIComponent(description)}
-                    &batch=${encodeURIComponent(batch)}&cs=${encodeURIComponent(cs)}&sw=${encodeURIComponent(sw)}&it=${encodeURIComponent(it)}
-                    &price=${encodeURIComponent(itemCost)}&itpercase=${encodeURIComponent(itemsPerCase)}&itpersw=${encodeURIComponent(itemsPerSw)}
-                    &sihit=${encodeURIComponent(totalit)}&totalcs=${encodeURIComponent(caseamount)}&totalit=${encodeURIComponent(itamount)}`)
-                        .then(response => {
-                            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (!Array.isArray(data)) {
-                                console.error("Invalid data", data);
-                                return;
-                            }
-                    
-                        })
-                        .catch(err => {
-                            console.error('Error saving details:', err);
-                        });
+                    tr.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${item.CS_BARCODE || ''}</td>
+                        <td>${item.IT_BARCODE || ''}</td>
+                        <td>${item.ITEM_ID || ''}</td>
+                        <td>${batch}</td>
+                        <td>${item.DESCRIPTION || ''}</td>
+                        <td>${item.CS || 0}</td>
+                        <td>${item.SW || 0}</td>
+                        <td>${item.IT || 0}</td>
+                        <td><input type="number" class="form-control form-control-sm cs-input" style="width:50px" value="0" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm sw-input" style="width:50px" value="0" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm it-input" style="width:50px" value="0" min="0"></td>
+                        <td><button class="btn btn-sm btn-primary add-to-list-btn">Add to List</button></td>
+                    `;
 
-                // Optionally, give visual feedback
-                addBtn.innerText = "Added!";
-                addBtn.disabled = true;
-                loadlist();
+                    // Append row
+                    tbody.appendChild(tr);
+
+                    // Select the newly created inputs and button
+                    const currentRow = tr;
+                    const csInput = currentRow.querySelector('.cs-input');
+                    const swInput = currentRow.querySelector('.sw-input');
+                    const itInput = currentRow.querySelector('.it-input');
+                    const addBtn = currentRow.querySelector('.add-to-list-btn');
+
+                    // Function to trigger add on Enter key press
+                    function triggerAdd(e) {
+                        if (e.key === 'Enter') {
+                            e.preventDefault(); // prevent form submit if inside a form
+                            addBtn.click();
+                        }
+                    }
+
+                    // Attach keydown events for Enter key
+                    csInput.addEventListener('keydown', triggerAdd);
+                    swInput.addEventListener('keydown', triggerAdd);
+                    itInput.addEventListener('keydown', triggerAdd);
+
+                    // Add click event for the button
+                    addBtn.addEventListener('click', () => {
+                        const itemId = item.ITEM_ID || '';
+                        const batch = item.BATCH || 'DEFAULT';
+
+                         const status = document.getElementById('status')?.value;
+                            if (status === 'ALLOCATED') {
+                              alert('Cannot process allocated transaction');
+                              return;
+                                }
+                        const itemsTable = document.getElementById('itemsTable');
+                        // Check for duplicate
+                        const existingItem = Array.from(itemsTable.querySelectorAll('tr')).find(row => 
+                            row.dataset.itemCode === itemId && row.dataset.batch === batch
+                        );
+
+                        console.log('Checking duplicate:', itemId, batch);
+                        console.log('Existing row:', existingItem ? existingItem.dataset.itemCode + ' / ' + existingItem.dataset.batch : 'None');
+
+                        if (existingItem) {
+                            alert('This item with the same batch is already in the list.');
+                            return; // Prevent duplicate
+                        }
+
+                        // Get quantities
+                        const cs = parseInt(csInput.value, 10) || 0;
+                        const sw = parseInt(swInput.value, 10) || 0;
+                        const it = parseInt(itInput.value, 10) || 0;
+
+                        const availcs = item.CS || 0;
+                        const availsw = item.SW || 0;
+                        const availit = item.IT || 0;
+
+                        // Check stock availability
+                        if (cs > availcs || sw > availsw || it > availit) {
+                            alert("Quantity exceeds available stock!");
+                            return;
+                        }
+
+                        const itemsPerCase = parseInt(tr.dataset.itemsPerCase, 10) || 0;
+                        const itemsPerSw   = parseInt(tr.dataset.itemsPerSw, 10) || 0;
+                        const itemCost     = parseFloat(tr.dataset.itemCost) || 0;
+                        const caseCost     = parseFloat(tr.dataset.caseCost) || 0;
+
+                        const csinit  = cs * itemsPerCase;
+                        const swinit  = sw * itemsPerSw;
+                        const totalit = csinit + swinit + it;
+
+                        const swandit = swinit + it;
+
+                        const caseamount = cs * caseCost;
+                        const itamount   = (swinit + it) * itemCost;
+                        const grandTotal = caseamount + itamount;
+
+                        // Add item to the list table
+                        const newRow = document.createElement('tr');
+                        newRow.dataset.itemCode = item.ITEM_ID; // consistent attribute
+                        newRow.dataset.batch = batch; // consistent attribute
+                        newRow.innerHTML = `
+                            <td></td>
+                            <td>${item.CS_BARCODE || ''}</td>
+                            <td>${item.IT_BARCODE || ''}</td>
+                            <td>${item.ITEM_ID || ''}</td>
+                            <td>${batch}</td>
+                            <td>${item.DESCRIPTION || ''}</td>
+                            <td>${cs}</td>
+                            <td>${sw}</td>
+                            <td>${it}</td>
+                            <td>${caseamount.toFixed(2)}</td>
+                            <td>${itamount.toFixed(2)}</td>
+                            <td>${grandTotal.toFixed(2)}</td>
+                            <td><button class="btn btn-sm btn-danger remove-from-list-btn">Remove</button></td>
+                        `;
+                        document.getElementById('itemsTable').querySelector('tbody').appendChild(newRow);
+
+                        // Save to server
+                        fetch(`/HomePage/datafetcher/transactions/Van_Loading_getdata.php?action=saveonvanloaddetails&company=${encodeURIComponent(companyId)}&siteid=${encodeURIComponent(siteid)}&transactionid=${encodeURIComponent(transactionid)}&vanid=${encodeURIComponent(vanid)}&barcode=${encodeURIComponent(item.IT_BARCODE || '')}&itemid=${encodeURIComponent(item.ITEM_ID)}&description=${encodeURIComponent(item.DESCRIPTION)}&batch=${encodeURIComponent(batch)}&cs=${encodeURIComponent(cs)}&sw=${encodeURIComponent(sw)}&it=${encodeURIComponent(it)}&price=${encodeURIComponent(item.ITEM_COST)}&itpercase=${encodeURIComponent(itemsPerCase)}&itpersw=${encodeURIComponent(itemsPerSw)}&sihit=${encodeURIComponent(totalit)}&totalcs=${encodeURIComponent(caseamount)}&totalit=${encodeURIComponent(itamount)}`)
+                            .then(response => {
+                                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                                return response.json();
+                            })
+                            .then(data => {
+                                if (!Array.isArray(data)) {
+                                    console.error("Invalid data", data);
+                                }
+                            })
+                            .catch(err => {
+                                console.error('Error saving details:', err);
+                            });
+
+                        // Optional: give visual feedback
+                        addBtn.innerText = "Added!";
+                        addBtn.disabled = true;
+                        loadlist(); // call your loadlist() function if needed
+                    });
+                });
+
+                resolve(data);
+            })
+            .catch(err => {
+                console.error('Error loading items:', err);
+                reject(err);
+            })
+            .finally(() => {
+                hideLoader();
             });
-             });
-        })
-        .catch(err => { 
-            console.error('Error loading items:', err);
-        })
-        .finally(() => {
-            hideLoader();
-        });
+    });
 }
-
 
 //filter skus
 
@@ -564,9 +719,6 @@ document.getElementById('searchtxt').addEventListener('input', function () {
 });
 
 // GET HFS 
-
-
-
 
 
 function loadvan() {
@@ -624,10 +776,17 @@ document.getElementById('newTransBtn').addEventListener('click', function() {
         })
         .then(data => {
             if (data.count !== undefined) {
+               
                 const transaction_id = 'VL2' + companyId + siteId + data.count;
            
                 document.getElementById('transaction_id').value = transaction_id;
-                     document.getElementById('status').value = 'DRAFT';
+                document.getElementById('status').value = 'DRAFT';
+                loadvan();
+                loadlist();
+                loadWarehouses();
+                updateTotals();
+                clearall();
+
                 return fetch(`/HomePage/datafetcher/transactions/Van_Loading_getdata.php?action=insertnewtrans&companyid=${companyId}&siteid=${siteId}&transactionid=${transaction_id}`);
             } else {
                 alert('No count value returned from server.');
@@ -702,7 +861,7 @@ function loadlist() {
     if (!tbody) return;
 
     tbody.innerHTML = ''; // Clear previous rows
-    showLoader(); // Show loader before fetch
+    showLoader();
 
     fetch(`/HomePage/datafetcher/transactions/Van_Loading_getdata.php?action=loadlist&transactionid=${encodeURIComponent(transactionid)}`)
         .then(response => {
@@ -722,10 +881,13 @@ function loadlist() {
             data.forEach((item, index) => {
                 const tr = document.createElement('tr');
 
+                const batch = item.BATCH || '';
+
                 tr.innerHTML = `
                     <td>${index + 1}</td>
                     <td>${item.BARCODE || ''}</td>
                     <td>${item.ITEM_CODE || ''}</td>
+                    <td>${batch}</td>
                     <td>${item.DESCRIPTION || ''}</td>
                     <td>${item.CS || ''}</td>
                     <td>${item.SW || ''}</td>
@@ -740,33 +902,35 @@ function loadlist() {
                     </td>
                 `;
 
+                // Save batch info as data attribute
+                tr.dataset.itemCode = item.ITEM_CODE;
+                tr.dataset.batch = batch;
+
                 tbody.appendChild(tr);
 
-                        updateTotals();
-
-                // Remove button click event
+                // Remove button event
                 tr.querySelector('.remove-btn').addEventListener('click', () => {
                     if (confirm('Are you sure you want to remove this item?')) {
-                        tr.remove();                // Remove row from table
-                        updateRowIndexes(tbody);    // Update row numbers
-                        removeitem(item.ITEM_CODE); // Remove from server and loadedPOs
+                        tr.remove();                
+                        // Call your server-side remove function if needed
+                        removeitem(item.ITEM_CODE, batch);
                         updateTotals();
-                        
                     }
                 });
             });
         })
         .catch(err => {
-            console.error('Error loading items:', err);
+            console.error('Error loading list:', err);
         })
         .finally(() => {
-            hideLoader(); // Hide loader when done
+
+            updateTotals();
+            hideLoader();
         });
 }
 
-
-
 function updateTotals() {
+    // Calculate totals
     let totalCS = 0, totalIT = 0, totalSIH = 0;
 
     loadedPOs.forEach(item => {
@@ -775,10 +939,554 @@ function updateTotals() {
         totalSIH += Number(item.SIH_IT) || 0;
     });
 
+    // Update total amount fields
     document.getElementById('totalCSAmount').value = totalCS.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     document.getElementById('totalITAmount').value = totalIT.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     document.getElementById('totalSIH').value = totalSIH.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    // Count rows in the table
+    const rows = document.querySelectorAll('#itemsTable tbody tr');
+    const rowCount = rows.length;
+
+    // Update total lines input
+    const totalLinesInput = document.getElementById('totalines');
+    if (totalLinesInput) {
+        totalLinesInput.value = rowCount;
+    }
+
+    // Optionally, update the display element
+    const displayElement = document.getElementById('totallines');
+    if (displayElement) {
+        displayElement.innerText = `${rowCount}`;
+    } else {
+        console.log(`Total Rows: ${rowCount}`);
+    }
 }
+
+
+// SELECT FROM PROPOSAL
+function loadfromproposal() {
+    const companyid = "<?php echo $_SESSION['COMPANY_ID']; ?>";
+    const siteid = "<?php echo $_SESSION['SITE_ID']; ?>";
+    const sellerid = document.getElementById('cmbvan').value;
+    const tbody = document.querySelector('#stockproposallist tbody');
+    if (!tbody) return;
+
+    tbody.innerHTML = ''; // Clear previous rows
+    showLoader();
+
+    fetch(`/HomePage/datafetcher/transactions/Van_Loading_getdata.php?action=loadproposal&companyid=${encodeURIComponent(companyid)}&siteid=${encodeURIComponent(siteid)}&sellerid=${encodeURIComponent(sellerid)}`)
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            loadedPOs = data;
+
+            if (!data || data.length === 0) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = '<td colspan="5" class="text-center">No items found.</td>';
+                tbody.appendChild(tr);
+                return;
+            }
+
+            data.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${item.DATE_CREATED || ''}</td>
+                    <td>${item.LOADING_ID || ''}</td>
+                    <td>${formatCurrency(item.AMOUNT)}</td>
+
+                    <td>
+                        <button class="btn btn-primary btn-sm select-btn" title="Select">
+                            <i class="fa fa-check"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+
+                // Button event
+                tr.querySelector('.select-btn').addEventListener('click', () => {
+                    const btn = tr.querySelector('.select-btn');
+
+                    // Disable after selection so it cannot be clicked again
+                    btn.disabled = true;
+                    btn.classList.remove('btn-primary');
+                    btn.classList.add('btn-secondary');
+                    btn.innerHTML = '<i class="fa fa-check"></i> Selected';
+
+                    // Remove from server/local (if ITEM_CODE is valid)
+                    if (item.ITEM_CODE) {
+                        removeitem(item.ITEM_CODE);
+                    }
+
+                    // Populate hidden inputs
+                    const transactionIdInput = document.getElementById('transaction_id');
+                    const dateCreatedInput = document.getElementById('date_created');
+                    if (transactionIdInput) transactionIdInput.value = item.LOADING_ID || '';
+                    if (dateCreatedInput) dateCreatedInput.value = item.DATE_CREATED || '';
+
+                    // Close modal
+                    $('#loadTransModal').modal('hide');
+                    $('.modal-backdrop').remove();
+                    $('body').removeClass('modal-open');
+
+                    // Refresh items
+                    loadlist();
+                });
+            });
+        })
+        .catch(err => {
+            console.error('Error loading items:', err);
+        })
+        .finally(() => {
+            hideLoader();
+        });
+}
+
+document.getElementById('btnLoadTransactions').addEventListener('click', function () {
+    const fromDate = document.getElementById('fromDate').value;
+    const toDate = document.getElementById('toDate').value;
+
+    // Pass filters to your fetch
+    loadTransactions(fromDate, toDate);
+});
+
+function loadTransactions(fromDate = '', toDate = '') {
+    const companyid = "<?php echo $_SESSION['COMPANY_ID']; ?>";
+    const siteid = "<?php echo $_SESSION['SITE_ID']; ?>";
+    const tbody = document.querySelector('#loadtranstbl tbody');
+    tbody.innerHTML = '';
+
+    showLoader();
+
+    fetch(`/HomePage/datafetcher/transactions/Van_Loading_getdata.php?action=loadtransactions&companyid=${encodeURIComponent(companyid)}&siteid=${encodeURIComponent(siteid)}&datefrom=${encodeURIComponent(fromDate)}&dateto=${encodeURIComponent(toDate)}`)
+        .then(res => res.json())
+        .then(data => {
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center">No transactions found.</td></tr>';
+                return;
+            }
+
+            data.forEach((item, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td>${i + 1}</td>
+        <td>${item.DATE_CREATED || ''}</td>
+        <td>${item.SELLER_ID || ''}</td>
+        <td>${item.LOADING_ID || ''}</td>
+        <td>${formatCurrency(item.AMOUNT)}</td>
+        <td>${item.TOTAL_LINES || ''}</td>
+        <td>${item.REMARKS || ''}</td>
+        <td>
+            <button class="btn btn-primary btn-sm select-btn" title="Select">
+              <i class="fa fa-check"></i>
+            </button>
+        </td>
+    `;
+    tbody.appendChild(tr);
+
+    tr.querySelector('.select-btn').addEventListener('click', () => {
+        // Close modal
+        $('#loadmodal').modal('hide');
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open');
+
+        // Set values in form inputs
+        const transactionIdInput = document.getElementById('transaction_id');
+        const dateCreatedInput = document.getElementById('date_created');
+        const remarksInput = document.getElementById('remarks');
+
+        if (transactionIdInput) transactionIdInput.value = item.LOADING_ID || '';
+        if (dateCreatedInput) dateCreatedInput.value = item.DATE_CREATED || '';
+        if (remarksInput) remarksInput.value = item.REMARKS || '';
+
+        // Update the cmbvan select element, assuming item.SELLER_ID is the correct value
+        const cmbvan = document.getElementById('cmbvan');
+        if (cmbvan && item.SELLER_ID) {
+            cmbvan.value = item.SELLER_ID;
+            // Trigger change event if necessary
+            const event = new Event('change');
+            cmbvan.dispatchEvent(event);
+        }
+
+        // Refresh list
+        loadlist();
+
+         const itemsTableBody = document.querySelector('#loadtranstbl  tbody');
+
+            // Clear all rows in the table body
+        itemsTableBody.innerHTML = '';
+
+                });
+            });
+        })
+        .catch(err => console.error('Error loading transactions:', err))
+        .finally(() => hideLoader());
+}
+
+/// PROCESS TRANSACTION
+
+async function processLoadingAllInOne() {
+    const transactionid = document.getElementById('transaction_id').value;
+    const companyid = "<?php echo $_SESSION['COMPANY_ID']; ?>";
+    const siteid = "<?php echo $_SESSION['SITE_ID']; ?>";
+    const nameofuser = "<?php echo $_SESSION['Name_of_user']; ?>";
+    const userid = "<?php echo $_SESSION['UserID']; ?>";
+    const sellerid = document.getElementById('cmbvan').value;
+    const warehousecode = document.getElementById('warehouse').value;
+    const tbody = document.querySelector('#tblskus tbody');
+    const status = document.getElementById('status')?.value;
+
+    if (!transactionid) { alert('No transaction selected'); return; }
+    if (!sellerid) { alert('No van selected'); return; }
+    if (!warehousecode) { alert('No warehouse selected'); return; }
+
+    if (status === 'ALLOCATED') {
+  alert('Cannot process allocated transaction');
+  return;
+    }
+
+    // Load items and get actual stock data
+    let itemsData = [];
+    try {
+        itemsData = await loaditems();
+        if (!Array.isArray(itemsData) || !itemsData.length) {
+            alert('No items loaded from data source!');
+            return;
+        }
+    } catch (err) {
+        console.error("Error loading items:", err);
+        alert('Failed to load items!');
+        return;
+    }
+
+    // Wait until table rows are populated
+    await waitForTableRows(tbody, 5000).catch(err => {
+        alert('No items loaded in table or timeout!');
+        throw err;
+    });
+
+    const rows = tbody.querySelectorAll('tr');
+    if (!rows.length) { alert('No items to process'); return; }
+
+    // Get the itemsTable rows to get REQUESTED values
+    const itemsTable = document.querySelector('#itemsTable tbody');
+    if (!itemsTable) {
+        alert('Items table not found!');
+        return;
+    }
+    const itemsTableRows = itemsTable.querySelectorAll('tr');
+
+    // Create a map of requested values from itemsTable
+    const requestedMap = {};
+    itemsTableRows.forEach(row => {
+        const itemid = row.cells[2]?.innerText.trim() || "";
+        const requested_cs = parseInt(row.cells[5]?.innerText.trim(), 10) || 0;
+        const requested_sw = parseInt(row.cells[6]?.innerText.trim(), 10) || 0;
+        const requested_it = parseInt(row.cells[7]?.innerText.trim(), 10) || 0;
+
+        requestedMap[itemid] = { requested_cs, requested_sw, requested_it };
+    });
+
+    // Validate each row against actual stock
+    let hasInvalidRows = false;
+    rows.forEach(row => {
+        const itemid = row.cells[3]?.innerText.trim() || "";
+        const requested = requestedMap[itemid] || { requested_cs: 0, requested_sw: 0, requested_it: 0 };
+        const availcs = parseInt(row.cells[6]?.innerText.trim(), 10) || 0;
+        const availsw = parseInt(row.cells[7]?.innerText.trim(), 10) || 0;
+        const availit = parseInt(row.cells[8]?.innerText.trim(), 10) || 0;
+
+        if (requested.requested_cs > availcs || requested.requested_sw > availsw || requested.requested_it > availit) {
+            row.style.backgroundColor = 'rgba(255,0,0,0.2)';
+            hasInvalidRows = true;
+        } else {
+            row.style.backgroundColor = '';
+        }
+    });
+
+    if (hasInvalidRows) {
+        alert('Some rows exceed available stock! Fix highlighted rows before processing.');
+        return;
+    }
+
+    // Process each row, passing requestedMap
+    await processTableRows(requestedMap);
+
+    updatetransaction();
+
+    alert('✅ All items processed successfully!');
+
+    document.getElementById('status').value = "ALLOCATED";
+
+}
+
+
+async function processTableRows(requestedMap) { // Accept requestedMap as parameter
+    const rows = document.querySelectorAll('#itemsTable tbody tr');
+    const transactionid = document.getElementById('transaction_id').value;
+    const companyid = "<?php echo $_SESSION['COMPANY_ID']; ?>";
+    const siteid = "<?php echo $_SESSION['SITE_ID']; ?>";
+      const nameofuser = "<?php echo $_SESSION['Name_of_user']; ?>";
+    const userid = "<?php echo $_SESSION['UserID']; ?>";
+        const warehousecode = document.getElementById('warehouse').value;
+            const sellerid = document.getElementById('cmbvan').value;
+
+    for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+
+        const itemid = row.cells[2]?.innerText.trim() || "";
+        const batch = row.cells[3]?.innerText.trim() || "";
+        const description = row.cells[4]?.innerText.trim() || "";
+        const cs_barcode = row.cells[1]?.innerText.trim() || "";
+        const it_barcode = row.cells[2]?.innerText.trim() || "";
+
+        // Get requested values from the map
+        const requested = requestedMap[itemid] || { requested_cs: 0, requested_sw: 0, requested_it: 0 };
+        const cs =  row.cells[5]?.innerText.trim() || "";
+        const sw =  row.cells[6]?.innerText.trim() || "";
+        const it =  row.cells[7]?.innerText.trim() || "";
+
+        // Parse dataset attributes
+        const itemsPerCase = parseInt(row.dataset.itemsPerCase, 10) || 0;
+        const itemsPerSw = parseInt(row.dataset.itemsPerSw, 10) || 0;
+        const itemCost = parseFloat(row.dataset.itemCost) || 0;
+        const caseCost = parseFloat(row.dataset.caseCost) || 0;
+
+        // Calculate initial amounts
+        const csinit = cs * itemsPerCase;
+        const swinit = sw * itemsPerSw;
+        const totalit = csinit + swinit + it;
+        const caseamount = cs * caseCost;
+        const itamount = (swinit + it) * itemCost;
+        const grandTotal = caseamount + itamount;
+
+        try {
+            const response = await fetch(`/HomePage/datafetcher/transactions/Van_Loading_getdata.php?action=processtransactions`
+                + `&company=${encodeURIComponent(companyid)}`
+                + `&siteid=${encodeURIComponent(siteid)}`
+                + `&transactionid=${encodeURIComponent(transactionid)}`
+                + `&barcode=${encodeURIComponent(cs_barcode || it_barcode)}`
+                + `&itemid=${encodeURIComponent(itemid)}`
+                + `&batch=${encodeURIComponent(batch)}`
+                + `&description=${encodeURIComponent(description)}`
+                + `&cs=${cs}&sw=${sw}&it=${it}`
+                + `&userid=${encodeURIComponent(userid)}`
+                + `&username=${encodeURIComponent(nameofuser)}`
+                + `&warehousecode=${encodeURIComponent(warehousecode)}`
+                + `&vanid=${encodeURIComponent(sellerid)}`
+              
+            );
+
+            const data = await response.json();
+            if (!data.success) {
+                alert(`Error processing row ${i + 1}: ${data.error || "Unknown error"}`);
+                return; // Exit on error
+            }
+        } catch (err) {
+           // console.error("Fetch error:", err);
+            return; // Exit on network error
+        }
+    }
+}
+
+// Helper function to wait for table rows
+function waitForTableRows(tbody, timeout = 3000) {
+    return new Promise((resolve, reject) => {
+        const interval = 50;
+        let waited = 0;
+        const check = () => {
+            if (tbody.querySelectorAll('tr').length > 0) {
+                resolve();
+            } else {
+                waited += interval;
+                if (waited >= timeout) reject('Timeout waiting for table rows');
+                else setTimeout(check, interval);
+            }
+        };
+        check();
+    });
+}
+
+
+/// process transaction 
+
+function updatetransaction() {
+    const transactionid = document.getElementById('transaction_id')?.value.trim();
+    const sellerid = document.getElementById('cmbvan')?.value.trim();
+    const remarks = document.getElementById('remarks')?.value.trim();
+    const totallinesStr = document.getElementById('totalines')?.value.trim();
+    const totalCSStr = document.getElementById('totalCSAmount')?.value.trim();
+    const totalITStr = document.getElementById('totalITAmount')?.value.trim();
+
+    // Basic validation
+    if (!transactionid) { alert('Transaction ID is missing'); return; }
+    if (!sellerid) { alert('Seller ID is missing'); return; }
+    if (!totallinesStr) { alert('Total lines is missing'); return; }
+
+    const totalcs = parseFloat(totalCSStr.replace(/,/g, '')) || 0;
+    const totalit = parseFloat(totalITStr.replace(/,/g, '')) || 0;
+    const total = totalcs + totalit;
+
+    showLoader();
+
+    fetch(`/HomePage/datafetcher/transactions/Van_Loading_getdata.php?action=processupdate&transactionid=${encodeURIComponent(transactionid)}&sellerid=${encodeURIComponent(sellerid)}&remarks=${encodeURIComponent(remarks)}&totallines=${encodeURIComponent(totallinesStr)}&total=${encodeURIComponent(total)}`)
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+               //alert('Transaction saved as draft.');
+                // Optionally, refresh data or update UI
+            } else {
+                alert(`Update failed: ${data.error || 'Unknown error'}`);
+            }
+        })
+        .catch(err => {
+            alert(`An error occurred: ${err.message}`);
+        })
+        .finally(() => {
+            hideLoader();
+        });
+}
+
+
+// SAVE AS DRAFT
+
+function saveasdraft() {
+    const transactionid = document.getElementById('transaction_id')?.value.trim();
+    const sellerid = document.getElementById('cmbvan')?.value.trim();
+    const remarks = document.getElementById('remarks')?.value.trim();
+    const totallinesStr = document.getElementById('totalines')?.value.trim();
+    const totalCSStr = document.getElementById('totalCSAmount')?.value.trim();
+    const totalITStr = document.getElementById('totalITAmount')?.value.trim();
+
+    // Basic validation
+    if (!transactionid) { alert('Transaction ID is missing'); return; }
+    if (!sellerid) { alert('Seller ID is missing'); return; }
+    if (!totallinesStr) { alert('Total lines is missing'); return; }
+
+    const totalcs = parseFloat(totalCSStr.replace(/,/g, '')) || 0;
+    const totalit = parseFloat(totalITStr.replace(/,/g, '')) || 0;
+    const total = totalcs + totalit;
+
+    showLoader();
+
+    fetch(`/HomePage/datafetcher/transactions/Van_Loading_getdata.php?action=saveasdraft&transactionid=${encodeURIComponent(transactionid)}&sellerid=${encodeURIComponent(sellerid)}&remarks=${encodeURIComponent(remarks)}&totallines=${encodeURIComponent(totallinesStr)}&total=${encodeURIComponent(total)}`)
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+               alert('Transaction saved as draft.');
+                // Optionally, refresh data or update UI
+                printReport()
+
+            } else {
+                alert(`Update failed: ${data.error || 'Unknown error'}`);
+            }
+        })
+        .catch(err => {
+            alert(`An error occurred: ${err.message}`);
+        })
+        .finally(() => {
+            hideLoader();
+        });
+}
+
+function clearall(){
+
+    document.getElementById('remarks').value = "";
+    document.getElementById('totalines').value = 0;
+    document.getElementById('totalCSAmount').value = 0;
+    document.getElementById('totalITAmount').value = 0;
+    document.getElementById('totalSIH').value = 0;
+
+
+ const itemsTableBody = document.querySelector('#itemsTable tbody');
+
+// Clear all rows in the table body
+itemsTableBody.innerHTML = '';
+
+}
+
+
+/// print picklist
+
+function printReport() {
+
+  const transactionId = document.getElementById('transactionid').value;
+  const sellerName = document.getElementById('sellerName').value;
+  const transactionDate = document.getElementById('transactionDate').value;
+
+  // Content to print
+  const reportContent = `
+     <html>
+  <head>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 5px; font-size: 10px; }
+      h1 { text-align: center; font-size: 14px; }
+      #transactionDetails { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 9px; }
+      #transactionDetails th, #transactionDetails td { border: 1px solid #ccc; padding: 8px; font-size: 9px; }
+    </style>
+  </head>
+  <body>
+    <h1>VAN PICKLIST REPORT</h1>
+    <p><strong>Transaction ID:</strong> 12345</p>
+    <p><strong>Seller:</strong> John Doe</p>
+    <p><strong>Date:</strong> 2024-04-27</p>
+    <p><strong>Remarks:</strong> Sample remarks for the transaction.</p>
+    
+    <h2>Items</h2>
+    <table id="transactionDetails">
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Item A</td>
+          <td>2</td>
+          <td>$10.00</td>
+          <td>$20.00</td>
+        </tr>
+        <tr>
+          <td>Item B</td>
+          <td>1</td>
+          <td>$15.00</td>
+          <td>$15.00</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="text-align:right; margin-top:10px;"><strong>Total Amount:</strong> $35.00</p>
+  </body>
+  </html>
+`;
+
+  // Open a new window
+  const printWindow = window.open('', '', 'width=900,height=700');
+
+  // Write the report content
+  printWindow.document.write(reportContent);
+  printWindow.document.close();
+
+  // Wait for content to load, then print and close
+  printWindow.onload = function() {
+    printWindow.focus();
+    printWindow.print();
+    // Optional: close window after printing
+    printWindow.close();
+  };
+}
+</script>
 
 
 </script>
