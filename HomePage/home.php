@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-
 include '../DB/dbcon.php';
    // Unset all session variables
 
@@ -303,7 +302,7 @@ foreach ($query_result as $data) {
                ,'SalesReturnReport','StockViewReport','SOReport' , 'StockLedgerReport' , 'WarehouseMasterReport' , 'SchemeMasterReport'
               ,'allsitereports' , 'allsitesalesinvoicesummary','allsitesalesinvoicedetailed' , 'allsiteSOReport' , 'IntransitSummary'
             ,'intransitdetailedReport','PurchasereturnReport', 'VanAllocationReport' ,'allsiteVanAllocation' , 'VanStockReport'
-          ,'SFAMappingReport' , 'T_Vanloading'];
+          ,'SFAMappingReport' , 'T_Vanloading' , 'T_VanLoadHistory'];
                if (in_array($page, $allowedPages)) {
 
                    include "pages/{$page}.php";
@@ -320,7 +319,7 @@ foreach ($query_result as $data) {
                          ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'
                        ,'SalesReturnReport','StockViewReport','SOReport','StockLedgerReport','WarehouseMasterReport','SchemeMasterReport','IntransitSummary'
                       ,'intransitdetailedReport','PurchasereturnReport','VanAllocationReport','VanStockReport'
-                    ,'SFAMappingReport','T_Vanloading'];
+                    ,'SFAMappingReport','T_Vanloading','T_VanLoadHistory'];
                        if (in_array($page, $allowedPages)) {
 
                            include "pages/{$page}.php";
@@ -337,7 +336,7 @@ foreach ($query_result as $data) {
                        $allowedPages = ['dashboard','PO_view', 'transactions', 'reports','ProductMasterReport', 'CustomerMasterReport'
                          ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'
                        ,'SalesReturnReport','StockViewReport','SOReport','StockLedgerReport','WarehouseMasterReport' , 'SchemeMasterReport','IntransitSummary'
-                      ,'intransitdetailedReport','PurchasereturnReport','VanAllocationReport','VanStockReport','SFAMappingReport'];
+                      ,'intransitdetailedReport','PurchasereturnReport','VanAllocationReport','VanStockReport','SFAMappingReport','T_VanLoadHistory'];
                        if (in_array($page, $allowedPages)) {
 
                            include "pages/{$page}.php";
