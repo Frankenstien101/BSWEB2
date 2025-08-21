@@ -273,7 +273,7 @@
   <button class="btn btn-success btn-sm mr-1" onclick="processLoadingAllInOne()">
     <i class="fas fa-cogs"></i> Process Van Loading
   </button>
-  <button class="btn btn-info btn-sm" onclick="print()">
+  <button class="btn btn-info btn-sm" onclick="printloading()">
     <i class="fas fa-print"></i> Print
   </button>
 </div>
@@ -1418,74 +1418,340 @@ itemsTableBody.innerHTML = '';
 /// print picklist
 
 function printReport() {
-
-  const transactionId = document.getElementById('transactionid').value;
-  const sellerName = document.getElementById('sellerName').value;
-  const transactionDate = document.getElementById('transactionDate').value;
-
-  // Content to print
+  const transactionId = document.getElementById('transaction_id').value;
+  const sellerName = document.getElementById('cmbvan').value;
+  const transactionDate = document.getElementById('date_created').value;
+  const remarks = document.getElementById('remarks').value;
+    const companyname = "<?php echo $_SESSION['Company_Name']; ?>";
+  
+  // Get the items table
+  const itemsTable = document.getElementById('itemsTable') || 
+                    document.querySelector('table') || 
+                    document.querySelector('.items-table');
+  
+  if (!itemsTable) {
+    alert('Items table not found!');
+    return;
+  }
+  
+  // Clone the table
+  const clonedTable = itemsTable.cloneNode(true);
+  
+  // Remove action buttons and form elements
+  const buttons = clonedTable.querySelectorAll('button, input, select, a');
+  buttons.forEach(btn => btn.remove());
+  
+  // Define which columns to remove (0-based index)
+  const columnsToRemove = [8,9,10,11]; // Remove CSSWIT (index 3), TOTAL CS (5), TOTAL IT (6)
+  // Adjust these indices based on your actual table structure:
+  // 0: BARCODE, 1: CODE, 2: DESCRIPTION, 3: CSSWIT, 4: PRICE, 5: TOTAL CS, 6: TOTAL IT
+  
+  // Remove specified columns from all rows
+  const allRows = clonedTable.querySelectorAll('tr');
+  allRows.forEach(row => {
+    const cells = row.querySelectorAll('th, td');
+    columnsToRemove.forEach(index => {
+      if (cells[index]) {
+        cells[index].remove();
+      }
+    });
+  });
+  
+  // Content to print with your specific format
   const reportContent = `
-     <html>
-  <head>
-    <style>
-      body { font-family: Arial, sans-serif; margin: 5px; font-size: 10px; }
-      h1 { text-align: center; font-size: 14px; }
-      #transactionDetails { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 9px; }
-      #transactionDetails th, #transactionDetails td { border: 1px solid #ccc; padding: 8px; font-size: 9px; }
-    </style>
-  </head>
-  <body>
-    <h1>VAN PICKLIST REPORT</h1>
-    <p><strong>Transaction ID:</strong> 12345</p>
-    <p><strong>Seller:</strong> John Doe</p>
-    <p><strong>Date:</strong> 2024-04-27</p>
-    <p><strong>Remarks:</strong> Sample remarks for the transaction.</p>
-    
-    <h2>Items</h2>
-    <table id="transactionDetails">
-      <thead>
-        <tr>
-          <th>Description</th>
-          <th>Quantity</th>
-          <th>Price</th>
-          <th>Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Item A</td>
-          <td>2</td>
-          <td>$10.00</td>
-          <td>$20.00</td>
-        </tr>
-        <tr>
-          <td>Item B</td>
-          <td>1</td>
-          <td>$15.00</td>
-          <td>$15.00</td>
-        </tr>
-      </tbody>
-    </table>
-    <p style="text-align:right; margin-top:10px;"><strong>Total Amount:</strong> $35.00</p>
-  </body>
-  </html>
-`;
+    <html>
+      <head>
+        <style>
+          body { 
+            font-family: Arial, sans-serif; 
+            margin: 10px; 
+            font-size: 10px; 
+            line-height: 1.2;
+          }
+          .header { 
+            text-align: center; 
+            margin-bottom: 15px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+          }
+          .company-name {
+            font-size: 14px;
+            font-weight: bold;
+          }
+          .company-address {
+            font-size: 10px;
+            margin-bottom: 5px;
+          }
+          .report-title {
+            font-size: 12px;
+            font-weight: bold;
+            margin: 10px 0;
+          }
+          .transaction-info {
+            margin: 10px 0;
+            padding: 5px;
+            border: 1px solid #ccc;
+          }
+          .transaction-info p {
+            margin: 3px 0;
+          }
+          .items-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 10px; 
+            font-size: 8px; 
+            page-break-inside: avoid;
+          }
+          .items-table th, .items-table td { 
+            border: 1px solid #000; 
+            padding: 4px; 
+            text-align: center;
+          }
+          .items-table th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+          }
+          .total-row {
+            font-weight: bold;
+            background-color: #e0e0e0;
+          }
+          .signature-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #000;
+          }
+          .text-left { text-align: left; }
+          .text-right { text-align: right; }
+          .text-center { text-align: center; }
+          @media print {
+            body { margin: 0; padding: 10px; }
+            .items-table { font-size: 7px; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="company-name">${companyname}</div>
+          <div class="report-title">VAN PICKLIST</div>
+        </div>
+        
+        <div class="transaction-info">
+          <p><strong>TRANSACTION ID:</strong> ${transactionId}</p>
+          <p><strong>DATE CREATED:</strong> ${transactionDate}</p>
+          <p><strong>SELLER:</strong> ${sellerName}</p>
+          <p><strong>STATUS:</strong> DRAFT</p>
+        </div>
+        
+        <div class="report-title"></div>
+        
+        ${clonedTable.outerHTML}
+        
+        <div class="signature-section">
+          <p>REMARKS: ${remarks}</p>
+          <br><br>
+          <p>PREPARED BY: _________________________</p>
+          <p>DATE: _________________________</p>
+        </div>
+      </body>
+    </html>
+  `;
 
-  // Open a new window
-  const printWindow = window.open('', '', 'width=900,height=700');
-
-  // Write the report content
+  // Open print window
+  const printWindow = window.open('', '_blank', 'width=1000,height=700');
   printWindow.document.write(reportContent);
   printWindow.document.close();
-
-  // Wait for content to load, then print and close
+  
+  // Print after content loads
   printWindow.onload = function() {
-    printWindow.focus();
-    printWindow.print();
-    // Optional: close window after printing
-    printWindow.close();
+    setTimeout(() => {
+      printWindow.focus();
+      printWindow.print();
+      printWindow.close();
+    }, 500);
   };
 }
+
+
+
+
+function printloading() {
+  const transactionId = document.getElementById('transaction_id').value;
+  const sellerName = document.getElementById('cmbvan').value;
+  const transactionDate = document.getElementById('date_created').value;
+  const remarks = document.getElementById('remarks').value;
+    const companyname = "<?php echo $_SESSION['Company_Name']; ?>";
+  const status = document.getElementById('status').value;
+
+        const totalCSStr = document.getElementById('totalCSAmount')?.value.trim();
+    const totalITStr = document.getElementById('totalITAmount')?.value.trim();
+
+    // Basic validation
+    if (!transactionId) { alert('Transaction ID is missing'); return; }
+
+     if (status !== 'ALLOCATED') {
+    alert('Cannot print not allocated transactions');
+    return;
+    }
+
+    const totalcs = parseFloat(totalCSStr.replace(/,/g, '')) || 0;
+    const totalit = parseFloat(totalITStr.replace(/,/g, '')) || 0;
+    const total = totalcs + totalit;
+  
+  // Get the items table
+  const itemsTable = document.getElementById('itemsTable') || 
+                    document.querySelector('table') || 
+                    document.querySelector('.items-table');
+  
+  if (!itemsTable) {
+    alert('Items table not found!');
+    return;
+  }
+  
+  // Clone the table
+  const clonedTable = itemsTable.cloneNode(true);
+  
+  // Remove action buttons and form elements
+  const buttons = clonedTable.querySelectorAll('button, input, select, a');
+  buttons.forEach(btn => btn.remove());
+  
+  // Define which columns to remove (0-based index)
+  const columnsToRemove = [10,11]; // Remove CSSWIT (index 3), TOTAL CS (5), TOTAL IT (6)
+  // Adjust these indices based on your actual table structure:
+  // 0: BARCODE, 1: CODE, 2: DESCRIPTION, 3: CSSWIT, 4: PRICE, 5: TOTAL CS, 6: TOTAL IT
+  
+  // Remove specified columns from all rows
+  const allRows = clonedTable.querySelectorAll('tr');
+  allRows.forEach(row => {
+    const cells = row.querySelectorAll('th, td');
+    columnsToRemove.forEach(index => {
+      if (cells[index]) {
+        cells[index].remove();
+      }
+    });
+  });
+  
+  // Content to print with your specific format
+  const reportContent = `
+    <html>
+      <head>
+        <style>
+          body { 
+            font-family: Arial, sans-serif; 
+            margin: 10px; 
+            font-size: 10px; 
+            line-height: 1.2;
+          }
+          .header { 
+            text-align: center; 
+            margin-bottom: 15px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+          }
+          .company-name {
+            font-size: 14px;
+            font-weight: bold;
+          }
+          .company-address {
+            font-size: 10px;
+            margin-bottom: 5px;
+          }
+          .report-title {
+            font-size: 12px;
+            font-weight: bold;
+            margin: 10px 0;
+          }
+          .transaction-info {
+            margin: 10px 0;
+            padding: 5px;
+            border: 1px solid #ccc;
+          }
+          .transaction-info p {
+            margin: 3px 0;
+          }
+          .items-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 10px; 
+            font-size: 8px; 
+            page-break-inside: avoid;
+          }
+          .items-table th, .items-table td { 
+            border: 1px solid #000; 
+            padding: 4px; 
+            text-align: center;
+          }
+          .items-table th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+          }
+          .total-row {
+            font-weight: bold;
+            background-color: #e0e0e0;
+          }
+          .signature-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #000;
+          }
+          .text-left { text-align: left; }
+          .text-right { text-align: right; }
+          .text-center { text-align: center; }
+          @media print {
+            body { margin: 0; padding: 10px; }
+            .items-table { font-size: 7px; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="company-name">${companyname}</div>
+          <div class="report-title">VAN LOADING REPORT</div>
+        </div>
+        
+        <div class="transaction-info">
+          <p><strong>TRANSACTION ID:</strong> ${transactionId}</p>
+          <p><strong>DATE CREATED:</strong> ${transactionDate}</p>
+          <p><strong>SELLER:</strong> ${sellerName}</p>
+          <p><strong>STATUS:</strong> ALLOCATED</p>
+        <p><strong>AMOUNT:</strong> ${total}</p>
+        </div>
+        
+        <div class="report-title"></div>
+        
+        ${clonedTable.outerHTML}
+        
+        <div class="signature-section">
+          <p>RECEIVE THE ABOVE GOODS IN GOOD CONDITION</p>
+          <br><br>
+          <p>CHECKED BY: _________________________</p>
+          <p>DATE: _________________________</p>
+        </div>
+      </body>
+    </html>
+  `;
+
+  // Open print window
+  const printWindow = window.open('', '_blank', 'width=1000,height=700');
+  printWindow.document.write(reportContent);
+  printWindow.document.close();
+  
+  // Print after content loads
+  printWindow.onload = function() {
+    setTimeout(() => {
+      printWindow.focus();
+      printWindow.print();
+      printWindow.close();
+    }, 500);
+  };
+}
+
+
+
+
+
+
+
+
 </script>
 
 
