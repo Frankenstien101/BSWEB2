@@ -177,7 +177,7 @@
           <p> VAN ALLOCATION</p>
         </div>
       </a>
-      <a href="#" >
+      <a href="home.php?page=T_VanLoadHistory" >
         <div class="app-card">
           <img src="\HomePage\pages\transactionsImg\cargo.png" alt="Developers/System Support" />
           <p>VAN LOAD HISTORY</p>
