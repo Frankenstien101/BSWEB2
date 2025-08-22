@@ -41,13 +41,12 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
 
 // If site not set in session, get the first available site for the user
 
-
-
 ?>
 <!doctype html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/x-icon" href="MainImg\bscr.ico">
+         <link rel="icon" type="image/x-icon" href="\Services\img\dash.png">
+
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
