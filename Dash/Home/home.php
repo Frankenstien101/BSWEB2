@@ -272,7 +272,7 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
         } else {
             echo "<h1 class='text-center'>Page not found or not allowed</h1>";
         }
-    } elseif ($role === 'ENCODER') {
+    } elseif ($role === 'TRUCK-SIZER') {
         // Encoder pages logic
         $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
         $allowedPages = ['dashboard', 'transactions', 'PO_view', 'reports','ProductMasterReport', 'CustomerMasterReport'
@@ -285,7 +285,7 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
         } else {
             echo "<h1 class='text-center'>Page not found or not allowed</h1>";
         }
-    } elseif ($role === 'IRA') {
+    } elseif ($role === 'CASHIER') {
         // IRA pages logic
         $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
         $allowedPages = ['dashboard','PO_view', 'transactions', 'reports','ProductMasterReport', 'CustomerMasterReport'
@@ -297,18 +297,7 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
         } else {
             echo "<h1 class='text-center'>Page not found or not allowed</h1>";
         }
-    } elseif ($role === 'OIC') {
-        // OIC pages logic
-        $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
-        $allowedPages = ['dashboard', 'transactions', 'T_Purchase_Order' , 'PO_view', 'reports','ProductMasterReport', 'CustomerMasterReport'
-          ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'
-        ,'SalesReturnReport','StockViewReport','SOReport', 'StockLedgerReport' , 'WarehouseMasterReport','SchemeMasterReport','IntransitSummary'
-       ,'intransitdetailedReport','PurchasereturnReport','VanAllocationReport','VanStockReport','SFAMappingReport'];
-        if (in_array($page, $allowedPages)) {
-            include "pages/{$page}.php";
-        } else {
-            echo "<h1 class='text-center'>Page not found or not allowed</h1>";
-        }
+   
     } else {
         // Default case
         echo "<h3 class='text-center'>
