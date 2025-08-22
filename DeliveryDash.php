@@ -14,43 +14,34 @@ if (isset($_POST['login'])) {
     try {
         // Fetch user with matching username
         $stmt = $conn->prepare("  
-            SELECT 
-                u.[UserID],
-                u.[Username],
-                u.[Password],
-                u.[Role],
-                u.[Name_of_user],
-                u.[Company],
-                u.[Site],
-                u.[Status],
-                c.[ID] AS Company_ID,
-                c.[CODE],
-                c.[NAME] AS Company_Name,
-                c.[ADDRESS],
-                c.[STATUS] AS Company_Status,
-                c.[KEY_LETTER],
-                c.[REPORT_HEADER],
-                c.[REPORT_SUB_HEADER],
-                c.[REPORT_SUB_HEADER2]
-            FROM 
-                [dbo].[Aquila_Users] u
-            INNER JOIN 
-                [dbo].[Aquila_COMPANY] c
-                ON u.Company = c.ID WHERE Username = :username");
+                          SELECT Dash_Users.LINEID, [USERNAME]
+                    ,[PASSWORD]
+                    ,[NAME_OF_USER]
+                    ,[COMPANY]
+                    ,[STATUS]
+                    ,[ROLE]
+              	  ,COMPANY_NAME
+              	  ,ADDRESS
+                FROM [dbo].[Dash_Users]
+
+              LEFT JOIN Dash_Company
+
+              ON Dash_Company.COMPANY_ID = Dash_Users.COMPANY
+                 WHERE USERNAME = :username");
         $stmt->bindParam(':username', $username);
         $stmt->execute();
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user) {
-            if ($user['Password'] === $password) {
-                $_SESSION['username'] = $username;
-                $_SESSION['Name_of_user'] = $user['Name_of_user'];
-                $_SESSION['Company_Name'] = $user['Company_Name'];
-                $_SESSION['UserID'] = $user['UserID'];
-                $_SESSION['Company_ID'] = $user['Company_ID']; 
-                $_SESSION['Role'] = $user['Role']; 
+            if ($user['PASSWORD'] === $password) {
+                $_SESSION['USERNAME'] = $username;
+                $_SESSION['Name_of_user'] = $user['NAME_OF_USER'];
+                $_SESSION['Company_Name'] = $user['COMPANY_NAME'];
+                $_SESSION['UserID'] = $user['LINEID'];
+                $_SESSION['Company_ID'] = $user['COMPANY']; 
+                $_SESSION['Role'] = $user['ROLE']; 
 
-                header("Location: HomePage/home.php");
+                header("Location: Dash/Home/home.php");
                 exit();
             } else {
                 $error = "Invalid password.";
@@ -350,7 +341,7 @@ if (isset($_POST['login'])) {
           <div class="error show"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
-        <form method="post" action="DASH.php">
+        <form method="post" action="DeliveryDash.php">
           <div class="form-group">
             <label for="username">Username</label>
             <input 
@@ -379,7 +370,7 @@ if (isset($_POST['login'])) {
             <label for="remember">Remember this device</label>
           </div>
 
-          <button type="submit1" name="login1">Sign In</button>
+          <button type="submit" name="login">Sign In</button>
         </form>
       </div>
     </div>
