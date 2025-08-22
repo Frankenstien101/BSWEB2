@@ -48,11 +48,9 @@
 
         <input type="hidden" id="PONUMBER">
 
-  <div class="card" style="width: 30rem; margin-bottom: 1rem; font-size: 12px; max-width: 100%;">
-  <div class="card-header">
-  <label for="dateFrom" style="font-size: 12px;">Filter Transaction</label>
-  </div>
-  <div class="card-body p-3" style="font-size: 12px;">
+  <div class="card mt-1" style="width: 30rem; margin-bottom: 1rem; font-size: 12px; max-width: 100%;">
+
+  <div class="card-body p-2 mt-1" style="font-size: 10px;">
     <form>
       <div class="form-row align-items-end">
         <div class="form-group col-md-4">
@@ -80,7 +78,7 @@
         </div>
 
         <div class="form-group col-md-4">
-          <button type="button" onclick= "loadItemsByDateRange()" class="btn btn-primary btn-block">
+          <button style = "font-size : 12px; width : 120px;" type="button" onclick= "loadItemsByDateRange()" class="btn btn-primary btn-block">
             Filter
           </button>
         </div>
@@ -92,23 +90,22 @@
   <!-- item details -->
     <div class="card text-bg-light" data-bs-spy="scroll" style="max-width: 100%; height:100%; margin-bottom: .5rem; Font-size: 10px;">
       <div class="card-header">Result</div>
-      <div class="card-body" style="overflow-y: auto; max-width: 100%; height: 500px;"  >
+      <div class="card-body" style="overflow-y: auto; max-width: 100%; height: 590px;"  >
         <table id="itemsTable" class="table table-striped table-hover table-bordered table-sm " style="font-size: 10px;">
-          
   <thead>
     <tr>
       <th>#</th>
-       <th>DATE CREATED</th>
-        <th>PO NUMBER</th>
+      <th>DATE CREATED</th>
+      <th>PO NUMBER</th>
       <th>PO DATE</th>
       <th>EXPECTED DAYS</th>
       <th>TOTAL LINES</th>
       <th>TOTAL AMOUNT</th>
       <th>DATE RECEIVED</th>
       <th>INVOICE DATE</th>
-          <th>INVOICE NUMBER</th>
-            <th>STATUS</th>
-            <th>ACTION</th>
+      <th>INVOICE NUMBER</th>
+      <th>STATUS</th>
+      <th>ACTION</th>
     </tr>
   </thead>
   <tbody>
