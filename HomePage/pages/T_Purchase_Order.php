@@ -21,7 +21,8 @@
 
 <!-- DataTables JS -->
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-   
+
+  
    <style>
       .autocomplete-list {
         position: absolute;
@@ -41,7 +42,7 @@
       }
       .card {
         font-family: 'Roboto', sans-serif;
-        font-size: 10px;
+        font-size: 9px;
       }
       .card .form-label,
       .card .form-control,
@@ -51,20 +52,22 @@
       }
       .mb-31 {
         font-family: 'Roboto', sans-serif;
-        font-size: 10px;
-        margin-top: 5px
+        font-size: 8px;
+        margin-top: 5px;
+        margin-bottom: -2px;
       }
       .input-item {
         font-family: 'Roboto', sans-serif;
-        font-size: 12px;
+        font-size: 9px;
+        
       }
 
       .toast-container {
   pointer-events: none; /* Ignore pointer events */
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  min-width: 250px;
+  bottom: 5px;
+  right: 5px;
+  min-width: 200px;
   z-index: 1080;
 }
 
@@ -82,15 +85,17 @@
     </style>
   </head>
   <body>
+
     <h3>PURCHASE ORDER</h3>
-    <div class="container-fluid text-left">
-      <button id="newTransBtn" class="btn btn-primary">New</button>
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loadTransModal">
-  Load
-</button>      <h1></h1>
+
+       <button id="newTransBtn" style ="font-size : 12px;" class="btn btn-primary mb-1">New Transaction</button>
+        <button type="button" class="btn btn-primary mb-1" style ="font-size : 12px;" data-bs-toggle="modal" data-bs-target="#loadTransModal">
+          Load Transaction
+        </button>  
+    
       <div class="row align-items-start">
-        <div class="col-sm-8 ">
-          <div class="card card-outline card-primary mb-3">
+        <div class="col-sm-4 ">
+          <div class="card card-outline card-primary mb-1">
             <div class="container-fluid text-left">
               <div class="row align-items-start">
                 <div class="col-sm-4">
@@ -100,7 +105,7 @@
                   </div>
                   <div class="mb-31">
                     <label for="po_date" class="form-label">PO DATE</label>
-                    <input type="date" class="form-control" id="po_date" value="<?php echo date('Y-m-d'); ?>" style="width: 50%">
+                    <input type="date" class="form-control" id="po_date" value="<?php echo date('Y-m-d'); ?>" style="width: 100%">
                   </div>
                   <div class="mb-31">
                     <label for="expected_days" class="form-label">EXPECTED DAYS</label>
@@ -126,46 +131,59 @@
             </div>
           </div>     
         </div>
-      </div>
+      </div>   
+
+<div class="card mb-2 shadow-sm">
+  <div class="card-body d-flex flex-wrap align-items-center gap-2">
+    <!-- Search input with autocomplete dropdown -->
+    <div class="position-relative flex-fill" style="max-width: 550px;">
+      <input type="text" id="productSearch" class="form-control form-control-sm" placeholder="Search product..." aria-label="Product Search" autocomplete="off" />
+      <div id="productResults" class="autocomplete-list position-absolute top-100 start-0 mt-1 bg-white border rounded shadow-sm w-100 z-index-1050"></div>
     </div>
 
-    <!-- insert items -->
-    <div class="input-item mb-2">
-      <div class="input-group-text mb-2" id="visible-addon">Insert &nbsp;
-        <div class="form-group position-relative mt-3" style="width: 600px; ">
-          <input type="text" id="productSearch" class="form-control" placeholder="Search product..." style="width: 100%; font-size: 10px; ">
-          <div id="productResults" class="autocomplete-list"></div>
-        </div>
-
-        <!-- Hidden input to store selected ITEMID if needed -->
-        <input type="hidden" id="selectedItemId">&nbsp;
-        <input type="hidden" id="selectedDescription">
-        <input type="hidden" id="selectedCSPrice">
-         <input type="hidden" id="selectedITPrice">
-        <input type="hidden" id="selectedItemsPerCase">
-        <input type="hidden" id="selectedBrand">
-        <input type="hidden" id="selectedITBarcode">
-        <input type="hidden" id="selectedCaseBarcode">
-        <input type="hidden" id="selectedtotalamount">
-
-         <input type="hidden" id="updatecscost">
-        <input type="hidden" id="updateitcost">
-        <input type="hidden" id="updateitpersw">
-
-
-
-
-        <input type="number" class="input-item" id="CStosave" placeholder="CS" style="width:50px">&nbsp;
-        <input type="number" class="input-item" id="SWtosave" placeholder="SW" style="width:50px">&nbsp;
-        <input type="number" class="input-item" id="ITtosave" placeholder="IT" style="width:50px">
-        &nbsp; <button type="button" id = "addtolist" class="btn btn-success">Add to list</button>
-      </div>
+    <!-- Hidden inputs for data -->
+    <div class="d-none">
+      <input type="hidden" id="selectedItemId" />
+      <input type="hidden" id="selectedDescription" />
+      <input type="hidden" id="selectedCSPrice" />
+      <input type="hidden" id="selectedITPrice" />
+      <input type="hidden" id="selectedItemsPerCase" />
+      <input type="hidden" id="selectedBrand" />
+      <input type="hidden" id="selectedITBarcode" />
+      <input type="hidden" id="selectedCaseBarcode" />
+      <input type="hidden" id="selectedtotalamount" />
+      <input type="hidden" id="updatecscost" />
+      <input type="hidden" id="updateitcost" />
+      <input type="hidden" id="updateitpersw" />
     </div>
+
+    <!-- Quantity inputs -->
+    <div class="d-flex align-items-center gap-1">
+      <div class="d-flex align-items-center">
+        <label for="CStosave" class="form-label mb-0 me-1 ml-1 fw-bold">CS</label>
+        <input type="number" id="CStosave" class="form-control form-control-sm" style="width: 70px;" placeholder="CS" />
+      </div>
+      <div class="d-flex align-items-center">
+        <label for="SWtosave" class="form-label mb-0 me-1 ml-1 fw-bold">SW</label>
+        <input type="number" id="SWtosave" class="form-control form-control-sm" style="width: 70px;" placeholder="SW" />
+      </div>
+      <div class="d-flex align-items-center">
+        <label for="ITtosave" class="form-label mb-0 me-1 ml-1 fw-bold">IT</label>
+        <input type="number" id="ITtosave" class="form-control form-control-sm" style="width: 70px;" placeholder="IT" />
+      </div>
+
+      <!-- Add to list button -->
+      <button type="button" id="addtolist" style ="font-size : 12px;" class="btn btn-success d-flex align-items-center ml-1">
+        <i class="bi bi-plus-lg me-1"></i> Add to list
+      </button>
+    </div>
+  </div>
+</div>
     
     <!-- item details -->
     <div class="card text-bg-light" data-bs-spy="scroll" style="max-width: 100%; height: 50%; margin-bottom: .5rem;">
       <div class="card-header">ITEM DETAILS</div>
-      <div class="card-body" style="overflow-y: auto; height: 310px;" >
+      <div class="card-body" style="overflow-y: auto; height: 360px;" >
         <table id="itemsTable" class="table table-striped table-hover table-bordered table-sm ">
           
   <thead>
@@ -192,13 +210,33 @@
       </div>
     </div>
     <!-- below btn -->
-    <div>
-      Total lines: 
-      <input type="text" id = "totallines" class="input-item " placeholder="0" readonly aria-label="Username" style="width: 3%" value="0" >
-      &nbsp;
-      Total Amount: 
-      <input type="text" id = "totalamount" class="input-item " placeholder="0" readonly aria-label="Username" style="width: 9%" value="0" >
+<div class="card mb-0 shadow-sm">
+  <div class="card-body row align-items-center p-1 m-1">
+    <!-- Left side: Total lines and Total amount -->
+    <div class="col d-flex flex-wrap align-items-center gap-1 px-3">
+      <div class="d-flex align-items-center">
+        <label for="totallines" class="me-1 fw-bold mb-0 ml-1">Total lines:</label>
+        <input type="text" id="totallines" class="form-control form-control-sm" placeholder="0" readonly aria-label="Total lines" style="width: 60px;" value="0" />
+      </div>
+      <div class="d-flex align-items-center">
+        <label for="totalamount" class="me-1 fw-bold mb-0 ml-1">Total Amount:</label>
+        <input type="text" id="totalamount" class="form-control form-control-sm" placeholder="0" readonly aria-label="Total amount" style="width: 100px;" value="0" />
+      </div>
     </div>
+    <!-- Right side: Button -->
+    <div class="col-auto text-end pe-1">
+
+      <button type="button" id="btnprocess" onclick="confirmProcessPO('#poNumber')" class="btn btn-success ml-1 mr-0" style="width: 140px; height: 40px; font-size:12px;">Process Order</button>
+   
+      <button class="btn btn-info btn-bg ml-1 mr-0 "  style="width: 70px; height: 40px; font-size:12px;" onclick="print()">
+    <i class="fas fa-print"></i> Print
+  </button>
+
+    </div>
+
+   
+  </div>
+</div>
     
   
   <div class="modal fade" id="processConfirmModal" tabindex="-1" role="dialog" aria-labelledby="processConfirmLabel" aria-hidden="true">
@@ -286,11 +324,6 @@
     </div>
   </div>
 </div>
-
-<div class="text-right mb-0">
-      <button type="button" id= "btnprocess" onclick="confirmProcessPO('#poNumber')" class="btn btn-success" style="width: 120px" >Process</button>
-  </div>
-
 
   <!-- Modal -->
 
