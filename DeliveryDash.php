@@ -59,7 +59,7 @@ if (isset($_POST['login'])) {
 <!doctype html>
 <html lang="en">
   <head>
-     <link rel="icon" type="image/x-icon" href="MainImg/deliverydash.ico">
+     <link rel="icon" type="image/x-icon" href="\Services\img\dash.png">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Login | DELIVERY DASH</title>
