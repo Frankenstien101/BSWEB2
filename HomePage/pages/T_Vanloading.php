@@ -777,7 +777,7 @@ document.getElementById('newTransBtn').addEventListener('click', function() {
         .then(data => {
             if (data.count !== undefined) {
                
-                const transaction_id = 'VL2' + companyId + siteId + data.count;
+                const transaction_id = 'VL2-' + companyId +'-'+ siteId + '-' + data.count;
            
                 document.getElementById('transaction_id').value = transaction_id;
                 document.getElementById('status').value = 'DRAFT';
@@ -1539,7 +1539,6 @@ function printReport() {
           <p><strong>TRANSACTION ID:</strong> ${transactionId}</p>
           <p><strong>DATE CREATED:</strong> ${transactionDate}</p>
           <p><strong>SELLER:</strong> ${sellerName}</p>
-          <p><strong>STATUS:</strong> DRAFT</p>
         </div>
         
         <div class="report-title"></div>
