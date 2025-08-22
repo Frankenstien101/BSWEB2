@@ -83,6 +83,7 @@ try {
         $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($items ?: []);
         exit();
+
         } else if ($action === 'loadskus') {
         $companyId     = $_GET['company'] ?? '';
         $siteid        = $_GET['siteid'] ?? '';
@@ -110,11 +111,13 @@ try {
         $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($items ?: []);
         exit();
+
         /// load saved items
         } else if ($action === 'loadlist') {
         $transactionId     = $_GET['transactionid'] ?? '';
 
         $sql = "SELECT *
+        
                 FROM Aquila_Van_Loading_Details 
              
                 WHERE TRANSACTION_ID = :transactionid
@@ -145,8 +148,8 @@ try {
 
         $stmt = $conn->prepare($sql);
         $stmt->execute([
-            ':transactionid'     => $transactionId,
-            ':itemid'     => $itemid,
+            ':transactionid'=> $transactionId,
+            ':itemid'       => $itemid,
         ]);
 
         $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -166,6 +169,225 @@ try {
 
         echo json_encode(['success'=>true, 'count'=>$row['total'] ?? 1]);
         exit();
+
+/// save to ledger
+
+    } else if ($action === 'processtransactions') {
+   
+         $action       = trim($_GET['action'] ?? '');
+        $companyid    = trim($_GET['company'] ?? '');
+        $siteid       = trim($_GET['siteid'] ?? '');
+        $transactionid= trim($_GET['transactionid'] ?? '');
+        $itemid       = trim($_GET['itemid'] ?? '');
+        $batch       = trim($_GET['batch'] ?? '');
+        $description  = trim($_GET['description'] ?? '');
+        $cs           = trim($_GET['cs'] ?? '');
+        $sw           = trim($_GET['sw'] ?? '');
+        $it           = trim($_GET['it'] ?? '');
+        $vanid        = trim($_GET['vanid'] ?? '');
+        $userprocess  = trim($_GET['username'] ?? '');
+        $warehousecode= trim($_GET['warehousecode'] ?? '');
+         $remarks  = trim($_GET['remarks'] ?? '');
+        $totallines= trim($_GET['totallines'] ?? '');
+        $totallines= trim($_GET['totallines'] ?? '');
+
+            try {
+            // Begin transaction
+            $conn->beginTransaction();
+            
+            // Prepare and execute INSERT
+            $sqlInsert = "INSERT INTO Aquila_Stock_Ledger 
+                (COMPANY_ID, SITE_ID, ITEM_ID, DESCRIPTION, CS, SW, IT, TRANSACTION_ID, TRANSACTION_TYPE, REMARKS, DATE_PROCESS, TIME_PROCESS, DATE_TIME_PROCESS, USER_PROCESS, WAREHOUSE_CODE)
+                VALUES (:companyid, :siteid, :itemid, :description, :cs, :sw, :it, :transactionid, 'VAN LOADING', :remarks, CAST(GETDATE() AS DATE), CAST(GETDATE() AS TIME), GETDATE(), :username, :warehousecode)";
+
+            $stmtInsert = $conn->prepare($sqlInsert);
+            $stmtInsert->execute([
+                ':companyid'     => $companyid,
+                ':siteid'        => $siteid,
+                ':itemid'        => $itemid,
+                ':description'   => $description,
+                ':cs'            => -abs((int)$cs),
+                ':sw'            => -abs((int)$sw),
+                ':it'            => -abs((int)$it),
+                ':transactionid' => $transactionid,
+                ':remarks'       => $remarks,
+                ':username'      => $userprocess,
+                ':warehousecode'=> $warehousecode
+            ]);
+        
+            // Prepare and execute UPDATE
+            $sqlUpdate = "UPDATE Aquila_Inventory_Master 
+                SET CS = CS - :cs, SW = SW - :sw, IT = IT - :it
+                WHERE COMPANY_ID = :companyid 
+                AND SITE_ID = :siteid
+                AND ITEM_ID = :itemid
+                AND WAREHOUSE_CODE = :warehousecode 
+                AND WAREHOUSE_SUB_WAREHOUSE = 'SALABLE' 
+                AND BATCH = :batch";
+
+            $stmtUpdate = $conn->prepare($sqlUpdate);
+            $stmtUpdate->execute([
+                ':cs' => abs((int)$cs),
+                ':sw' => abs((int)$sw),
+                ':it' => abs((int)$it),
+                ':companyid' => $companyid,
+                ':siteid' => $siteid,
+                ':itemid' => $itemid,
+                ':warehousecode' => $warehousecode,
+                ':batch' => $batch
+            ]);
+        
+            // Commit transaction
+            $conn->commit();
+        } catch (Exception $e) {
+            // Rollback on error
+            $conn->rollBack();
+            echo json_encode([
+                "success" => false,
+                "error" => $e->getMessage()
+            ]);
+        }
+        exit();
+    //process after
+
+    } else if ($action === 'processupdate') {
+
+            try {
+            $transactionid = trim($_GET['transactionid'] ?? '');
+            $sellerid = trim($_GET['sellerid'] ?? '');
+            $remarks = trim($_GET['remarks'] ?? '');
+            $totallines = trim($_GET['totallines'] ?? '');
+            $total = trim($_GET['total'] ?? '');
+            
+            if (!$transactionid || !$sellerid || !$totallines || !$total) {
+                throw new Exception('Missing required parameters.');
+            }
+        
+            $sql = "UPDATE Aquila_Van_Loading_Transaction
+                    SET SELLER_ID = :sellerid,
+                        DATE_CREATED = GETDATE(),
+                        AMOUNT = :total,
+                        TOTAL_LINES = :totallines,
+                        STATUS = 'ALLOCATED',
+                        IS_SYNC = '0',
+                        REMARKS = :remarks
+                    WHERE LOADING_ID = :transactionid";
+
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([
+                ':sellerid' => $sellerid,
+                ':total' => $total,
+                ':totallines' => $totallines,
+                ':remarks' => $remarks,
+                ':transactionid' => $transactionid
+            ]);
+        
+            echo json_encode(['success' => true]);
+        } catch (Exception $e) {
+            // Log error
+            error_log($e->getMessage());
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        }
+        exit();
+
+        /// SAVE AS DRAFT
+
+        } else if ($action === 'saveasdraft') {
+
+            try {
+            $transactionid = trim($_GET['transactionid'] ?? '');
+            $sellerid = trim($_GET['sellerid'] ?? '');
+            $remarks = trim($_GET['remarks'] ?? '');
+            $totallines = trim($_GET['totallines'] ?? '');
+            $total = trim($_GET['total'] ?? '');
+            
+            if (!$transactionid || !$sellerid || !$totallines || !$total) {
+                throw new Exception('Missing required parameters.');
+            }
+        
+            $sql = "UPDATE Aquila_Van_Loading_Transaction
+                    SET SELLER_ID = :sellerid,
+                        DATE_CREATED = GETDATE(),
+                        AMOUNT = :total,
+                        TOTAL_LINES = :totallines,
+                        STATUS = 'DRAFT',
+                        IS_SYNC = '0',
+                        REMARKS = :remarks
+                    WHERE LOADING_ID = :transactionid";
+        
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([
+                ':sellerid' => $sellerid,
+                ':total' => $total,
+                ':totallines' => $totallines,
+                ':remarks' => $remarks,
+                ':transactionid' => $transactionid
+            ]);
+        
+            echo json_encode(['success' => true]);
+        } catch (Exception $e) {
+            // Log error
+            error_log($e->getMessage());
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        }
+        exit();
+
+
+    } else if ($action === 'loadproposal') {
+        $sellerid     = $_GET['sellerid'] ?? '';
+        $companyid     = $_GET['companyid'] ?? '';
+        $siteid     = $_GET['siteid'] ?? '';
+
+        $sql = "SELECT *
+                FROM Aquila_Van_Loading_Transaction 
+             
+                WHERE STATUS = 'PENDING'
+                AND SELLER_ID = :sellerid
+                AND COMPANY_ID = :companyid
+                AND SITE_ID =  :siteid
+      
+                ORDER BY DATE_CREATED ASC";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            ':sellerid'     => $sellerid,
+            ':companyid'     => $companyid,
+            ':siteid'     => $siteid,
+        ]);
+
+        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode($items ?: []);
+        exit();
+
+        // LOAD TRANS 
+        } else if ($action === 'loadtransactions') {
+        $companyid     = $_GET['companyid'] ?? '';
+        $siteid     = $_GET['siteid'] ?? '';
+        $datefrom     = $_GET['datefrom'] ?? '';
+        $dateto     = $_GET['dateto'] ?? '';
+
+        $sql = "SELECT *
+                FROM Aquila_Van_Loading_Transaction 
+             
+                WHERE STATUS = 'DRAFT'
+                AND COMPANY_ID = :companyid
+                AND SITE_ID =  :siteid
+                AND DATE_CREATED BETWEEN :datefrom AND :dateto
+      
+                ORDER BY DATE_CREATED ASC";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            ':datefrom'     => $datefrom,
+            ':dateto'     => $dateto,
+            ':companyid'     => $companyid,
+            ':siteid'     => $siteid,
+        ]);
+
+        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode($items ?: []);
+        exit();
+
 
     } else if ($action === 'insertnewtrans') {
         $companyId     = $_GET['companyid'] ?? '';
@@ -188,6 +410,10 @@ try {
     } else {
         echo json_encode(['success'=>false, 'error'=>'No valid action']);
         exit();
+
+    /// add to ledger 
+
+
     }
 
 } catch (Exception $e) {
