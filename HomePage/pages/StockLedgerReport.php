@@ -133,7 +133,7 @@
    
 
     <!-- Date Filter Card -->
-    <div class="card text-bg-light mb-1 justify-content-between" style="width: 24%; font-size: 9px;">
+    <div class="card text-bg-light mb-1 justify-content-between" style="max-width: 100%; font-size: 9px;">
         <div class="card-header d-flex justify-content-between align-items-center">
             <span>SELECT DATE FILTER</span>
         </div>
@@ -225,7 +225,7 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    loaditems();
+  //  loaditems();
 });
 
 let loadedPOs = []; // Global storage
@@ -249,7 +249,7 @@ function loaditems() {
     tbody.innerHTML = '';
     showLoader();
 
-    fetch(`/HomePage/datafetcher/reports/getdatareports.php?action=loaditems&company=${encodeURIComponent(companyId)}&siteid=${encodeURIComponent(siteid)}&datefrom=${encodeURIComponent(dateFrom)}&dateto=${encodeURIComponent(dateTo)}`)
+    fetch(`/HomePage/datafetcher/reports/getdatareports.php?action=stockledger&company=${encodeURIComponent(companyId)}&siteid=${encodeURIComponent(siteid)}&datefrom=${encodeURIComponent(dateFrom)}&dateto=${encodeURIComponent(dateTo)}`)
         .then(response => {
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             return response.json();
