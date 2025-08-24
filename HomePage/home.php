@@ -79,7 +79,8 @@ if (!isset($_SESSION['SITE_CODE']) || !isset($_SESSION['COMPANY_ID']) || !isset(
 <!doctype html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/x-icon" href="MainImg\bscr.ico">
+
+     <link rel="icon" type="image/x-icon" href="\Services\img\bscr.png">
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -93,7 +94,7 @@ if (!isset($_SESSION['SITE_CODE']) || !isset($_SESSION['COMPANY_ID']) || !isset(
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-  <title>Bluesys</title>
+  <title>Bluesys DMS</title>
 </head>
 <body class="hold-transition sidebar-mini">
 
