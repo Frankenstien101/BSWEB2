@@ -246,7 +246,7 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link d-flex align-items-center">
+            <a href="home.php?page=settings" class="nav-link d-flex align-items-center">
               <img src="\Dash\Home\img\settings.png" style="width: 30px; height: 30px; margin-right: 10px;">
               <p class="mb-0">Settings</p>
             </a>
@@ -265,7 +265,7 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
     if ($role === 'ADMIN') {
         // Admin pages logic
         $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
-        $allowedPages = ['dashboard', 'transactions', 'reports'];
+        $allowedPages = ['dashboard', 'transactions', 'reports' , 'settings'];
         if (in_array($page, $allowedPages)) {
             include "pages/{$page}.php";
         } else {
