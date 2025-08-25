@@ -120,6 +120,65 @@ try {
         $dateto = $_GET['dateto'] ?? '';
 
         // Query 1: Agent Details
+
+        // Query 2: Agent Performance Summary
+        $stmt = $conn->prepare("SELECT 
+                                    COMPANY_ID, SITE_ID, AGENT_ID, USERNAME, DELIVERY_DATE, ENTRY_BAT_PERCENTAGE, EXIT_BAT_PERCENTAGE,
+                                    TIME_ENTRY, TIME_EXIT, STATUS, LOGIN_ID, TIME_SPENT
+                                FROM Dash_Agent_Performance_Summary
+                                WHERE 
+                                    COMPANY_ID = :companyid
+                                    AND DELIVERY_DATE BETWEEN :datefrom AND :dateto
+                                    AND STATUS = 'COMPLETE'
+                                GROUP BY 
+                                    COMPANY_ID, SITE_ID, AGENT_ID, USERNAME, DELIVERY_DATE, ENTRY_BAT_PERCENTAGE, EXIT_BAT_PERCENTAGE,
+                                    TIME_ENTRY, TIME_EXIT, STATUS, LOGIN_ID, TIME_SPENT");
+        $stmt->execute([':datefrom' => $datefrom, ':dateto' => $dateto, ':companyid' => $companyid]);
+        $warehouses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+        // Query 4: Delivery Summary
+        $stmt = $conn->prepare("SELECT 
+                                    [DISTRIBUTOR_CODE], [BRANCH_CODE], [BRANCH], ORDER_DATE, [DATE] AS INVOICE_DATE,
+                                    Dash_Plan_Batch_Details.DATE_TO_DELIVER AS DATE_DELIVERED, [SALES_REP], [SELLER_NAME], AGENT_ID, BATCH,
+                                    Dash_Plan_Batch_Details.STATUS,
+                                    CASE WHEN SUM(ISNULL([RETURN_AMOUNT], 0)) = 0 THEN 'NO' ELSE 'YES' END AS HAS_RETURN,
+                                    PRFR_Invoice_Detailed.CUSTOMER_ID, PRFR_Invoice_Detailed.CUSTOMER_NAME,
+                                    [DOCUMENT_NUMBER], SUM([SALES_AMOUNT]) AS TOTAL,
+                                    PG_LOCAL_SUBSEGMENT,
+                                    MAX(Dash_Agent_Performance_Detailed.STORE_ENTRY) AS STORE_ENTRY,
+                                    MAX(Dash_Agent_Performance_Detailed.STORE_EXIT) AS STORE_EXIT,
+                                    MAX(Dash_Agent_Performance_Detailed.STORE_TIME_SPENT) AS STORE_TIME_SPENT
+                                FROM [dbo].[PRFR_Invoice_Detailed]
+                                LEFT JOIN Dash_Plan_Batch_Details ON Dash_Plan_Batch_Details.INVOICE_NUMBER = PRFR_Invoice_Detailed.DOCUMENT_NUMBER AND PRFR_Invoice_Detailed.DISTRIBUTOR_CODE = Dash_Plan_Batch_Details.COMPANY_ID
+                                LEFT JOIN Dash_Returns ON Dash_Returns.INVOICE_NUMBER = PRFR_Invoice_Detailed.DOCUMENT_NUMBER AND PRFR_Invoice_Detailed.DISTRIBUTOR_CODE = Dash_Returns.COMPANY_ID AND Dash_Returns.IT_BARCODE = PRFR_Invoice_Detailed.IT_BARCODE
+                                LEFT JOIN Dash_Agent_Performance_Detailed ON Dash_Agent_Performance_Detailed.DELIVERY_DATE = Dash_Plan_Batch_Details.DATE_TO_DELIVER AND Dash_Agent_Performance_Detailed.STORE_CODE = PRFR_Invoice_Detailed.CUSTOMER_ID AND Dash_Agent_Performance_Detailed.COMPANY_ID = PRFR_Invoice_Detailed.DISTRIBUTOR_CODE
+                                WHERE Dash_Plan_Batch_Details.COMPANY_ID = :companyid AND Dash_Plan_Batch_Details.DATE_TO_DELIVER BETWEEN :datefrom AND :dateto
+                                GROUP BY [DISTRIBUTOR_CODE], [BRANCH_CODE], [BRANCH], ORDER_DATE, [DATE], Dash_Plan_Batch_Details.DATE_TO_DELIVER,
+                                [SALES_REP], [SELLER_NAME], AGENT_ID, BATCH, Dash_Plan_Batch_Details.STATUS, 
+                                PRFR_Invoice_Detailed.CUSTOMER_ID, PRFR_Invoice_Detailed.CUSTOMER_NAME, [DOCUMENT_NUMBER], PG_LOCAL_SUBSEGMENT");
+        $stmt->execute([':datefrom' => $datefrom, ':dateto' => $dateto, ':companyid' => $companyid]);
+        $summary = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Output all data as JSON
+        echo json_encode([
+            "Agent Performance Summary" => $warehouses,
+            "Delivery Result Summary" => $summary,
+        ], JSON_UNESCAPED_UNICODE);
+        exit();
+        
+
+
+        } elseif ($action === 'loadagentsdetailed') {
+        // Load agent data and output JSON
+        header('Content-Type: application/json; charset=utf-8');
+
+        $companyid = $_GET['companyid'] ?? '';
+        $siteid = $_GET['siteid'] ?? '';
+        $datefrom = $_GET['datefrom'] ?? '';
+        $dateto = $_GET['dateto'] ?? '';
+
+        // Query 1: Agent Details
         $stmt = $conn->prepare("SELECT 
                                     COMPANY_ID, SITE_ID, -- Now from Dash_Customer_Master (c)
                                     SITE_NAME, DATE_TO_DELIVER, AGENT, STORE_ENTRY, STORE_EXIT, STORE_TIME_SPENT,
@@ -222,24 +281,10 @@ try {
         $stmt->execute([':datefrom' => $datefrom, ':dateto' => $dateto, ':companyid' => $companyid]);
         $summary = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Query 5: SO Report
-        $stmt = $conn->prepare("SELECT 
-                                    [COMPANY_ID], [SITE_ID], [UPLOAD_BY_USER_ID], [DIST_NAME], [BRANCH_NAME], [SELLER_TYPE], [SELLER_NAME], 
-                                    [CUSTOMER_NAME], [STORE_CODE], [CHANNEL_NAME], [SUB_CHANNEL_NAME], [ORDER_DATE], [ORDER_ID],
-                                    [PRD_SKU_CODE], [PRD_SKU_NAME], [BARCODE], [CS_QTY], [QTY_PIECE], [PRICE_PIECE], [SCHEME_CODE],
-                                    [SCHEME_DESC], [ORDER_VALUE_WITHOUTSCHEME], [SCHEME_VALUE], [ORDER_VALUE], [ORDER_SOURCE], [IS_PLAN]
-                                FROM [dbo].[PRFR_SO_UPLOAD]
-                                WHERE COMPANY_ID = :companyid AND ORDER_DATE BETWEEN :datefrom AND :dateto");
-        $stmt->execute([':datefrom' => $datefrom, ':dateto' => $dateto, ':companyid' => $companyid]);
-        $soreport = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
         // Output all data as JSON
         echo json_encode([
             "Agent Performance Detailed" => $agents,
-            "Agent Performance Summary" => $warehouses,
             "Delivery Result Detailed" => $stores,
-            "Delivery Result Summary" => $summary,
-            "SO Report" => $soreport
         ], JSON_UNESCAPED_UNICODE);
         exit();
         }
