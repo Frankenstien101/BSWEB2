@@ -2,8 +2,7 @@
 <?php
 session_start();
 include(__DIR__ . "/../../DB/dbcon.php");
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+
 
 $action = $_GET['action'] ?? '';
 
@@ -114,8 +113,6 @@ try {
     } elseif ($action === 'loadagents') {
         // Load agent data and output JSON
         header('Content-Type: application/json; charset=utf-8');
-        ini_set('memory_limit', '1000M');
-        ini_set('max_execution_time', 560);
 
         $companyid = $_GET['companyid'] ?? '';
         $siteid = $_GET['siteid'] ?? '';
@@ -252,8 +249,6 @@ try {
    elseif ($action === 'soreport') {
         // Load agent data and output JSON
         header('Content-Type: application/json; charset=utf-8');
-        ini_set('memory_limit', '1000M');
-        ini_set('max_execution_time', 560);
 
         $companyid = $_GET['companyid'] ?? '';
         $siteid = $_GET['siteid'] ?? '';
@@ -281,8 +276,6 @@ try {
      elseif ($action === 'result') {
         // Load agent data and output JSON
         header('Content-Type: application/json; charset=utf-8');
-        ini_set('memory_limit', '1000M');
-        ini_set('max_execution_time', 560);
 
         $companyid = $_GET['companyid'] ?? '';
         $siteid = $_GET['siteid'] ?? '';
@@ -355,18 +348,7 @@ try {
 
         ], JSON_UNESCAPED_UNICODE);
         exit();
-        
-
-
-
-
-
-
-
-
-
-
-
+    
 
     } else {
         // Invalid or missing action
