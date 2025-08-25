@@ -180,7 +180,7 @@
       <!-- CROSSDOCK REPORT -->
       <div class="card text-bg-light" style="width: 240px;">
         <div class="card-header d-flex align-items-center p-2">
-          <span>CROSSDOCK REPORT</span>
+          <span>PERFORMANCE DETAILED</span>
           <div class="d-flex align-items-center ml-auto m-0 p-0">
             <input type="checkbox" id="crossdockReportAllSites" class="m-0" />
             <label for="crossdockReportAllSites" class="m-0 ml-2" style="font-size:10px;">ALL SITES</label>
@@ -189,13 +189,13 @@
         <div class="card-body p-2">
           <div class="d-flex flex-wrap align-items-center">
             <label class="mb-1 mr-1">Date From:</label>
-            <input type="date" id="supplier_datefrom" class="mb-1 form-control form-control-sm" value="<?php echo date('Y-m-d'); ?>"/>
+            <input type="date" id="perffrom" class="mb-1 form-control form-control-sm" value="<?php echo date('Y-m-d'); ?>"/>
             <label class="mb-1 ml-1 mr-1">To</label>
-            <input type="date" id="supplier_dateto" class="mb-1 form-control form-control-sm" value="<?php echo date('Y-m-d'); ?>"/>
+            <input type="date" id="perfto" class="mb-1 form-control form-control-sm" value="<?php echo date('Y-m-d'); ?>"/>
           </div>
         </div>
         <div class="d-flex justify-content-end mb-1 mr-2">
-          <button class="btn btn-success btn-sm" onclick="applyFilters()">GENERATE</button>
+          <button class="btn btn-success btn-sm" onclick="exportMultiSheetdetailed()">GENERATE</button>
         </div>
       </div>
     </div>
@@ -266,7 +266,7 @@
           }
         }
 
-        XLSX.writeFile(wb, "Delivery_Performance_Report.xlsx");
+        XLSX.writeFile(wb, "Delivery_Performance_Summary_Report.xlsx");
       } catch (err) {
         console.error(err);
         alert("Export failed!");
@@ -275,6 +275,35 @@
       }
     }
 
+
+    async function exportMultiSheetdetailed() {
+      showLoading(); // Show spinner
+      const companyid = "<?php echo $_SESSION['Company_ID'] ?? ''; ?>";
+      const siteid    = "<?php echo $_SESSION['SITE_ID'] ?? ''; ?>";
+      const datefrom = document.getElementById('perffrom').value;
+      const dateto = document.getElementById('perfto').value;
+
+      try {
+        const res = await fetch(`/Dash/datafetcher/reports_getdata.php?action=loadagentsdetailed&datefrom=${encodeURIComponent(datefrom)}&dateto=${encodeURIComponent(dateto)}&companyid=${companyid}&siteid=${siteid}`);
+        const data = await res.json();
+
+        const wb = XLSX.utils.book_new();
+
+        for (const sheetName in data) {
+          if (Array.isArray(data[sheetName])) {
+            const ws = XLSX.utils.json_to_sheet(data[sheetName]);
+            XLSX.utils.book_append_sheet(wb, ws, sheetName);
+          }
+        }
+
+        XLSX.writeFile(wb, "Delivery_Performance_Detailed_Report.xlsx");
+      } catch (err) {
+        console.error(err);
+        alert("Export failed!");
+      } finally {
+        hideLoading(); // Hide spinner
+      }
+    }
 
 
  async function exportsoreport() {
@@ -305,61 +334,35 @@
         hideLoading(); // Hide spinner
       }
     }
-
-
     
-async function exportdeliveryresult() {
-  showLoading(); // Show spinner
-  const companyid = "<?php echo $_SESSION['Company_ID'] ?? ''; ?>";
-  const siteid    = "<?php echo $_SESSION['SITE_ID'] ?? ''; ?>";
-  const datefrom = document.getElementById('resultdtfrom').value;
-  const dateto = document.getElementById('resultdtto').value; // Corrected to 'resultdtto' assuming you meant to get 'dateto'
+ async function exportdeliveryresult() {
+      showLoading(); // Show spinner
+      const companyid = "<?php echo $_SESSION['Company_ID'] ?? ''; ?>";
+      const siteid    = "<?php echo $_SESSION['SITE_ID'] ?? ''; ?>";
+      const datefrom = document.getElementById('resultdtfrom').value;
+      const dateto = document.getElementById('resultdtfrom').value;
 
-  try {
-    const res = await fetch(`/Dash/datafetcher/reports_getdata.php?action=result&datefrom=${encodeURIComponent(datefrom)}&dateto=${encodeURIComponent(dateto)}&companyid=${companyid}&siteid=${siteid}`);
-    const data = await res.json();
+      try {
+        const res = await fetch(`/Dash/datafetcher/reports_getdata.php?action=result&datefrom=${encodeURIComponent(datefrom)}&dateto=${encodeURIComponent(dateto)}&companyid=${companyid}&siteid=${siteid}`);
+        const data = await res.json();
 
-    const wb = XLSX.utils.book_new();
+        const wb = XLSX.utils.book_new();
 
-    for (const sheetName in data) {
-      if (Array.isArray(data[sheetName]) && data[sheetName].length > 0) {
-        const ws = XLSX.utils.json_to_sheet(data[sheetName]);
-        XLSX.utils.book_append_sheet(wb, ws, sheetName);
-      } else {
-        console.warn(`Sheet "${sheetName}" has no data or is not an array.`);
+        for (const sheetName in data) {
+          if (Array.isArray(data[sheetName])) {
+            const ws = XLSX.utils.json_to_sheet(data[sheetName]);
+            XLSX.utils.book_append_sheet(wb, ws, sheetName);
+          }
+        }
+
+        XLSX.writeFile(wb, "Delivery_Result_Report.xlsx");
+      } catch (err) {
+        console.error(err);
+        alert("Export failed!");
+      } finally {
+        hideLoading(); // Hide spinner
       }
     }
-
-    // Generate binary string
-    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-
-    // Create a Blob from the binary data
-    const blob = new Blob([wbout], { type: 'application/octet-stream' });
-
-    // Create a URL for the Blob
-    const url = URL.createObjectURL(blob);
-
-    // Create a temporary anchor element to trigger download
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'Delivery_Result_Report.xlsx';
-
-    // Append anchor to body, trigger click, then remove it
-    document.body.appendChild(a);
-    a.click();
-
-    // Clean up
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-
-  } catch (err) {
-    console.error(err);
-    alert("Export failed!");
-  } finally {
-    hideLoading(); // Hide spinner
-  }
-}
-
 
   </script>
 </body>
