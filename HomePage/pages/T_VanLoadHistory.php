@@ -197,23 +197,23 @@
 
   <label class="radio-label mr-1">
     <input type="radio" name="status" value="PENDING">
-    <span class="radio-custom bg-blue">| PENDING |</span>
+    <span class="radio-custom bg-blue">PENDING</span>
   </label>
 
 
   <label class="radio-label mr-1">
     <input type="radio" name="status" value="ALLOCATED">
-    <span class="radio-custom bg-gold">| ALLOCATED |</span>
+    <span class="radio-custom bg-gold">ALLOCATED</span>
   </label>
   
   <label class="radio-label mr-1">
     <input type="radio" name="status" value="LOCKED">
-    <span class="radio-custom bg-red">| LOCKED |</span>
+    <span class="radio-custom bg-red">LOCKED</span>
   </label>
 
     <label class="radio-label mr-1">
     <input type="radio" name="status" value="APPROVED">
-    <span class="radio-custom bg-green">| APPROVED |</span>
+    <span class="radio-custom bg-green">APPROVED</span>
   </label>
   
 
