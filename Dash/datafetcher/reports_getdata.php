@@ -289,36 +289,62 @@ try {
             "Delivery Result Detailed" => $stores,
         ], JSON_UNESCAPED_UNICODE);
         exit();
-        }
+        
 
 // so report
 
-   elseif ($action === 'soreport') {
-        // Load agent data and output JSON
-        header('Content-Type: application/json; charset=utf-8');
+   } elseif ($action === 'soreport') {
+    // CSV download headers
+    header('Content-Type: text/csv; charset=utf-8');
+    header('Content-Disposition: attachment; filename="SO_Report.csv"');
+    header("Pragma: no-cache");
+    header("Expires: 0");
 
-        $companyid = $_GET['companyid'] ?? '';
-        $siteid = $_GET['siteid'] ?? '';
-        $datefrom = $_GET['datefrom'] ?? '';
-        $dateto = $_GET['dateto'] ?? '';
-    
-        // Query 5: SO Report
-        $stmt = $conn->prepare("SELECT 
-                                    [COMPANY_ID], [SITE_ID], [UPLOAD_BY_USER_ID], [DIST_NAME], [BRANCH_NAME], [SELLER_TYPE], [SELLER_NAME], 
-                                    [CUSTOMER_NAME], [STORE_CODE], [CHANNEL_NAME], [SUB_CHANNEL_NAME], [ORDER_DATE], [ORDER_ID],
-                                    [PRD_SKU_CODE], [PRD_SKU_NAME], [BARCODE], [CS_QTY], [QTY_PIECE], [PRICE_PIECE], [SCHEME_CODE],
-                                    [SCHEME_DESC], [ORDER_VALUE_WITHOUTSCHEME], [SCHEME_VALUE], [ORDER_VALUE], [ORDER_SOURCE], [IS_PLAN]
-                                FROM [dbo].[PRFR_SO_UPLOAD]
-                                WHERE COMPANY_ID = :companyid AND ORDER_DATE BETWEEN :datefrom AND :dateto");
-        $stmt->execute([':datefrom' => $datefrom, ':dateto' => $dateto, ':companyid' => $companyid]);
-        $soreport = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $companyid = $_GET['companyid'] ?? '';
+    $siteid    = $_GET['siteid'] ?? '';
+    $datefrom  = $_GET['datefrom'] ?? '';
+    $dateto    = $_GET['dateto'] ?? '';
 
-        // Output all data as JSON
-        echo json_encode([
-            "SO Report" => $soreport
-        ], JSON_UNESCAPED_UNICODE);
-        exit();
+    // Open output stream
+    $output = fopen('php://output', 'w');
+
+    // Write header row
+    fputcsv($output, [
+        'COMPANY_ID', 'SITE_ID', 'UPLOAD_BY_USER_ID', 'DIST_NAME', 'BRANCH_NAME', 
+        'SELLER_TYPE', 'SELLER_NAME', 'CUSTOMER_NAME', 'STORE_CODE', 'CHANNEL_NAME',
+        'SUB_CHANNEL_NAME', 'ORDER_DATE', 'ORDER_ID', 'PRD_SKU_CODE', 'PRD_SKU_NAME',
+        'BARCODE', 'CS_QTY', 'QTY_PIECE', 'PRICE_PIECE', 'SCHEME_CODE', 'SCHEME_DESC',
+        'ORDER_VALUE_WITHOUTSCHEME', 'SCHEME_VALUE', 'ORDER_VALUE', 'ORDER_SOURCE', 'IS_PLAN'
+    ]);
+
+    // Prepare query (use cursor for row by row fetch)
+    $stmt = $conn->prepare("SELECT 
+                                [COMPANY_ID], [SITE_ID], [UPLOAD_BY_USER_ID], [DIST_NAME], [BRANCH_NAME], [SELLER_TYPE], [SELLER_NAME], 
+                                [CUSTOMER_NAME], [STORE_CODE], [CHANNEL_NAME], [SUB_CHANNEL_NAME], [ORDER_DATE], [ORDER_ID],
+                                [PRD_SKU_CODE], [PRD_SKU_NAME], [BARCODE], [CS_QTY], [QTY_PIECE], [PRICE_PIECE], [SCHEME_CODE],
+                                [SCHEME_DESC], [ORDER_VALUE_WITHOUTSCHEME], [SCHEME_VALUE], [ORDER_VALUE], [ORDER_SOURCE], [IS_PLAN]
+                            FROM [dbo].[PRFR_SO_UPLOAD]
+                            WHERE COMPANY_ID = :companyid 
+                              AND ORDER_DATE BETWEEN :datefrom AND :dateto");
+
+    $stmt->execute([
+        ':datefrom' => $datefrom,
+        ':dateto'   => $dateto,
+        ':companyid'=> $companyid
+    ]);
+
+    // Fetch row by row and stream
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        fputcsv($output, $row);
+        // flush to client to avoid memory buildup
+        flush();
     }
+
+    fclose($output);
+    exit();
+}
+
+    
 
      elseif ($action === 'result') {
         // Load agent data and output JSON
