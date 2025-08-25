@@ -308,34 +308,57 @@
 
 
     
- async function exportdeliveryresult() {
-      showLoading(); // Show spinner
-      const companyid = "<?php echo $_SESSION['Company_ID'] ?? ''; ?>";
-      const siteid    = "<?php echo $_SESSION['SITE_ID'] ?? ''; ?>";
-      const datefrom = document.getElementById('resultdtfrom').value;
-      const dateto = document.getElementById('resultdtfrom').value;
+async function exportdeliveryresult() {
+  showLoading(); // Show spinner
+  const companyid = "<?php echo $_SESSION['Company_ID'] ?? ''; ?>";
+  const siteid    = "<?php echo $_SESSION['SITE_ID'] ?? ''; ?>";
+  const datefrom = document.getElementById('resultdtfrom').value;
+  const dateto = document.getElementById('resultdtto').value; // Corrected to 'resultdtto' assuming you meant to get 'dateto'
 
-      try {
-        const res = await fetch(`/Dash/datafetcher/reports_getdata.php?action=result&datefrom=${encodeURIComponent(datefrom)}&dateto=${encodeURIComponent(dateto)}&companyid=${companyid}&siteid=${siteid}`);
-        const data = await res.json();
+  try {
+    const res = await fetch(`/Dash/datafetcher/reports_getdata.php?action=result&datefrom=${encodeURIComponent(datefrom)}&dateto=${encodeURIComponent(dateto)}&companyid=${companyid}&siteid=${siteid}`);
+    const data = await res.json();
 
-        const wb = XLSX.utils.book_new();
+    const wb = XLSX.utils.book_new();
 
-        for (const sheetName in data) {
-          if (Array.isArray(data[sheetName])) {
-            const ws = XLSX.utils.json_to_sheet(data[sheetName]);
-            XLSX.utils.book_append_sheet(wb, ws, sheetName);
-          }
-        }
-
-        XLSX.writeFile(wb, "Delivery_Result_Report.xlsx");
-      } catch (err) {
-        console.error(err);
-        alert("Export failed!");
-      } finally {
-        hideLoading(); // Hide spinner
+    for (const sheetName in data) {
+      if (Array.isArray(data[sheetName]) && data[sheetName].length > 0) {
+        const ws = XLSX.utils.json_to_sheet(data[sheetName]);
+        XLSX.utils.book_append_sheet(wb, ws, sheetName);
+      } else {
+        console.warn(`Sheet "${sheetName}" has no data or is not an array.`);
       }
     }
+
+    // Generate binary string
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+
+    // Create a Blob from the binary data
+    const blob = new Blob([wbout], { type: 'application/octet-stream' });
+
+    // Create a URL for the Blob
+    const url = URL.createObjectURL(blob);
+
+    // Create a temporary anchor element to trigger download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Delivery_Result_Report.xlsx';
+
+    // Append anchor to body, trigger click, then remove it
+    document.body.appendChild(a);
+    a.click();
+
+    // Clean up
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+  } catch (err) {
+    console.error(err);
+    alert("Export failed!");
+  } finally {
+    hideLoading(); // Hide spinner
+  }
+}
 
 
   </script>
