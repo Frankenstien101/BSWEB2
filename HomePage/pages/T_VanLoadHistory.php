@@ -128,9 +128,6 @@
     color: #080808ff; /* Black text for contrast */
 }
 
-
-
-
 </style>
 </head>
 <body>
@@ -260,25 +257,26 @@
 <!-- Modal -->
 <div class="modal fade" id="loadingIdModal" tabindex="-1" role="dialog" aria-labelledby="loadingIdModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content" style="font-size: 12px;">
+    <div class="modal-content" style="font-size: 12px; max-height: 80vh;"> <!-- max-height for vertical scroll -->
       <div class="modal-header">
-        <h5 class="modal-title" id="loadingIdModalLabel">Loading Details :  <span id="currentLoadingId"></span></h5>
+        <h5 class="modal-title" id="loadingIdModalLabel">
+          Loading Details : <span id="currentLoadingId"></span>
+        </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body" id="loadingIdModalBody">
+      <div class="modal-body" id="loadingIdModalBody" style="overflow-y: auto; max-height: 60vh;"> <!-- vertical scroll -->
         <!-- Dynamic content will be injected here -->
-      <table id="loadingdetails" class="table table-striped table-hover table-bordered table-sm" style="font-size: 9px;">
+        <div style="overflow-x: auto;"> <!-- horizontal scroll wrapper -->
+          <table id="loadingdetails" class="table table-striped table-hover table-bordered table-sm" style="font-size: 9px; min-width: 800px;">
             <thead>
-                <tr>
-            <thead>
-            <tr>
+              <tr>
                 <th>#</th>
-               <th>BARCODE</th>
-              <th>ITEM CODE</th>
-                 <th>BATCH</th>
-               <th>DESCRIPTION</th>
+                <th>BARCODE</th>
+                <th>ITEM CODE</th>
+                <th>BATCH</th>
+                <th>DESCRIPTION</th>
                 <th>CS</th>
                 <th>SW</th>
                 <th>IT</th>
@@ -286,11 +284,11 @@
                 <th>SIH</th>
                 <th>TOTAL CASE AMOUNT</th>
                 <th>TOTAL IT AMOUNT</th>
-                </tr>
-                </thead>
+              </tr>
+            </thead>
             <tbody></tbody>
-        </table>
-
+          </table>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
@@ -298,6 +296,7 @@
     </div>
   </div>
 </div>
+
 
 
 <!-- Loader -->
