@@ -392,7 +392,7 @@ async function deliveryplan() {
       const companyid = "<?php echo $_SESSION['Company_ID'] ?? ''; ?>";
       const siteid    = "<?php echo $_SESSION['SITE_ID'] ?? ''; ?>";
       const datefrom = document.getElementById('resultdtfrom').value;
-      const dateto = document.getElementById('resultdtfrom').value;
+      const dateto = document.getElementById('resultdtto').value;
 
       try {
         const res = await fetch(`/Dash/datafetcher/reports_getdata.php?action=result&datefrom=${encodeURIComponent(datefrom)}&dateto=${encodeURIComponent(dateto)}&companyid=${companyid}&siteid=${siteid}`);
