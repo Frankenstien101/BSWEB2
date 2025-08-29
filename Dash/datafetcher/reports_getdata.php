@@ -289,62 +289,86 @@ try {
             "Delivery Result Detailed" => $stores,
         ], JSON_UNESCAPED_UNICODE);
         exit();
-        
+        }
 
 // so report
 
-   } elseif ($action === 'soreport') {
-    // CSV download headers
-    header('Content-Type: text/csv; charset=utf-8');
-    header('Content-Disposition: attachment; filename="SO_Report.csv"');
-    header("Pragma: no-cache");
-    header("Expires: 0");
+   elseif ($action === 'soreport') {
+        // Load agent data and output JSON
+        header('Content-Type: application/json; charset=utf-8');
 
+        $companyid = $_GET['companyid'] ?? '';
+        $siteid = $_GET['siteid'] ?? '';
+        $datefrom = $_GET['datefrom'] ?? '';
+        $dateto = $_GET['dateto'] ?? '';
+    
+        // Query 5: SO Report
+        $stmt = $conn->prepare("SELECT 
+                                    [COMPANY_ID], [SITE_ID], [UPLOAD_BY_USER_ID], [DIST_NAME], [BRANCH_NAME], [SELLER_TYPE], [SELLER_NAME], 
+                                    [CUSTOMER_NAME], [STORE_CODE], [CHANNEL_NAME], [SUB_CHANNEL_NAME], [ORDER_DATE], [ORDER_ID],
+                                    [PRD_SKU_CODE], [PRD_SKU_NAME], [BARCODE], [CS_QTY], [QTY_PIECE], [PRICE_PIECE], [SCHEME_CODE],
+                                    [SCHEME_DESC], [ORDER_VALUE_WITHOUTSCHEME], [SCHEME_VALUE], [ORDER_VALUE], [ORDER_SOURCE], [IS_PLAN]
+                                FROM [dbo].[PRFR_SO_UPLOAD]
+                                WHERE COMPANY_ID = :companyid AND ORDER_DATE BETWEEN :datefrom AND :dateto");
+        $stmt->execute([':datefrom' => $datefrom, ':dateto' => $dateto, ':companyid' => $companyid]);
+        $soreport = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Output all data as JSON
+        echo json_encode([
+            "SO Report" => $soreport
+        ], JSON_UNESCAPED_UNICODE);
+        exit();
+    }
+    
+
+    elseif ($action === 'deliveryplan') {
     $companyid = $_GET['companyid'] ?? '';
     $siteid    = $_GET['siteid'] ?? '';
     $datefrom  = $_GET['datefrom'] ?? '';
     $dateto    = $_GET['dateto'] ?? '';
 
-    // Open output stream
-    $output = fopen('php://output', 'w');
-
-    // Write header row
-    fputcsv($output, [
-        'COMPANY_ID', 'SITE_ID', 'UPLOAD_BY_USER_ID', 'DIST_NAME', 'BRANCH_NAME', 
-        'SELLER_TYPE', 'SELLER_NAME', 'CUSTOMER_NAME', 'STORE_CODE', 'CHANNEL_NAME',
-        'SUB_CHANNEL_NAME', 'ORDER_DATE', 'ORDER_ID', 'PRD_SKU_CODE', 'PRD_SKU_NAME',
-        'BARCODE', 'CS_QTY', 'QTY_PIECE', 'PRICE_PIECE', 'SCHEME_CODE', 'SCHEME_DESC',
-        'ORDER_VALUE_WITHOUTSCHEME', 'SCHEME_VALUE', 'ORDER_VALUE', 'ORDER_SOURCE', 'IS_PLAN'
-    ]);
-
-    // Prepare query (use cursor for row by row fetch)
     $stmt = $conn->prepare("SELECT 
-                                [COMPANY_ID], [SITE_ID], [UPLOAD_BY_USER_ID], [DIST_NAME], [BRANCH_NAME], [SELLER_TYPE], [SELLER_NAME], 
-                                [CUSTOMER_NAME], [STORE_CODE], [CHANNEL_NAME], [SUB_CHANNEL_NAME], [ORDER_DATE], [ORDER_ID],
-                                [PRD_SKU_CODE], [PRD_SKU_NAME], [BARCODE], [CS_QTY], [QTY_PIECE], [PRICE_PIECE], [SCHEME_CODE],
-                                [SCHEME_DESC], [ORDER_VALUE_WITHOUTSCHEME], [SCHEME_VALUE], [ORDER_VALUE], [ORDER_SOURCE], [IS_PLAN]
-                            FROM [dbo].[PRFR_SO_UPLOAD]
-                            WHERE COMPANY_ID = :companyid 
-                              AND ORDER_DATE BETWEEN :datefrom AND :dateto");
+                Dash_Plan_Batch_Details.COMPANY_ID,
+                Dash_Plan_Batch_Details.SITE_ID,
+                [BATCH],
+                [INVOICE_NUMBER],
+                [TOTAL_AMOUNT],
+                [INVOICE_VOLUME],
+                [DISTANCE],
+                [DISTANCE_IN_DECIMAL],
+                Dash_Plan_Batch_Details.STATUS,
+                Dash_Plan_Batch_Details.DATE_TO_DELIVER,
+                [STORE_LAT],
+                [STORE_LONG],
+                [CUSTOMER_ID],
+                [CUSTOMER_NAME],
+                [AGENT_ID],
+                VEHICLE_ID
+        FROM [dbo].[Dash_Plan_Batch_Details]
+        LEFT JOIN Dash_Plan_Batch_Transaction 
+            ON Dash_Plan_Batch_Transaction.BATCH_ID = Dash_Plan_Batch_Details.BATCH
+        WHERE Dash_Plan_Batch_Details.COMPANY_ID = :companyid 
+          AND Dash_Plan_Batch_Details.DATE_TO_DELIVER BETWEEN :datefrom AND :dateto");
 
-    $stmt->execute([
-        ':datefrom' => $datefrom,
-        ':dateto'   => $dateto,
-        ':companyid'=> $companyid
-    ]);
+    $stmt->execute([':datefrom' => $datefrom, ':dateto' => $dateto, ':companyid' => $companyid]);
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Fetch row by row and stream
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        fputcsv($output, $row);
-        // flush to client to avoid memory buildup
-        flush();
+    // Set CSV headers
+    header('Content-Type: text/csv; charset=utf-8');
+    header('Content-Disposition: attachment; filename="Delivery_Plan.csv"');
+
+    $out = fopen('php://output', 'w');
+    if (!empty($rows)) {
+        // write header row
+        fputcsv($out, array_keys($rows[0]));
+        // write data rows
+        foreach ($rows as $row) {
+            fputcsv($out, $row);
+        }
     }
-
-    fclose($output);
+    fclose($out);
     exit();
 }
-
-    
 
      elseif ($action === 'result') {
         // Load agent data and output JSON
@@ -422,6 +446,231 @@ try {
         ], JSON_UNESCAPED_UNICODE);
         exit();
     
+        }
+
+     elseif ($action === 'orderprep') {
+        // Load agent data and output JSON
+        header('Content-Type: application/json; charset=utf-8');
+
+        $companyid = $_GET['companyid'] ?? '';
+        $siteid = $_GET['siteid'] ?? '';
+        $datefrom = $_GET['datefrom'] ?? '';
+        $dateto = $_GET['dateto'] ?? '';
+
+        // Query 1: Agent Details
+        $stmt = $conn->prepare("SELECT Dash_SO_Plan_Batch_Details.COMPANY_ID, 
+                      Dash_SO_Plan_Batch_Details.SITE_ID,
+                      Dash_SO_Plan_Batch_Details.SO_PLAN_NUMBER,
+                      [SO_NUMBER],
+                      VEHICLE_ID,
+                      SO_PICK_BATCH,
+                      [CUSTOMER_ID],
+                      [CUSTOMER_NAME],
+                      [TOTAL_AMOUNT],
+                      [STORE_LAT],
+                      [STORE_LONG],
+                      [ORDER_DATE],
+                      Dash_SO_Plan_Batch_Details.STATUS,
+                      [SUB_BATCH],
+                      [SUB_DA],
+                      [VEHICLE_IDS]
+               FROM [dbo].[Dash_SO_Plan_Batch_Details] 
+               LEFT JOIN Dash_SO_Plan_Transaction 
+               ON Dash_SO_Plan_Transaction.SO_PLAN_NUMBER = Dash_SO_Plan_Batch_Details.SO_PLAN_NUMBER 
+               WHERE Dash_SO_Plan_Batch_Details.COMPANY_ID = :companyid
+               AND ORDER_DATE BETWEEN :datefrom AND :dateto 
+               AND Dash_SO_Plan_Batch_Details.STATUS != 'NEW'");
+        $stmt->execute([':datefrom' => $datefrom, ':dateto' => $dateto, ':companyid' => $companyid]);
+        $agents = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Query 2: Agent Performance Summary
+    
+        // Output all data as JSON
+        echo json_encode([
+            "Details" => $agents,
+
+        ], JSON_UNESCAPED_UNICODE);
+        exit();
+     }
+      elseif ($action === 'freight') {
+        // Load agent data and output JSON
+        header('Content-Type: application/json; charset=utf-8');
+
+        $companyid = $_GET['companyid'] ?? '';
+        $siteid = $_GET['siteid'] ?? '';
+        $datefrom = $_GET['datefrom'] ?? '';
+        $dateto = $_GET['dateto'] ?? '';
+
+        // Query 1: Agent Details
+        $stmt = $conn->prepare("SELECT 
+        S.SITE_NAME,
+        D.SITE_ID,
+        AVG(D.DailyTruckCount) AS Average_Trucks_Used_Per_Day,
+        AVG(D.AverageInvoiceDrops) AS Average_Invoice_Drops_Per_Day,
+        CONVERT(VARCHAR(8), DATEADD(SECOND, AVG(DATEDIFF(SECOND, 0, TRY_CONVERT(time, A.TIME_ENTRY))), 0), 108) AS Average_Market_Entry_Time,
+        CONVERT(VARCHAR(8), DATEADD(SECOND, AVG(DATEDIFF(SECOND, 0, TRY_CONVERT(time, A.TIME_EXIT))), 0), 108) AS Average_Market_Exit_Time
+    FROM (
+        SELECT 
+            SITE_ID,
+            CAST([ORDER_DATE] AS DATE) AS DeliveryDate,
+            COUNT(DISTINCT VEHICLE_ID) AS DailyTruckCount,
+            SUM(NUM_OF_INVOICES) AS AverageInvoiceDrops,
+            COMPANY_ID
+        FROM [dbo].[Dash_Plan_Batch_Transaction]
+        WHERE ORDER_DATE BETWEEN :datefrom AND :dateto
+          AND VEHICLE_ID IS NOT NULL
+          AND STATUS = 'PROCESSED'
+        GROUP BY SITE_ID, CAST([ORDER_DATE] AS DATE), COMPANY_ID
+    ) AS D
+    JOIN [dbo].[Dash_Sites] AS S ON D.SITE_ID = S.SITE_ID
+    LEFT JOIN [dbo].[Dash_Agent_Performance_Summary] AS A 
+        ON D.SITE_ID = A.SITE_ID AND D.DeliveryDate = A.DELIVERY_DATE
+    WHERE 
+        TRY_CONVERT(time, A.TIME_ENTRY) IS NOT NULL
+        AND TRY_CONVERT(time, A.TIME_EXIT) IS NOT NULL
+        AND D.COMPANY_ID = :companyid
+    GROUP BY D.SITE_ID, S.SITE_NAME
+    ORDER BY S.SITE_NAME;");
+        $stmt->execute([':datefrom' => $datefrom, ':dateto' => $dateto, ':companyid' => $companyid]);
+        $agents = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Query 2: Agent Performance Summary
+    
+        $stmt = $conn->prepare("SELECT 
+                        S.SITE_NAME,
+                        D.SITE_ID,
+                        D.DeliveryDate,
+                        D.DailyTruckCount AS Trucks_Used_On_Day,
+                        D.AverageInvoiceDrops AS Invoice_Drops_On_Day,
+                        CONVERT(VARCHAR(8), DATEADD(SECOND, AVG(DATEDIFF(SECOND, 0, TRY_CONVERT(time, A.TIME_ENTRY))), 0), 108) AS Average_Market_Entry_Time,
+                        CONVERT(VARCHAR(8), DATEADD(SECOND, AVG(DATEDIFF(SECOND, 0, TRY_CONVERT(time, A.TIME_EXIT))), 0), 108) AS Average_Market_Exit_Time
+                    FROM (
+                        SELECT 
+                            SITE_ID,
+                            CAST([ORDER_DATE] AS DATE) AS DeliveryDate,
+                            COUNT(DISTINCT VEHICLE_ID) AS DailyTruckCount,
+                            SUM(NUM_OF_INVOICES) AS AverageInvoiceDrops,
+                            COMPANY_ID
+                        FROM [dbo].[Dash_Plan_Batch_Transaction]
+                        WHERE ORDER_DATE BETWEEN :datefrom AND :dateto
+                          AND VEHICLE_ID IS NOT NULL
+                          AND STATUS = 'PROCESSED'
+                        GROUP BY SITE_ID, CAST([ORDER_DATE] AS DATE), COMPANY_ID
+                    ) AS D
+                    JOIN [dbo].[Dash_Sites] AS S ON D.SITE_ID = S.SITE_ID
+                    LEFT JOIN [dbo].[Dash_Agent_Performance_Summary] AS A 
+                        ON D.SITE_ID = A.SITE_ID AND D.DeliveryDate = A.DELIVERY_DATE
+                    WHERE 
+                        TRY_CONVERT(time, A.TIME_ENTRY) IS NOT NULL
+                        AND TRY_CONVERT(time, A.TIME_EXIT) IS NOT NULL
+                        AND D.COMPANY_ID = :companyid
+                    GROUP BY 
+                        D.SITE_ID, 
+                        S.SITE_NAME,
+                        D.DeliveryDate,
+                        D.DailyTruckCount,
+                        D.AverageInvoiceDrops
+                    ORDER BY 
+                      
+                        D.DeliveryDate;");
+        $stmt->execute([':datefrom' => $datefrom, ':dateto' => $dateto, ':companyid' => $companyid]);
+        $details = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Output all data as JSON
+        echo json_encode([
+            "Summary" => $agents,
+            "Details" => $details,
+        ], JSON_UNESCAPED_UNICODE);
+        exit();
+    }
+
+        elseif ($action === 'crossdock') {
+        // Load agent data and output JSON
+        header('Content-Type: application/json; charset=utf-8');
+
+        $companyid = $_GET['companyid'] ?? '';
+        $siteid = $_GET['siteid'] ?? '';
+        $datefrom = $_GET['datefrom'] ?? '';
+        $dateto = $_GET['dateto'] ?? '';
+
+        // Query 1: Agent Details
+
+
+        // Query 2: Agent Performance Summary
+    
+        $stmt = $conn->prepare("WITH OrderedPoints AS (
+                                SELECT
+                                    AGENT_ID,
+                                    DELIVERY_DATE,
+                                    LAT_CAPTURED,
+                                    LONG_CAPTURED,
+                                    TIME_STAMP,
+                                    ROW_NUMBER() OVER (PARTITION BY AGENT_ID, DELIVERY_DATE ORDER BY TIME_STAMP) AS rn
+                                FROM [dbo].[Dash_Agent_Time_Stamp]
+                            ),
+                            
+                            DistancePairs AS (
+                                SELECT
+                                    a.AGENT_ID,
+                                    a.DELIVERY_DATE,
+                                    geography::Point(a.LAT_CAPTURED, a.LONG_CAPTURED, 4326) AS PointA,
+                                    geography::Point(b.LAT_CAPTURED, b.LONG_CAPTURED, 4326) AS PointB
+                                FROM OrderedPoints a
+                                INNER JOIN OrderedPoints b 
+                                    ON a.AGENT_ID = b.AGENT_ID
+                                    AND a.DELIVERY_DATE = b.DELIVERY_DATE
+                                    AND a.rn = b.rn - 1
+                            ),
+                            
+                            TotalDistances AS (
+                                SELECT
+                                    AGENT_ID,
+                                    DELIVERY_DATE,
+                                    ROUND(SUM(PointA.STDistance(PointB)) / 1000.0, 2) AS TotalDistanceKm  -- total distance in kilometers
+                                FROM DistancePairs
+                                GROUP BY AGENT_ID, DELIVERY_DATE
+                            )
+                            
+                            SELECT 
+                                xd.[COMPANY_ID],
+                                xd.[SITE_ID],
+                                xd.[BATCH],
+                                xd.[DELIVERY_AMOUNT],
+                                xd.[AGENT],
+                                xd.[VEHICLE],
+                                xd.[TRANSACTION_DATE],
+                            
+                                CONVERT(varchar(8), xd.[WH_ENTRY], 108) AS WAREHOUSE_ENTRY,
+                                CONVERT(varchar(8), xd.[DEPARTURE_TIME], 108) AS DEPARTURE_TIME,
+                                CONVERT(varchar(8), xd.[ARRIVAL_TIME], 108) AS CROSS_DOCK_ARRIVAL_TIME,
+                                CONVERT(varchar(8), xd.[XD_EXIT], 108) AS CROSS_DOCK_EXIT,
+                                CONVERT(varchar(8), xd.[WH_RETURN], 108) AS WAREHOUSE_RETURN_TIME,
+                            
+                                td.TotalDistanceKm AS DISTANCE_TRAVELLED_IN_KM,
+                            
+                                ROUND(
+                                    td.TotalDistanceKm * ISNULL(v.CONSUMPTION_PER_100_METERS, 0) / 100, 
+                                    2
+                                ) AS FUEL_CONSUMED_IN_LITER
+                            
+                            FROM [dbo].[Dash_XDock_Status] xd
+                            LEFT JOIN TotalDistances td 
+                                ON xd.AGENT = td.AGENT_ID 
+                                AND xd.TRANSACTION_DATE = td.DELIVERY_DATE
+                            LEFT JOIN [dbo].[Dash_Vehicles] v
+                                ON xd.VEHICLE = v.PLATE_NUM
+                            
+                            WHERE xd.TRANSACTION_DATE BETWEEN :datefrom AND :dateto AND  xd.[COMPANY_ID] = :companyid
+                            
+                            ORDER BY xd.AGENT, xd.TRANSACTION_DATE;");
+        $stmt->execute([':datefrom' => $datefrom, ':dateto' => $dateto, ':companyid' => $companyid]);
+        $details = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Output all data as JSON
+        echo json_encode([
+            "Details" => $details,
+        ], JSON_UNESCAPED_UNICODE);
+        exit();
 
     } else {
         // Invalid or missing action
