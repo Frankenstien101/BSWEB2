@@ -52,6 +52,8 @@
       height: 3rem;
     }
   </style>
+
+  
 </head>
 <body>
   <!-- Loading overlay: hidden initially -->
@@ -81,7 +83,7 @@
           </div>
         </div>
         <div class="d-flex justify-content-end mb-1 mr-2">
-          <button class="btn btn-success btn-sm" onclick="exportMultiSheet()">GENERATE</button>
+          <button class="btn btn-success btn-sm" onclick="deliveryplan()">GENERATE</button>
         </div>
       </div>
       
@@ -103,7 +105,7 @@
           </div>
         </div>
         <div class="d-flex justify-content-end mb-1 mr-2">
-          <button class="btn btn-success btn-sm" onclick="applyFilters()">GENERATE</button>
+          <button class="btn btn-success btn-sm" onclick="orderpreps()">GENERATE</button>
         </div>
       </div>
     </div>
@@ -214,21 +216,21 @@
         <div class="card-body p-2">
           <div class="d-flex flex-wrap align-items-center">
             <label class="mb-1 mr-1">Date From:</label>
-            <input type="date" id="customer_datefrom" class="mb-1 form-control form-control-sm" value="<?php echo date('Y-m-d'); ?>"/>
+            <input type="date" id="freight_datefrom" class="mb-1 form-control form-control-sm" value="<?php echo date('Y-m-d'); ?>"/>
             <label class="mb-1 ml-1 mr-1">To</label>
-            <input type="date" id="customer_dateto" class="mb-1 form-control form-control-sm" value="<?php echo date('Y-m-d'); ?>"/>
+            <input type="date" id="freight_dateto" class="mb-1 form-control form-control-sm" value="<?php echo date('Y-m-d'); ?>"/>
           </div>
         </div>
         <div class="d-flex justify-content-end mb-1 mr-2">
-          <button class="btn btn-success btn-sm" onclick="applyFilters()">GENERATE</button>
+          <button class="btn btn-success btn-sm" onclick="freightreport()">GENERATE</button>
         </div>
       </div>
        <div class="card text-bg-light" style="width: 240px;">
         <div class="card-header d-flex align-items-center p-2">
           <span>CROSSDOCK REPORT</span>
           <div class="d-flex align-items-center ml-auto m-0 p-0">
-            <input type="checkbox" id="freightReportAllSites" class="m-0" />
-            <label for="freightReportAllSites" class="m-0 ml-2" style="font-size:10px;">ALL SITES</label>
+            <input type="checkbox" id="crossdockAllSites" class="m-0" />
+            <label for="crossdockAllSites" class="m-0 ml-2" style="font-size:10px;">ALL SITES</label>
           </div>
         </div>
         <div class="card-body p-2">
@@ -240,13 +242,12 @@
           </div>
         </div>
         <div class="d-flex justify-content-end mb-1 mr-2">
-          <button class="btn btn-success btn-sm" onclick="applyFilters()">GENERATE</button>
+          <button class="btn btn-success btn-sm" onclick="crossdock()">GENERATE</button>
         </div>
       </div>
     </div>
     </div>
 
-    
   </div>
 
   <!-- Bootstrap JS dependencies -->
@@ -357,6 +358,34 @@ async function exportsoreport() {
   }
 }
 
+
+async function deliveryplan() {
+  showLoading(); // Show spinner
+  const companyid = "<?php echo $_SESSION['Company_ID'] ?? ''; ?>";
+  const siteid    = "<?php echo $_SESSION['SITE_ID'] ?? ''; ?>";
+  const datefrom = document.getElementById('delivery_datefrom').value;
+  const dateto   = document.getElementById('delivery_dateto').value;
+
+  try {
+    // Direct download link (backend streams CSV row by row)
+    const url = `/Dash/datafetcher/reports_getdata.php?action=deliveryplan&datefrom=${encodeURIComponent(datefrom)}&dateto=${encodeURIComponent(dateto)}&companyid=${companyid}&siteid=${siteid}`;
+    
+    // Create hidden <a> element to trigger download
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Delivery_Plan.csv"; // will be served as CSV
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+  } catch (err) {
+    console.error(err);
+    alert("Export failed!");
+  } finally {
+    hideLoading(); // Hide spinner
+  }
+}
+
     
  async function exportdeliveryresult() {
       showLoading(); // Show spinner
@@ -379,6 +408,95 @@ async function exportsoreport() {
         }
 
         XLSX.writeFile(wb, "Delivery_Result_Report.xlsx");
+      } catch (err) {
+        console.error(err);
+        alert("Export failed!");
+      } finally {
+        hideLoading(); // Hide spinner
+      }
+    }
+
+
+     async function orderpreps() {
+      showLoading(); // Show spinner
+      const companyid = "<?php echo $_SESSION['Company_ID'] ?? ''; ?>";
+      const siteid    = "<?php echo $_SESSION['SITE_ID'] ?? ''; ?>";
+      const datefrom = document.getElementById('order_datefrom').value;
+      const dateto = document.getElementById('order_dateto').value;
+
+      try {
+        const res = await fetch(`/Dash/datafetcher/reports_getdata.php?action=orderprep&datefrom=${encodeURIComponent(datefrom)}&dateto=${encodeURIComponent(dateto)}&companyid=${companyid}&siteid=${siteid}`);
+        const data = await res.json();
+
+        const wb = XLSX.utils.book_new();
+
+        for (const sheetName in data) {
+          if (Array.isArray(data[sheetName])) {
+            const ws = XLSX.utils.json_to_sheet(data[sheetName]);
+            XLSX.utils.book_append_sheet(wb, ws, sheetName);
+          }
+        }
+
+        XLSX.writeFile(wb, "Order_Preparation_Report.xlsx");
+      } catch (err) {
+        console.error(err);
+        alert("Export failed!");
+      } finally {
+        hideLoading(); // Hide spinner
+      }
+    }
+
+    async function freightreport() {
+      showLoading(); // Show spinner
+      const companyid = "<?php echo $_SESSION['Company_ID'] ?? ''; ?>";
+      const siteid    = "<?php echo $_SESSION['SITE_ID'] ?? ''; ?>";
+      const datefrom = document.getElementById('freight_datefrom').value;
+      const dateto = document.getElementById('freight_dateto').value;
+
+      try {
+        const res = await fetch(`/Dash/datafetcher/reports_getdata.php?action=freight&datefrom=${encodeURIComponent(datefrom)}&dateto=${encodeURIComponent(dateto)}&companyid=${companyid}&siteid=${siteid}`);
+        const data = await res.json();
+
+        const wb = XLSX.utils.book_new();
+
+        for (const sheetName in data) {
+          if (Array.isArray(data[sheetName])) {
+            const ws = XLSX.utils.json_to_sheet(data[sheetName]);
+            XLSX.utils.book_append_sheet(wb, ws, sheetName);
+          }
+        }
+
+        XLSX.writeFile(wb, "Freight_Report.xlsx");
+      } catch (err) {
+        console.error(err);
+        alert("Export failed!");
+      } finally {
+        hideLoading(); // Hide spinner
+      }
+    }
+
+
+      async function crossdock() {
+      showLoading(); // Show spinner
+      const companyid = "<?php echo $_SESSION['Company_ID'] ?? ''; ?>";
+      const siteid    = "<?php echo $_SESSION['SITE_ID'] ?? ''; ?>";
+      const datefrom = document.getElementById('cdockfrom').value;
+      const dateto = document.getElementById('cdockto').value;
+
+      try {
+        const res = await fetch(`/Dash/datafetcher/reports_getdata.php?action=crossdock&datefrom=${encodeURIComponent(datefrom)}&dateto=${encodeURIComponent(dateto)}&companyid=${companyid}&siteid=${siteid}`);
+        const data = await res.json();
+
+        const wb = XLSX.utils.book_new();
+
+        for (const sheetName in data) {
+          if (Array.isArray(data[sheetName])) {
+            const ws = XLSX.utils.json_to_sheet(data[sheetName]);
+            XLSX.utils.book_append_sheet(wb, ws, sheetName);
+          }
+        }
+
+        XLSX.writeFile(wb, "CrossDock_Report.xlsx");
       } catch (err) {
         console.error(err);
         alert("Export failed!");
