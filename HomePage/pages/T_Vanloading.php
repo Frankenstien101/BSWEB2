@@ -209,7 +209,7 @@
     hideBtn.addEventListener('click', hideDetails);
 </script>
 </div>
-<div class="card-body" style="overflow-y: auto; max-width: 100%; height: 440px; padding: 10px;">
+<div class="card-body" style="overflow-y: auto; max-width: 100%; height: 550px; padding: 10px;">
   <table id="itemsTable" class="table table-striped table-hover table-bordered table-sm mb-0" style="font-size: 10px;">
     <thead class="thead-light">
       <tr>
@@ -218,6 +218,7 @@
         <th>ITEM ID</th>
         <th>BATCH</th>
         <th>DESCRIPTION</th>
+         <th>IT PER CS</th>
         <th>CS</th>
         <th>SW</th>
         <th>IT</th>
@@ -889,6 +890,7 @@ function loadlist() {
                     <td>${item.ITEM_CODE || ''}</td>
                     <td>${batch}</td>
                     <td>${item.DESCRIPTION || ''}</td>
+                     <td>${item.ITEM_PER_CASE || ''}</td>
                     <td>${item.CS || ''}</td>
                     <td>${item.SW || ''}</td>
                     <td>${item.IT || ''}</td>
@@ -1183,9 +1185,9 @@ async function processLoadingAllInOne() {
     const requestedMap = {};
     itemsTableRows.forEach(row => {
         const itemid = row.cells[2]?.innerText.trim() || "";
-        const requested_cs = parseInt(row.cells[5]?.innerText.trim(), 10) || 0;
-        const requested_sw = parseInt(row.cells[6]?.innerText.trim(), 10) || 0;
-        const requested_it = parseInt(row.cells[7]?.innerText.trim(), 10) || 0;
+        const requested_cs = parseInt(row.cells[6]?.innerText.trim(), 10) || 0;
+        const requested_sw = parseInt(row.cells[7]?.innerText.trim(), 10) || 0;
+        const requested_it = parseInt(row.cells[8]?.innerText.trim(), 10) || 0;
 
         requestedMap[itemid] = { requested_cs, requested_sw, requested_it };
     });
@@ -1200,7 +1202,7 @@ async function processLoadingAllInOne() {
         const availit = parseInt(row.cells[8]?.innerText.trim(), 10) || 0;
 
         if (requested.requested_cs > availcs || requested.requested_sw > availsw || requested.requested_it > availit) {
-            row.style.backgroundColor = 'rgba(255,0,0,0.2)';
+            row.style.backgroundColor = 'rgba(248, 13, 13, 0.2)';
             hasInvalidRows = true;
         } else {
             row.style.backgroundColor = '';
@@ -1245,9 +1247,9 @@ async function processTableRows(requestedMap) { // Accept requestedMap as parame
 
         // Get requested values from the map
         const requested = requestedMap[itemid] || { requested_cs: 0, requested_sw: 0, requested_it: 0 };
-        const cs =  row.cells[5]?.innerText.trim() || "";
-        const sw =  row.cells[6]?.innerText.trim() || "";
-        const it =  row.cells[7]?.innerText.trim() || "";
+        const cs =  row.cells[6]?.innerText.trim() || "";
+        const sw =  row.cells[7]?.innerText.trim() || "";
+        const it =  row.cells[8]?.innerText.trim() || "";
 
         // Parse dataset attributes
         const itemsPerCase = parseInt(row.dataset.itemsPerCase, 10) || 0;
@@ -1277,6 +1279,7 @@ async function processTableRows(requestedMap) { // Accept requestedMap as parame
                 + `&username=${encodeURIComponent(nameofuser)}`
                 + `&warehousecode=${encodeURIComponent(warehousecode)}`
                 + `&vanid=${encodeURIComponent(sellerid)}`
+                
               
             );
 
@@ -1416,160 +1419,156 @@ itemsTableBody.innerHTML = '';
 
 
 /// print picklist
-
 function printReport() {
-  const transactionId = document.getElementById('transaction_id').value;
-  const sellerName = document.getElementById('cmbvan').value;
+  const transactionId   = document.getElementById('transaction_id').value;
+  const sellerName      = document.getElementById('cmbvan').value;
   const transactionDate = document.getElementById('date_created').value;
-  const remarks = document.getElementById('remarks').value;
-    const companyname = "<?php echo $_SESSION['Company_Name']; ?>";
-  
-  // Get the items table
+  const remarks         = document.getElementById('remarks').value;
+  const companyname     = "<?php echo $_SESSION['Company_Name']; ?>";
+
+  // Get items table
   const itemsTable = document.getElementById('itemsTable') || 
-                    document.querySelector('table') || 
-                    document.querySelector('.items-table');
-  
+                     document.querySelector('table') || 
+                     document.querySelector('.items-table');
+
   if (!itemsTable) {
     alert('Items table not found!');
     return;
   }
-  
-  // Clone the table
+
+  // Clone and clean table
   const clonedTable = itemsTable.cloneNode(true);
-  
-  // Remove action buttons and form elements
-  const buttons = clonedTable.querySelectorAll('button, input, select, a');
-  buttons.forEach(btn => btn.remove());
-  
-  // Define which columns to remove (0-based index)
-  const columnsToRemove = [8,9,10,11]; // Remove CSSWIT (index 3), TOTAL CS (5), TOTAL IT (6)
-  // Adjust these indices based on your actual table structure:
-  // 0: BARCODE, 1: CODE, 2: DESCRIPTION, 3: CSSWIT, 4: PRICE, 5: TOTAL CS, 6: TOTAL IT
-  
-  // Remove specified columns from all rows
-  const allRows = clonedTable.querySelectorAll('tr');
-  allRows.forEach(row => {
+  clonedTable.querySelectorAll('button, input, select, a').forEach(btn => btn.remove());
+  const columnsToRemove = [9,10,11,12]; 
+  clonedTable.querySelectorAll('tr').forEach(row => {
     const cells = row.querySelectorAll('th, td');
-    columnsToRemove.forEach(index => {
-      if (cells[index]) {
-        cells[index].remove();
+    columnsToRemove.forEach(index => { if (cells[index]) cells[index].remove(); });
+  });
+
+  // Style widths
+  const columnWidths = { 0:"10px", 1:"80px", 2:"50px", 3:"50px", 4:"350px" };
+  clonedTable.querySelectorAll('tr').forEach(row => {
+    const cells = row.querySelectorAll('th, td');
+    Object.entries(columnWidths).forEach(([i, w]) => {
+      if (cells[i]) { 
+        cells[i].style.width = w; 
+        cells[i].style.minWidth = w; 
+        cells[i].style.maxWidth = w; 
       }
     });
   });
-  
-  // Content to print with your specific format
+
+  // Build the report HTML
   const reportContent = `
     <html>
       <head>
+        <title>Van Picklist</title>
         <style>
-          body { 
-            font-family: Arial, sans-serif; 
-            margin: 10px; 
-            font-size: 10px; 
-            line-height: 1.2;
-          }
-          .header { 
-            text-align: center; 
-            margin-bottom: 15px;
-            border-bottom: 2px solid #000;
-            padding-bottom: 10px;
-          }
-          .company-name {
-            font-size: 14px;
-            font-weight: bold;
-          }
-          .company-address {
-            font-size: 10px;
-            margin-bottom: 5px;
-          }
-          .report-title {
-            font-size: 12px;
-            font-weight: bold;
-            margin: 10px 0;
-          }
-          .transaction-info {
-            margin: 10px 0;
-            padding: 5px;
-            border: 1px solid #ccc;
-          }
-          .transaction-info p {
-            margin: 3px 0;
-          }
-          .items-table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-top: 10px; 
-            font-size: 8px; 
-            page-break-inside: avoid;
-          }
-          .items-table th, .items-table td { 
-            border: 1px solid #000; 
-            padding: 4px; 
-            text-align: center;
-          }
-          .items-table th {
-            background-color: #f0f0f0;
-            font-weight: bold;
-          }
-          .total-row {
-            font-weight: bold;
-            background-color: #e0e0e0;
-          }
-          .signature-section {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #000;
-          }
-          .text-left { text-align: left; }
-          .text-right { text-align: right; }
-          .text-center { text-align: center; }
-          @media print {
-            body { margin: 0; padding: 10px; }
-            .items-table { font-size: 7px; }
-          }
+          body { font-family: Arial, sans-serif; margin: 10px; font-size: 11px; line-height: 1.2; }
+          .header { text-align: center; margin-bottom: 15px; border-bottom: 2px solid #000; padding-bottom: 10px; }
+          .company-name { font-size: 14px; font-weight: bold; }
+          .report-title { font-size: 12px; font-weight: bold; margin: 10px 0; }
+          .transaction-info { margin: 10px 0; padding: 5px; border: 1px solid #ccc; }
+          .transaction-info p { margin: 3px 0; }
+          .items-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 9px; page-break-inside: avoid; }
+          .items-table th, .items-table td { border: 1px solid #000; padding: 4px; text-align: center; }
+          .items-table th { background-color: #f0f0f0; font-weight: bold; }
+          .total-row { font-weight: bold; background-color: #e0e0e0; }
+          .signature-section { margin-top: 30px; padding-top: 20px; border-top: 1px solid #000; }
+          .report-buttons { margin-bottom: 15px; }
+          .report-buttons button { margin-right: 10px; padding: 6px 12px; font-size: 12px; cursor: pointer; }
+          @media print { .report-buttons { display: none !important; } }
         </style>
       </head>
       <body>
-        <div class="header">
-          <div class="company-name">${companyname}</div>
-          <div class="report-title">VAN PICKLIST</div>
+        <div id="reportContent">
+          <div class="header">
+            <div class="company-name">${companyname}</div>
+            <div class="report-title">VAN PICKLIST</div>
+          </div>
+
+          <div class="report-buttons">
+            <button onclick="printOnly()">🖨️ Print</button>
+            <button onclick="exportExcel()">📊 Export Excel</button>
+            <button onclick="exportPDF()">📄Export PDF</button>
+          </div>
+
+          <div class="transaction-info">
+            <p><strong>TRANSACTION ID:</strong> ${transactionId}</p>
+            <p><strong>DATE CREATED:</strong> ${transactionDate}</p>
+            <p><strong>SELLER:</strong> ${sellerName}</p>
+          </div>
+
+          <table id="reportTable" class="items-table">
+            ${clonedTable.innerHTML}
+          </table>
+
+          <div class="signature-section">
+            <p>REMARKS: ${remarks}</p>
+            <br><br>
+            <p>PREPARED BY: _________________________</p>
+            <p>DATE: _________________________</p>
+          </div>
         </div>
-        
-        <div class="transaction-info">
-          <p><strong>TRANSACTION ID:</strong> ${transactionId}</p>
-          <p><strong>DATE CREATED:</strong> ${transactionDate}</p>
-          <p><strong>SELLER:</strong> ${sellerName}</p>
-        </div>
-        
-        <div class="report-title"></div>
-        
-        ${clonedTable.outerHTML}
-        
-        <div class="signature-section">
-          <p>REMARKS: ${remarks}</p>
-          <br><br>
-          <p>PREPARED BY: _________________________</p>
-          <p>DATE: _________________________</p>
-        </div>
+
+        <script>
+          function exportExcel() {
+            const report = document.getElementById('reportContent').cloneNode(true);
+            const btns = report.querySelector('.report-buttons');
+            if (btns) btns.remove();
+
+            const excelFile = \`
+              <html xmlns:o="urn:schemas-microsoft-com:office:office"
+                    xmlns:x="urn:schemas-microsoft-com:office:excel"
+                    xmlns="http://www.w3.org/TR/REC-html40">
+              <head><meta charset="UTF-8"></head>
+              <body>
+                \${report.innerHTML}
+              </body>
+              </html>\`;
+
+            const blob = new Blob([excelFile], { type: 'application/vnd.ms-excel' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'van_picklist.xls';
+            link.click();
+          }
+
+          function exportPDF() {
+            const btns = document.querySelector('.report-buttons');
+            if (btns) btns.style.display = 'none';
+            window.print();
+            if (btns) btns.style.display = 'block';
+          }
+
+          function printOnly() {
+            const btns = document.querySelector('.report-buttons');
+            if (btns) btns.style.display = 'none';
+            window.print();
+            if (btns) btns.style.display = 'block';
+          }
+        <\/script>
       </body>
     </html>
   `;
 
-  // Open print window
-  const printWindow = window.open('', '_blank', 'width=1000,height=700');
-  printWindow.document.write(reportContent);
-  printWindow.document.close();
-  
-  // Print after content loads
-  printWindow.onload = function() {
-    setTimeout(() => {
-      printWindow.focus();
-      printWindow.print();
-      printWindow.close();
-    }, 500);
-  };
-}
+  // Open popup
+const width = 800;
+const height = 700;
 
+// calculate center position
+const left = (window.screen.width / 2) - (width / 2);
+const top = (window.screen.height / 2) - (height / 2);
+
+// open centered popup
+const features = `width=${width},height=${height},top=${top},left=${left},` +
+                 `resizable=yes,scrollbars=yes,status=no,toolbar=no,menubar=no,location=no`;
+
+const printWindow = window.open('', '', features);
+
+printWindow.document.write(reportContent);
+printWindow.document.close();
+}
 
 
 
@@ -1578,163 +1577,142 @@ function printloading() {
   const sellerName = document.getElementById('cmbvan').value;
   const transactionDate = document.getElementById('date_created').value;
   const remarks = document.getElementById('remarks').value;
-    const companyname = "<?php echo $_SESSION['Company_Name']; ?>";
+  const companyname = "<?php echo $_SESSION['Company_Name']; ?>";
   const status = document.getElementById('status').value;
 
-        const totalCSStr = document.getElementById('totalCSAmount')?.value.trim();
-    const totalITStr = document.getElementById('totalITAmount')?.value.trim();
+  const totalCSStr = document.getElementById('totalCSAmount')?.value.trim();
+  const totalITStr = document.getElementById('totalITAmount')?.value.trim();
 
-    // Basic validation
-    if (!transactionId) { alert('Transaction ID is missing'); return; }
-
-     if (status !== 'ALLOCATED') {
+  if (!transactionId) { alert('Transaction ID is missing'); return; }
+  if (status !== 'ALLOCATED') {
     alert('Cannot print not allocated transactions');
     return;
-    }
+  }
 
-    const totalcs = parseFloat(totalCSStr.replace(/,/g, '')) || 0;
-    const totalit = parseFloat(totalITStr.replace(/,/g, '')) || 0;
-    const total = totalcs + totalit;
-  
-  // Get the items table
+  const totalcs = parseFloat(totalCSStr.replace(/,/g, '')) || 0;
+  const totalit = parseFloat(totalITStr.replace(/,/g, '')) || 0;
+  const total = totalcs + totalit;
+
   const itemsTable = document.getElementById('itemsTable') || 
                     document.querySelector('table') || 
                     document.querySelector('.items-table');
-  
+
   if (!itemsTable) {
     alert('Items table not found!');
     return;
   }
-  
-  // Clone the table
+
   const clonedTable = itemsTable.cloneNode(true);
-  
-  // Remove action buttons and form elements
-  const buttons = clonedTable.querySelectorAll('button, input, select, a');
-  buttons.forEach(btn => btn.remove());
-  
-  // Define which columns to remove (0-based index)
-  const columnsToRemove = [10,11]; // Remove CSSWIT (index 3), TOTAL CS (5), TOTAL IT (6)
-  // Adjust these indices based on your actual table structure:
-  // 0: BARCODE, 1: CODE, 2: DESCRIPTION, 3: CSSWIT, 4: PRICE, 5: TOTAL CS, 6: TOTAL IT
-  
-  // Remove specified columns from all rows
-  const allRows = clonedTable.querySelectorAll('tr');
-  allRows.forEach(row => {
-    const cells = row.querySelectorAll('th, td');
-    columnsToRemove.forEach(index => {
-      if (cells[index]) {
-        cells[index].remove();
-      }
+
+  // Remove unwanted controls
+  clonedTable.querySelectorAll('button, input, select, a').forEach(el => el.remove());
+
+  // Remove unwanted columns (e.g. ACTION, TOTAL SIH)
+  const removeCols = ["ACTION", "TOTAL SIH"];
+  const headerCells = clonedTable.querySelectorAll("thead th");
+  let removeIndexes = [];
+
+  headerCells.forEach((th, i) => {
+    if (removeCols.includes(th.innerText.trim().toUpperCase())) {
+      removeIndexes.push(i);
+    }
+  });
+
+  clonedTable.querySelectorAll("tr").forEach(row => {
+    const cells = row.querySelectorAll("th, td");
+    removeIndexes.forEach(idx => {
+      if (cells[idx]) cells[idx].remove();
     });
   });
-  
-  // Content to print with your specific format
+
+  // Calculate totals
+  let totalCS = 0, totalSW = 0, totalIT = 0, totalCSAmount = 0, totalITAmount = 0;
+  clonedTable.querySelectorAll("tbody tr").forEach(row => {
+    const cells = row.querySelectorAll("td");
+    if (cells.length > 0) {
+      totalCS += parseFloat(cells[3].innerText) || 0;
+      totalSW += parseFloat(cells[4].innerText) || 0;
+      totalIT += parseFloat(cells[5].innerText) || 0;
+      totalCSAmount += parseFloat(cells[7].innerText.replace(/,/g, "")) || 0;
+      totalITAmount += parseFloat(cells[8].innerText.replace(/,/g, "")) || 0;
+    }
+  });
+
+  // Append totals row
+  const tfoot = document.createElement("tfoot");
+  tfoot.innerHTML = `
+    <tr class="total-row">
+      <td colspan="3" style="text-align:right;">TOTAL:</td>
+      <td>${totalCS}</td>
+      <td>${totalSW}</td>
+      <td>${totalIT}</td>
+      <td></td>
+      <td>${totalCSAmount.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
+      <td>${totalITAmount.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
+    </tr>
+  `;
+  clonedTable.appendChild(tfoot);
+
   const reportContent = `
-    <html>
-      <head>
-        <style>
-          body { 
-            font-family: Arial, sans-serif; 
-            margin: 10px; 
-            font-size: 10px; 
-            line-height: 1.2;
-          }
-          .header { 
-            text-align: center; 
-            margin-bottom: 15px;
-            border-bottom: 2px solid #000;
-            padding-bottom: 10px;
-          }
-          .company-name {
-            font-size: 14px;
-            font-weight: bold;
-          }
-          .company-address {
-            font-size: 10px;
-            margin-bottom: 5px;
-          }
-          .report-title {
-            font-size: 12px;
-            font-weight: bold;
-            margin: 10px 0;
-          }
-          .transaction-info {
-            margin: 10px 0;
-            padding: 5px;
-            border: 1px solid #ccc;
-          }
-          .transaction-info p {
-            margin: 3px 0;
-          }
-          .items-table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-top: 10px; 
-            font-size: 8px; 
-            page-break-inside: avoid;
-          }
-          .items-table th, .items-table td { 
-            border: 1px solid #000; 
-            padding: 4px; 
-            text-align: center;
-          }
-          .items-table th {
-            background-color: #f0f0f0;
-            font-weight: bold;
-          }
-          .total-row {
-            font-weight: bold;
-            background-color: #e0e0e0;
-          }
-          .signature-section {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #000;
-          }
-          .text-left { text-align: left; }
-          .text-right { text-align: right; }
-          .text-center { text-align: center; }
-          @media print {
-            body { margin: 0; padding: 10px; }
-            .items-table { font-size: 7px; }
-          }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <div class="company-name">${companyname}</div>
-          <div class="report-title">VAN LOADING REPORT</div>
-        </div>
-        
-        <div class="transaction-info">
-          <p><strong>TRANSACTION ID:</strong> ${transactionId}</p>
-          <p><strong>DATE CREATED:</strong> ${transactionDate}</p>
-          <p><strong>SELLER:</strong> ${sellerName}</p>
-          <p><strong>STATUS:</strong> ALLOCATED</p>
-        <p><strong>AMOUNT:</strong> ${total}</p>
-        </div>
-        
-        <div class="report-title"></div>
-        
-        ${clonedTable.outerHTML}
-        
-        <div class="signature-section">
-          <p>RECEIVE THE ABOVE GOODS IN GOOD CONDITION</p>
-          <br><br>
-          <p>CHECKED BY: _________________________</p>
-          <p>DATE: _________________________</p>
-        </div>
-      </body>
-    </html>
+  <html>
+    <head>
+      <style>
+        body { font-family: Arial, sans-serif; margin: 20px; font-size: 11px; line-height: 1.3; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .company-name { font-size: 14px; font-weight: bold; }
+        .company-address { font-size: 11px; margin: 3px 0; }
+        .report-title { font-size: 14px; font-weight: bold; margin: 10px 0; text-decoration: underline; }
+        .transaction-section { width: 100%; margin-bottom: 10px; font-size: 11px; }
+        .transaction-section td { padding: 2px 5px; }
+        .items-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 10px; }
+        .items-table th, .items-table td { border: 1px solid #000; padding: 4px; text-align: center; }
+        .items-table td:nth-child(3) { text-align: left; } /* DESCRIPTION column */
+        .items-table th { font-weight: bold; }
+        .total-row td { font-weight: bold; }
+        .signature-section { margin-top: 40px; font-size: 11px; }
+        .signature-section p { margin: 5px 0; }
+        .line { display: inline-block; width: 200px; border-bottom: 1px solid #000; margin-left: 10px; }
+        @media print { body { margin: 0; padding: 20px; } }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <div class="company-name">EMPERADOR DISTILLERS, INC.</div>
+        <div class="company-address">Vensu Ventures Inc., Leon Llido St., General Santos City</div>
+        <div class="report-title">VAN LOADING REPORT</div>
+      </div>
+
+      <table class="transaction-section">
+        <tr>
+          <td><strong>TRANSACTION ID:</strong> ${transactionId}</td>
+          <td><strong>DATE CREATED:</strong> ${transactionDate}</td>
+        </tr>
+        <tr>
+          <td><strong>SELLER:</strong> ${sellerName}</td>
+          <td><strong>STATUS:</strong> ALLOCATED</td>
+        </tr>
+        <tr>
+          <td><strong>AMOUNT:</strong> ${total.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
+          <td></td>
+        </tr>
+      </table>
+
+      ${clonedTable.outerHTML}
+
+      <div class="signature-section">
+        <p>RECEIVE THE ABOVE GOODS IN GOOD CONDITION</p>
+        <br><br>
+        <p>CHECKED BY: <span class="line"></span></p>
+        <p>DATE: <span class="line"></span></p>
+      </div>
+    </body>
+  </html>
   `;
 
-  // Open print window
   const printWindow = window.open('', '_blank', 'width=1000,height=700');
   printWindow.document.write(reportContent);
   printWindow.document.close();
-  
-  // Print after content loads
+
   printWindow.onload = function() {
     setTimeout(() => {
       printWindow.focus();
@@ -1743,12 +1721,6 @@ function printloading() {
     }, 500);
   };
 }
-
-
-
-
-
-
 
 
 </script>

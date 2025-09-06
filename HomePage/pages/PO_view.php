@@ -15,13 +15,10 @@
   rel="stylesheet"
 />
 
-
-
-    <title>PO VIEW</title>
+  <title>PO VIEW</title>
   </head>
 
-
-<STYle>
+<style>
 
   .bg-green {
     background-color: green;
@@ -37,7 +34,7 @@
     color: white; /* Optional: for better text visibility */
 }
 
-</STYle>
+</style>
 
 <!-- Bootstrap JS for modal -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -101,6 +98,7 @@
       <th>EXPECTED DAYS</th>
       <th>TOTAL LINES</th>
       <th>TOTAL AMOUNT</th>
+      <th>ADDRESS</th>
       <th>DATE RECEIVED</th>
       <th>INVOICE DATE</th>
       <th>INVOICE NUMBER</th>
@@ -117,8 +115,6 @@
         </table>
       </div>
     </div>
-
-    
 
 <!-- Modal -->
 <div class="modal fade" id="loadTransModal" tabindex="-1" aria-labelledby="loadTransModalLabel" aria-hidden="true">
@@ -155,7 +151,6 @@
   <tbody>
     <!-- Filled dynamically -->
   </tbody>
-
             <!-- ...repeat rows as needed... -->
           </tbody>
         </table>
@@ -168,7 +163,6 @@
     </div>
   </div>
 </div>
-
 
 <script>
 
@@ -202,7 +196,7 @@ function loadItemsByDateRange() {
       loadedPOs = data; // Save globally
       if (!data || data.length === 0) {
         const tr = document.createElement('tr');
-        tr.innerHTML = '<td colspan="12" class="text-center">No items found.</td>';
+        tr.innerHTML = '<td colspan="13" class="text-center">No items found.</td>';
         tbody.appendChild(tr);
         return;
       }
@@ -228,7 +222,8 @@ function loadItemsByDateRange() {
           <td>${item.EXPECTED_DAYS || ''}</td>
           <td>${item.TOTAL_QTY || ''}</td>
           <td>${item.TOTAL_AMOUNT ? parseFloat(item.TOTAL_AMOUNT).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}</td>
-          <td>${item.DATE_RECEIVED || ''}</td>
+          <td>${item.ADDRESS || ''}</td>
+           <td>${item.DATE_RECEIVED || ''}</td>
           <td>${item.INVOICE_DATE || ''}</td>
           <td>${item.INVOICE_NUMBER || ''}</td>
           <td class="${statusClass}">${item.STATUS || ''}</td>
@@ -367,11 +362,7 @@ function loaditemsperpo() {
     });
 };
 
-
-
-
 </script>
-
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

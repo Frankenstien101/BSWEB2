@@ -22,8 +22,8 @@
   <thead>
     <tr>
       <th>#</th>
-<th>LINEID</th>
 <th>COMPANY ID</th>
+<th>SITE ID</th>
 <th>ITEM ID</th>
 <th>DESCRIPTION</th>
 <th>STATUS</th>
@@ -110,8 +110,8 @@ function loaditems() {
 
                 tr.innerHTML = `
                     <td>${index + 1}</td>
-                    <td>${item.LINEID || ''}</td>
                     <td>${item.COMPANY_ID || ''}</td>
+                    <td>${item.SITE_ID || ''}</td>
                     <td>${item.ITEM_ID || ''}</td>
                     <td>${item.DESCRIPTION || ''}</td>
                     <td class="${statusClass}">${item.STATUS || ''}</td>

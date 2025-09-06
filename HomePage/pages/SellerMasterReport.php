@@ -52,7 +52,6 @@
     <div class="text-right mb-0">
 <button class="btn btn-success mb-2" onclick="exportToExcel()">Export to Excel</button>  </div>
 
-
   <div id="loading" style="
     position: fixed;
     top: 0; left: 0;

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-<title>Stock ledger</title>
+<title>Invoice Detailed</title>
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" />
 <style>
@@ -122,73 +122,71 @@
             width: 100% !important;
         }
     }
+
+    .bg-gold {
+    background-color: #fac411ff; /* Classic gold */
+    color: #080808ff; /* Black text for contrast */
+}
+
 </style>
 </head>
 <body>
-<h3>STOCK LEDGER</h3>
+<h3>VAN INVENTORY</h3>
 
-<!-- Filter Cards Container -->
 <div class="filter-container">
-    <!-- Seller Selection Card -->
-   
 
-    <!-- Date Filter Card -->
-    <div class="card text-bg-light mb-1 justify-content-between" style="max-width: 100%; font-size: 9px;">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <span>SELECT DATE FILTER</span>
+    <div class="card text-bg-light mb-1 mt-2" style="width: 180px; font-size: 9px;">
+        <div class="card-header d-flex justify-content-between align-items-right">
+            <span>SELECT VAN</span>
+           
         </div>
-        <div class="card-body date-filter-body">
-            <div class="header">
-                <label>Date From:</label>
-                <input type="date" id="datefrom"  value="<?php echo date('Y-m-d'); ?>" />
-                <label>to</label>
-                <input type="date" id="dateto"  value="<?php echo date('Y-m-d'); ?>" />
-                <button class="btn btn-primary btn-sm" onclick="loaditems()">GENERATE</button>
-            </div>
-            <div id="date-error" class="error-message"></div>
+        <div class="card-body" style="padding: 8px;">
+            <div class="table-container" style="height:30px;">
+            <select id="cmbvan" name="van" class="form-control form-control-sm" style= "font-size :9px; height:25px; width: 100%;">
+            </select>
         </div>
     </div>
+ </div>
+ </div>
+
+<div class="card text-bg-light mt-1" style="max-width: 100%; height: 100%; margin-bottom: 0.5rem; font-size: 9px;">
+    
+<div class="card-header">
+
+<div class="status-radio-group ml-1" style="display: flex; justify-content: flex-end; margin-left: auto;">
+
 </div>
 
-<!-- Summary Card -->
-
-<!-- Table Card -->
-<div class="card text-bg-light" style="max-width: 100%; height: 630px; margin-bottom: 0.5rem; font-size: 9px;">
-    <div class="card-header"></div>
+</div>
     <div class="card-body card-body-scroll">
         <table id="itemsTable" class="table table-striped table-hover table-bordered table-sm" style="font-size: 9px;">
-   <thead>
-    <tr>
-    <th>#</th>
-      <th>ITEM ID</th>
-      <th>DESCRIPTION</th>
-      <th>CS</th>
-      <th>SW</th>
-      <th>IT</th>
-      <th>TRANSACTION ID</th>
-      <th>TRANSACTION TYPE</th>
-      <th>REMARKS</th>  
-      <th>DATE PROCESS</th>
-      <th>TIME PROCESS</th>
-      <th>DATE TIME_PROCESS</th>
-      <th>USER PROCESS</th>
-      <th>WAREHOUSE_CODE</th>
-    </tr>
-</thead>
-            <tbody></tbody>
+            <thead>
+                <tr>
+                <thead>
+                <tr>
+                    <th>#</th>
+                   <th>ITEM ID</th>
+                  <th>BATCH</th>
+                   <th>DESCRIPTION</th>
+                    <th>CS</th>
+                    <th>SW</th>
+                    <th>IT</th>
+                    <th>PRICE</th>
+                      <th>IT/CS</th>
+                    <th>IT/SW</th>
+                    <th>SIH</th>
+                    </tr>
+                    </thead>
+             <tbody></tbody>
         </table>
     </div>
     <div id="table-error" class="error-message"></div>
     <div id="table-success" class="success-message"></div>
 </div>
 
-<!-- Pagination Card -->
+  <div class="text-right mb-0">
+<button class="btn btn-success mb-2" onclick="exportToExcel()">Export to Excel</button>  </div>
 
-
-<!-- Export Button -->
-<div class="text-right mb-0">
-    <button class="btn btn-success btn-sm mb-2" onclick="exportToExcel()">Export Data</button>
-</div>
 
 <!-- Loader -->
 <div id="loading" style="
@@ -220,33 +218,77 @@
   </div>
 </div>
 
+<input type="hidden" id="vanselected">
+
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  //  loaditems();
+
+function loadvan() {
+    const companyid = "<?php echo $_SESSION['COMPANY_ID'] ?? ''; ?>";
+    const siteid = "<?php echo $_SESSION['SITE_ID'] ?? ''; ?>";
+    const vanselect = document.getElementById('cmbvan');
+    const vanfield = document.getElementById('vanselected');
+
+    // Reset options
+    vanselect.innerHTML = '<option value="" disabled selected>Select an option</option>';
+
+    fetch(`/HomePage/datafetcher/reports/getdatareports.php?action=selecthfs&company=${encodeURIComponent(companyid)}&siteid=${encodeURIComponent(siteid)}`)
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            if (!Array.isArray(data)) {
+                console.error("Invalid van data", data);
+                return;
+            }
+
+            data.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.SELLER_ID || '';
+                option.textContent = item.SELLER_ID || 'Unknown';
+                option.dataset.category = item.SELLER_ID || ''; // ✅ use CATEGORY_DESC
+                vanselect.appendChild(option);
+            });
+        })
+        .catch(err => {
+            console.error('Error loading van:', err);
+        });
+}
+
+// attach change listener once
+document.getElementById('cmbvan').addEventListener('change', function () {
+    const selectedOption = this.options[this.selectedIndex];
+    document.getElementById('vanselected').value = selectedOption.dataset.SELLER_ID || '';
+    loaditems();
 });
 
-let loadedPOs = []; // Global storage
+    function showLoader() {
+        document.getElementById("loading").style.display = "flex";
+    }
+    function hideLoader() {
+        document.getElementById("loading").style.display = "none";
+    }
 
-function showLoader() {
-    document.getElementById("loading").style.display = "flex";
-}
 
-function hideLoader() {
-    document.getElementById("loading").style.display = "none";
-}
-function loaditems() {
-    const companyId = "<?php echo $_SESSION['COMPANY_ID'] ?? ''; ?>";
-    const siteid = "<?php echo $_SESSION['SITE_ID'] ?? ''; ?>";
-    const dateFrom = document.getElementById('datefrom').value;
-    const dateTo = document.getElementById('dateto').value;
+    document.addEventListener("DOMContentLoaded", function () {
+        loadvan();
+  
+    });
+
+let loadedPOs = [];
+
+    function loaditems() {
+    const companyid = "<?php echo $_SESSION['COMPANY_ID'] ?? ''; ?>";
+    const sellerid = document.getElementById('cmbvan').value;
+
 
     const tbody = document.querySelector('#itemsTable tbody');
     if (!tbody) return;
 
-    tbody.innerHTML = '';
-    showLoader();
+    tbody.innerHTML = ''; // Clear previous rows
+    showLoader(); // Show loader before fetch
 
-    fetch(`/HomePage/datafetcher/reports/getdatareports.php?action=stockledger&company=${encodeURIComponent(companyId)}&siteid=${encodeURIComponent(siteid)}&datefrom=${encodeURIComponent(dateFrom)}&dateto=${encodeURIComponent(dateTo)}`)
+    fetch(`/HomePage/datafetcher/reports/getdatareports.php?action=loadvaninventory&company=${encodeURIComponent(companyid)}&sellerid=${encodeURIComponent(sellerid)}`)
         .then(response => {
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             return response.json();
@@ -255,30 +297,28 @@ function loaditems() {
             loadedPOs = data;
             if (!data || data.length === 0) {
                 const tr = document.createElement('tr');
-                tr.innerHTML = '<td colspan="12" class="text-center">No items found.</td>';
+                tr.innerHTML = '<td colspan="11" class="text-center">No items found.</td>';
                 tbody.appendChild(tr);
                 return;
             }
 
             data.forEach((item, index) => {
                 const tr = document.createElement('tr');
-               tr.innerHTML = `
-               <td>${index + 1}</td>
-                <td>${item.ITEM_ID || ''}</td>
-                <td>${item.DESCRIPTION || ''}</td>
-                <td>${item.CS || ''}</td>
-                <td>${item.SW || ''}</td>
-                <td>${item.IT || ''}</td>
-                <td>${item.TRANSACTION_ID || ''}</td>
-                <td>${item.TRANSACTION_TYPE || ''}</td>
-                <td>${item.REMARKS || ''}</td>
-                <td>${item.DATE_PROCESS || ''}</td>
-                <td>${item.TIME_PROCESS || ''}</td>
-                <td>${item.DATE_TIME_PROCESS || ''}</td>
-                <td>${item.USER_PROCESS || ''}</td>
-                <td>${item.WAREHOUSE_CODE || ''}</td>
-            `;
 
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${item.ITEM_ID || ''}</td>
+                    <td>${item.BATCH || ''}</td>
+                    <td>${item.DESCRIPTION || ''}</td>
+                    <td>${item.CS || ''}</td>
+                    <td>${item.SW || ''}</td>
+                    <td>${item.IT || ''}</td>
+                    <td>${item.PRICE ? parseFloat(item.PRICE).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0'}</td>
+                    <td>${item.ITEM_PER_CASE || ''}</td>
+                    <td>${item.ITEM_PER_SW || ''}</td>
+                    <td>${item.SIH_IT || ''}</td>
+
+                `;
                 tbody.appendChild(tr);
             });
         })
@@ -286,8 +326,12 @@ function loaditems() {
             console.error('Error loading items:', err);
         })
         .finally(() => {
-            hideLoader();
+            hideLoader(); // Hide loader when done
         });
+}
+
+ function formatCurrency(value) {
+    return value ? Number(value).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '';
 }
 
 function exportToExcel() {
@@ -296,22 +340,24 @@ function exportToExcel() {
         return;
     }
 
-    // Convert array of objects to worksheet
     const worksheet = XLSX.utils.json_to_sheet(loadedPOs);
-
-    // Create workbook and add worksheet
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Details");
 
-    // Export the Excel file
-    XLSX.writeFile(workbook, "Stock_Ledger_Report.xlsx");
+    // Use van name as filename
+    const vanName = document.getElementById('cmbvan').value || 'Van';
+    XLSX.writeFile(workbook, `Van_Inventory_${vanName}.xlsx`);
 }
 
+
+
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <!-- Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+<!-- SheetJS (XLSX) library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
 </body>
 </html>

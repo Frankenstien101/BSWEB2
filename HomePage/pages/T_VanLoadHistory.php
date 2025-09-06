@@ -491,6 +491,7 @@
    // Total records count from server
 window.filters = {};     // Placeholder for filters object
 
+
 function loadItems2(page = 1) {
 
     currentPage = page;  // Update global current page
