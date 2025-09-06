@@ -3041,8 +3041,6 @@ if (isset($_GET['action']) && $_GET['action'] === 'allsiteinvoicedetailedcsv') {
     }
 }
 
-
-
 /// ALL SITE SO REPORT 
 
 
@@ -4063,7 +4061,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'loadsfamapping') {
 
         $sql = "SELECT * FROM Aquila_SFA_Product_Mapping 
                 WHERE COMPANY_ID = :companyid
-                ORDER BY DESCRIPTION ASC";
+                ORDER BY SITE_ID ASC";
 
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':companyid', $companyId);
@@ -4080,5 +4078,41 @@ if (isset($_GET['action']) && $_GET['action'] === 'loadsfamapping') {
     }
     exit();
 }
+
+
+if (isset($_GET['action']) && $_GET['action'] === 'loadvaninventory') {
+    header('Content-Type: application/json');
+
+    if (!$conn || !($conn instanceof PDO)) {
+        echo json_encode(['error' => 'Database connection failed']);
+        exit();
+    }
+
+    try {
+        $companyId = $_GET['company'] ?? null;
+        $sellerId  = $_GET['sellerid'] ?? null;
+
+        $sql = "SELECT * FROM Aquila_Van_Inventory 
+                WHERE COMPANY_ID = :companyid
+                AND SELLER_ID = :sellerid
+                ORDER BY DESCRIPTION ASC";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':companyid', $companyId, PDO::PARAM_INT);
+        $stmt->bindParam(':sellerid', $sellerId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode($items ?: []);
+        
+    } catch (PDOException $e) {
+        echo json_encode(['error' => 'Database error', 'message' => $e->getMessage()]);
+    } catch (Exception $e) {
+        echo json_encode(['error' => 'Application error', 'message' => $e->getMessage()]);
+    }
+    exit();
+}
+
 
 
