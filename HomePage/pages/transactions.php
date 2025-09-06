@@ -183,7 +183,7 @@
           <p>VAN LOAD HISTORY</p>
         </div>
       </a>
-            <a href="#" >
+            <a href="home.php?page=T_VanInventory" >
         <div class="app-card">
           <img src="\HomePage\pages\transactionsImg\inv.png" alt="Developers/System Support" />
           <p>VAN INVENTORY</p>
