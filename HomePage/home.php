@@ -220,34 +220,27 @@ foreach ($query_result as $data) {
   <title>Bootstrap Dropdown Test</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <!-- Bootstrap 4.6.2 CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 </head>
 <body>
 
 </html>
 
-  <!-- /.navbar -->
-
-  <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4 " style="background-color: #021f5aff;">
-    <!-- Brand Logo -->
 
     <a href="#" class="brand-link text-center">
       <img src="/MainImg/download-compresskaru.com.png" alt="Logo" class="img-circle elevation-3" style="width: 70px; height: 70px;">
       <span class="brand-text font-weight-bold d-block ">BLUESYS DMS</span>
     </a>
 
-    <!-- Sidebar -->
     <div class="sidebar">
-      <!-- User panel -->
+
       <div class="user-panel mt-3 pb-3 mb-3 d-flex ">
         <div class="info">
           <a href="#" class="d-block "><?php echo $_SESSION['Company_Name']; ?></a>
         </div>
       </div>
 
-      <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
           <li class="nav-item">
@@ -283,19 +276,16 @@ foreach ($query_result as $data) {
         </ul>
       </nav>
     </div>
-    <!-- /.sidebar -->
+
   </aside>
 
-  <!-- Content Wrapper -->
   <div class="content-wrapper p-4">
     <?php
 
-    // Suppose you get the 'role' from a request parameter 'documentid'
     $role = $_SESSION['Role'] ?? '';
 
-    // Now check the role value and branch accordingly
       if ($role === 'ADMIN') {
-          // do something for admin
+
       
                $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
                $allowedPages = ['dashboard', 'transactions', 'T_Purchase_Order', 'PO_view', 'reports','ProductMasterReport', 'CustomerMasterReport'
@@ -303,7 +293,7 @@ foreach ($query_result as $data) {
                ,'SalesReturnReport','StockViewReport','SOReport' , 'StockLedgerReport' , 'WarehouseMasterReport' , 'SchemeMasterReport'
               ,'allsitereports' , 'allsitesalesinvoicesummary','allsitesalesinvoicedetailed' , 'allsiteSOReport' , 'IntransitSummary'
             ,'intransitdetailedReport','PurchasereturnReport', 'VanAllocationReport' ,'allsiteVanAllocation' , 'VanStockReport'
-          ,'SFAMappingReport' , 'T_Vanloading' , 'T_VanLoadHistory'];
+          ,'SFAMappingReport' , 'T_Vanloading' , 'T_VanLoadHistory','T_VanInventory'];
                if (in_array($page, $allowedPages)) {
 
                    include "pages/{$page}.php";
@@ -314,13 +304,13 @@ foreach ($query_result as $data) {
                }
 
        } elseif ($role === 'ENCODER') {
-           // do something for user
+
           $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
                        $allowedPages = ['dashboard', 'transactions', 'PO_view', 'reports','ProductMasterReport', 'CustomerMasterReport'
                          ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'
                        ,'SalesReturnReport','StockViewReport','SOReport','StockLedgerReport','WarehouseMasterReport','SchemeMasterReport','IntransitSummary'
                       ,'intransitdetailedReport','PurchasereturnReport','VanAllocationReport','VanStockReport'
-                    ,'SFAMappingReport','T_Vanloading','T_VanLoadHistory'];
+                    ,'SFAMappingReport','T_Vanloading','T_VanLoadHistory','T_VanInventory'];
                        if (in_array($page, $allowedPages)) {
 
                            include "pages/{$page}.php";
@@ -330,14 +320,13 @@ foreach ($query_result as $data) {
                            echo "<h1 class='text-center'>Page not found or not allowed</h1>";
                        }
 
-
         } elseif ($role === 'IRA') {
-           // do something for user
+
           $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
                        $allowedPages = ['dashboard','PO_view', 'transactions', 'reports','ProductMasterReport', 'CustomerMasterReport'
                          ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'
                        ,'SalesReturnReport','StockViewReport','SOReport','StockLedgerReport','WarehouseMasterReport' , 'SchemeMasterReport','IntransitSummary'
-                      ,'intransitdetailedReport','PurchasereturnReport','VanAllocationReport','VanStockReport','SFAMappingReport','T_VanLoadHistory'];
+                      ,'intransitdetailedReport','PurchasereturnReport','VanAllocationReport','VanStockReport','SFAMappingReport','T_VanLoadHistory','T_VanInventory'];
                        if (in_array($page, $allowedPages)) {
 
                            include "pages/{$page}.php";
@@ -349,12 +338,12 @@ foreach ($query_result as $data) {
 
 
          } elseif ($role === 'OIC') {
-           // do something for user
+
           $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
                        $allowedPages = ['dashboard', 'transactions', 'T_Purchase_Order' , 'PO_view', 'reports','ProductMasterReport', 'CustomerMasterReport'
                          ,'SellerMasterReport','CoverageReport','InvoiceSummaryReport','InvoiceDetailedReport'
                        ,'SalesReturnReport','StockViewReport','SOReport', 'StockLedgerReport' , 'WarehouseMasterReport','SchemeMasterReport','IntransitSummary'
-                      ,'intransitdetailedReport','PurchasereturnReport','VanAllocationReport','VanStockReport','SFAMappingReport'];
+                      ,'intransitdetailedReport','PurchasereturnReport','VanAllocationReport','VanStockReport','SFAMappingReport','T_VanInventory'];
                        if (in_array($page, $allowedPages)) {
 
                            include "pages/{$page}.php";
@@ -365,7 +354,7 @@ foreach ($query_result as $data) {
                        }
 
       } else {
-          // default case
+
           echo "<h3 class='text-center'>
                   Session expired or account logged out, 
                   <a href='verify.php' onclick='handleLoginClick(event)'>Login again</a> to continue
@@ -385,21 +374,16 @@ foreach ($query_result as $data) {
     ?>
   </div>
 
+</div> 
 
-</div> <!-- /.wrapper -->
-
-<!-- JS Scripts -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 
- <!-- jQuery (required by Bootstrap 4) -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 
-  <!-- Popper.js (required for dropdowns) -->
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 
-  <!-- Bootstrap 4.6.2 JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
 <script>
   $(document).on('click', '#click_me', function(){
