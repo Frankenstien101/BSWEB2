@@ -187,15 +187,16 @@ try {
         $vanid        = trim($_GET['vanid'] ?? '');
         $userprocess  = trim($_GET['username'] ?? '');
         $warehousecode= trim($_GET['warehousecode'] ?? '');
-         $remarks  = trim($_GET['remarks'] ?? '');
+        $remarks  = trim($_GET['remarks'] ?? '');
         $totallines= trim($_GET['totallines'] ?? '');
         $totallines= trim($_GET['totallines'] ?? '');
 
             try {
-            // Begin transaction
+                
+      
             $conn->beginTransaction();
             
-            // Prepare and execute INSERT
+       
             $sqlInsert = "INSERT INTO Aquila_Stock_Ledger 
                 (COMPANY_ID, SITE_ID, ITEM_ID, DESCRIPTION, CS, SW, IT, TRANSACTION_ID, TRANSACTION_TYPE, REMARKS, DATE_PROCESS, TIME_PROCESS, DATE_TIME_PROCESS, USER_PROCESS, WAREHOUSE_CODE)
                 VALUES (:companyid, :siteid, :itemid, :description, :cs, :sw, :it, :transactionid, 'VAN LOADING', :remarks, CAST(GETDATE() AS DATE), CAST(GETDATE() AS TIME), GETDATE(), :username, :warehousecode)";
@@ -210,12 +211,12 @@ try {
                 ':sw'            => -abs((int)$sw),
                 ':it'            => -abs((int)$it),
                 ':transactionid' => $transactionid,
-                ':remarks'       => $remarks,
+                ':remarks'       => $vanid,
                 ':username'      => $userprocess,
                 ':warehousecode'=> $warehousecode
             ]);
         
-            // Prepare and execute UPDATE
+       
             $sqlUpdate = "UPDATE Aquila_Inventory_Master 
                 SET CS = CS - :cs, SW = SW - :sw, IT = IT - :it
                 WHERE COMPANY_ID = :companyid 
@@ -237,7 +238,7 @@ try {
                 ':batch' => $batch
             ]);
         
-            // Commit transaction
+          
             $conn->commit();
         } catch (Exception $e) {
             // Rollback on error
@@ -248,7 +249,7 @@ try {
             ]);
         }
         exit();
-    //process after
+
 
     } else if ($action === 'processupdate') {
 
