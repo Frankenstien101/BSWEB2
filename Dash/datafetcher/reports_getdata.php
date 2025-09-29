@@ -6,6 +6,12 @@ ini_set('max_execution_time', 300); // 5 minutes
 ini_set('memory_limit', '512M');
 set_time_limit(300); // sometimes necessary for Azure
 
+require 'vendor/autoload.php';
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
+
 $action = $_GET['action'] ?? '';
 $isall = $_GET['isall'] ?? '';
 
