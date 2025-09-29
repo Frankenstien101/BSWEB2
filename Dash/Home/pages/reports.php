@@ -341,6 +341,16 @@
       pollProgress(progressKey);
     }
 
+    // Handle ARIA-hidden for modal
+    $(document).ready(function() {
+      $('#progressModal').on('show.bs.modal', function () {
+        $(this).attr('aria-hidden', 'false');
+      });
+      $('#progressModal').on('hide.bs.modal', function () {
+        $(this).attr('aria-hidden', 'true');
+      });
+    });
+
     // === JS Functions for each button ===
     function exportMultiSheet() {
       const companyid = "<?php echo $_SESSION['Company_ID'] ?? ''; ?>";

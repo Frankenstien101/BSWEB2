@@ -161,6 +161,12 @@ function json_response($data, $status = 200) {
     exit;
 }
 
+function get_download_url($key, $filename) {
+    // Always use https for Azure
+    $host = $_SERVER['HTTP_HOST'];
+    return 'https://' . $host . '/Dash/datafetcher/reports_getdata.php?action=downloadfile&key=' . urlencode($key) . '&fn=' . urlencode($filename);
+}
+
 // Progress and download endpoints
 if ($action === 'progress') {
     ob_start();
@@ -168,18 +174,8 @@ if ($action === 'progress') {
     if (!$key) json_response(['success' => false, 'message' => 'Invalid key'], 400);
     $prog = get_progress($key);
     if ($prog['status'] === 'done') {
-        $pattern = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "report_file_{$key}_*.xlsx";
-        $matches = glob($pattern);
-        if ($matches) {
-            $filePath = $matches[0];
-            $actionFromFile = preg_match('/report_file_[^_]+_([^.]+)\.xlsx$/', basename($filePath), $matches) ? $matches[1] : 'report';
-            error_log("Progress: actionFromFile=$actionFromFile for key=$key");
-            $filename = generate_filename($actionFromFile);
-            $prog['download_url'] = get_protocol() . '://' . $_SERVER['HTTP_HOST']
-                . str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])) . '/' . basename($_SERVER['SCRIPT_NAME'])
-                . "?action=downloadfile&key=" . rawurlencode($key) . "&fn=" . rawurlencode($filename);
-            $prog['file'] = $filename;
-        }
+        $filename = $prog['file'] ?? 'report.xlsx';
+        $prog['download_url'] = get_download_url($key, $filename);
     }
     ob_end_clean();
     json_response(['success' => true, 'progress' => $prog]);
@@ -275,9 +271,7 @@ $actions = [
             set_progress($progressKey, 85, 'Saving file');
             $tmpFile = save_spreadsheet_to_temp($spreadsheet, $progressKey, 'deliveryperformance');
             if ($tmpFile) {
-                $downloadUrl = get_protocol() . '://' . $_SERVER['HTTP_HOST']
-                    . str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])) . '/' . basename($_SERVER['SCRIPT_NAME'])
-                    . "?action=downloadfile&key=" . rawurlencode($progressKey) . "&fn=" . rawurlencode(generate_filename('deliveryperformance'));
+                $downloadUrl = get_download_url($progressKey, generate_filename('deliveryperformance'));
                 set_progress($progressKey, 100, 'Ready', ['download_url' => $downloadUrl, 'file' => generate_filename('deliveryperformance')]);
                 ob_end_clean();
                 json_response(['success' => true, 'download_url' => $downloadUrl]);
@@ -329,9 +323,7 @@ $actions = [
             set_progress($progressKey, 90, 'Saving file');
             $tmpFile = save_spreadsheet_to_temp($spreadsheet, $progressKey, 'AgentPerformanceSummary');
             if ($tmpFile) {
-                $downloadUrl = get_protocol() . '://' . $_SERVER['HTTP_HOST']
-                    . str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])) . '/' . basename($_SERVER['SCRIPT_NAME'])
-                    . "?action=downloadfile&key=" . rawurlencode($progressKey) . "&fn=" . rawurlencode(generate_filename('loadagents'));
+                $downloadUrl = get_download_url($progressKey, generate_filename('loadagents'));
                 set_progress($progressKey, 100, 'Ready', ['download_url' => $downloadUrl, 'file' => generate_filename('loadagents')]);
                 ob_end_clean();
                 json_response(['success' => true, 'download_url' => $downloadUrl]);
@@ -419,9 +411,7 @@ $actions = [
             set_progress($progressKey, 95, 'Saving file');
             $tmpFile = save_spreadsheet_to_temp($spreadsheet, $progressKey, 'loadagentsdetailed');
             if ($tmpFile) {
-                $downloadUrl = get_protocol() . '://' . $_SERVER['HTTP_HOST']
-                    . str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])) . '/' . basename($_SERVER['SCRIPT_NAME'])
-                    . "?action=downloadfile&key=" . rawurlencode($progressKey) . "&fn=" . rawurlencode(generate_filename('loadagentsdetailed'));
+                $downloadUrl = get_download_url($progressKey, generate_filename('loadagentsdetailed'));
                 set_progress($progressKey, 100, 'Ready', ['download_url' => $downloadUrl, 'file' => generate_filename('loadagentsdetailed')]);
                 ob_end_clean();
                 json_response(['success' => true, 'download_url' => $downloadUrl]);
@@ -451,9 +441,7 @@ $actions = [
             set_progress($progressKey, 90, 'Saving file');
             $tmpFile = save_spreadsheet_to_temp($spreadsheet, $progressKey, 'soreport');
             if ($tmpFile) {
-                $downloadUrl = get_protocol() . '://' . $_SERVER['HTTP_HOST']
-                    . str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])) . '/' . basename($_SERVER['SCRIPT_NAME'])
-                    . "?action=downloadfile&key=" . rawurlencode($progressKey) . "&fn=" . rawurlencode(generate_filename('soreport'));
+                $downloadUrl = get_download_url($progressKey, generate_filename('soreport'));
                 set_progress($progressKey, 100, 'Ready', ['download_url' => $downloadUrl, 'file' => generate_filename('soreport')]);
                 ob_end_clean();
                 json_response(['success' => true, 'download_url' => $downloadUrl]);
@@ -489,9 +477,7 @@ $actions = [
             set_progress($progressKey, 90, 'Saving file');
             $tmpFile = save_spreadsheet_to_temp($spreadsheet, $progressKey, 'deliveryplan');
             if ($tmpFile) {
-                $downloadUrl = get_protocol() . '://' . $_SERVER['HTTP_HOST']
-                    . str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])) . '/' . basename($_SERVER['SCRIPT_NAME'])
-                    . "?action=downloadfile&key=" . rawurlencode($progressKey) . "&fn=" . rawurlencode(generate_filename('deliveryplan'));
+                $downloadUrl = get_download_url($progressKey, generate_filename('deliveryplan'));
                 set_progress($progressKey, 100, 'Ready', ['download_url' => $downloadUrl, 'file' => generate_filename('deliveryplan')]);
                 ob_end_clean();
                 json_response(['success' => true, 'download_url' => $downloadUrl]);
@@ -533,9 +519,7 @@ $actions = [
             set_progress($progressKey, 90, 'Saving file');
             $tmpFile = save_spreadsheet_to_temp($spreadsheet, $progressKey, 'result');
             if ($tmpFile) {
-                $downloadUrl = get_protocol() . '://' . $_SERVER['HTTP_HOST']
-                    . str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])) . '/' . basename($_SERVER['SCRIPT_NAME'])
-                    . "?action=downloadfile&key=" . rawurlencode($progressKey) . "&fn=" . rawurlencode(generate_filename('result'));
+                $downloadUrl = get_download_url($progressKey, generate_filename('result'));
                 set_progress($progressKey, 100, 'Ready', ['download_url' => $downloadUrl, 'file' => generate_filename('result')]);
                 ob_end_clean();
                 json_response(['success' => true, 'download_url' => $downloadUrl]);
@@ -572,9 +556,7 @@ $actions = [
             set_progress($progressKey, 90, 'Saving file');
             $tmpFile = save_spreadsheet_to_temp($spreadsheet, $progressKey, 'orderprep');
             if ($tmpFile) {
-                $downloadUrl = get_protocol() . '://' . $_SERVER['HTTP_HOST']
-                    . str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])) . '/' . basename($_SERVER['SCRIPT_NAME'])
-                    . "?action=downloadfile&key=" . rawurlencode($progressKey) . "&fn=" . rawurlencode(generate_filename('orderprep'));
+                $downloadUrl = get_download_url($progressKey, generate_filename('orderprep'));
                 set_progress($progressKey, 100, 'Ready', ['download_url' => $downloadUrl, 'file' => generate_filename('orderprep')]);
                 ob_end_clean();
                 json_response(['success' => true, 'download_url' => $downloadUrl]);
@@ -602,9 +584,7 @@ $actions = [
             set_progress($progressKey, 90, 'Saving file');
             $tmpFile = save_spreadsheet_to_temp($spreadsheet, $progressKey, 'freight');
             if ($tmpFile) {
-                $downloadUrl = get_protocol() . '://' . $_SERVER['HTTP_HOST']
-                    . str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])) . '/' . basename($_SERVER['SCRIPT_NAME'])
-                    . "?action=downloadfile&key=" . rawurlencode($progressKey) . "&fn=" . rawurlencode(generate_filename('freight'));
+                $downloadUrl = get_download_url($progressKey, generate_filename('freight'));
                 set_progress($progressKey, 100, 'Ready', ['download_url' => $downloadUrl, 'file' => generate_filename('freight')]);
                 ob_end_clean();
                 json_response(['success' => true, 'download_url' => $downloadUrl]);
@@ -632,9 +612,7 @@ $actions = [
             set_progress($progressKey, 90, 'Saving file');
             $tmpFile = save_spreadsheet_to_temp($spreadsheet, $progressKey, 'crossdock');
             if ($tmpFile) {
-                $downloadUrl = get_protocol() . '://' . $_SERVER['HTTP_HOST']
-                    . str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])) . '/' . basename($_SERVER['SCRIPT_NAME'])
-                    . "?action=downloadfile&key=" . rawurlencode($progressKey) . "&fn=" . rawurlencode(generate_filename('crossdock'));
+                $downloadUrl = get_download_url($progressKey, generate_filename('crossdock'));
                 set_progress($progressKey, 100, 'Ready', ['download_url' => $downloadUrl, 'file' => generate_filename('crossdock')]);
                 ob_end_clean();
                 json_response(['success' => true, 'download_url' => $downloadUrl]);
