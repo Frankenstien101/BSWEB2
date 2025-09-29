@@ -278,7 +278,7 @@
         </main>
 
         <footer>
-            © 2025 BLUESYS. All rights reserved.
+            © 2025 BLUESYS 2. All rights reserved.
         </footer>
     </div>
 </body>
