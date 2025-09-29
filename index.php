@@ -272,13 +272,13 @@
                     <p class="app-description">
                         a smart accounting and bookkeeping solution that helps businesses track income, expenses, invoices, and taxes — all in one secure, easy-to-use platform.
                     </p>
-                    <a href="#" class="app-button">Visit Site</a>
+                    <a href="\BlueBook.php" class="app-button">Visit Site</a>
                 </div>
             </div>
         </main>
 
         <footer>
-            © 2025 BLUESYS 2. All rights reserved.
+            © 2025 BLUESYS. All rights reserved.
         </footer>
     </div>
 </body>
