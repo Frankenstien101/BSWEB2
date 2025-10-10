@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-         <link rel="icon" type="image/x-icon" href="MainImg\bscr.ico">
+         <link rel="icon" type="image/x-icon" href="MainImg\blubooknew.ico">
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -13,7 +13,7 @@
     <title>Hello, world!</title>
   </head>
   <body>
-    <h1>Dashboard Dash</h1>
+    <h1>Dashboard</h1>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

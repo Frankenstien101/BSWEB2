@@ -45,7 +45,7 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
 <!doctype html>
 <html lang="en">
 <head>
-         <link rel="icon" type="image/x-icon" href="\Services\img\dash.png">
+         <link rel="icon" type="image/x-icon" href="\Services\img\blubooknew.png">
 
   <!-- Required meta tags -->
   <meta charset="utf-8">
@@ -60,7 +60,8 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-  <title>Delivery Dash</title>
+  <title>Blue Book</title>
+
 </head>
 <body class="hold-transition sidebar-mini">
 
@@ -202,7 +203,20 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
     }
 
     .bg-dark-orange {
-  background-color: #024166ff !important; /* dark orange */
+  background-color: #2b2c2cff !important; /* dark orange */
+}
+
+.content-wrapper {
+  position: absolute;
+  top: 10;
+  left: 0;
+  right: 0;
+  height: 90vh;
+  overflow-y: auto;
+  background: #f4f6f9;
+  padding: 2rem 2rem 2rem 0;
+  z-index: 1; /* Lower than sidebar */
+  transition: left 0.3s;
 }
   </style>
 </head>
@@ -229,25 +243,25 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
           <li class="nav-item">
             <a href="home.php?page=dashboard" class="nav-link d-flex align-items-center">
-              <img src="\Dash\Home\img\analysis.png" style=" width: 30px; height: 30px; margin-right: 10px;">
+              <img src="\BlueBook\Home\img\dashboard.png" style=" width: 30px; height: 30px; margin-right: 10px;">
               <p class="mb-0">Dashboard</p>
             </a>
           </li>
           <li class="nav-item">
             <a href="home.php?page=transactions" class="nav-link d-flex align-items-center">
-              <img src="\Dash\Home\img\transaction.png" style="width: 30px; height: 35px; margin-right: 10px;">
+              <img src="\BlueBook\Home\img\sheet.png" style="width: 30px; height: 30px; margin-right: 10px;">
               <p class="mb-0">Transactions</p>
             </a>
           </li>
           <li class="nav-item">
             <a href="home.php?page=reports" class="nav-link d-flex align-items-center">
-              <img src="\Dash\Home\img\documents.png" style="width: 30px; height: 30px; margin-right: 10px;">
+              <img src="\BlueBook\Home\img\calculator.png" style="width: 30px; height: 30px; margin-right: 10px;">
               <p class="mb-0">Reports</p>
             </a>
           </li>
           <li class="nav-item">
             <a href="home.php?page=settings" class="nav-link d-flex align-items-center">
-              <img src="\Dash\Home\img\settings.png" style="width: 30px; height: 30px; margin-right: 10px;">
+              <img src="\BlueBook\Home\img\ability.png" style="width: 30px; height: 30px; margin-right: 10px;">
               <p class="mb-0">Settings</p>
             </a>
           </li>

@@ -207,9 +207,10 @@
 
     showBtn.addEventListener('click', showDetails);
     hideBtn.addEventListener('click', hideDetails);
+
 </script>
 </div>
-<div class="card-body" style="overflow-y: auto; max-width: 100%; height: 550px; padding: 10px;">
+<div class="card-body" style="overflow-y: auto; max-width: 100%; height: 50vh; padding: 10px;">
   <table id="itemsTable" class="table table-striped table-hover table-bordered table-sm mb-0" style="font-size: 10px;">
     <thead class="thead-light">
       <tr>
@@ -527,7 +528,7 @@ function loaditems() {
         const tbody = document.querySelector('#tblskus tbody');
         if (!tbody) return resolve([]);
 
-        tbody.innerHTML = ''; // Clear previous rows
+        tbody.innerHTML = ''; 
         showLoader();
 
         fetch(`/HomePage/datafetcher/transactions/Van_Loading_getdata.php?action=loadskus&company=${encodeURIComponent(companyId)}&siteid=${encodeURIComponent(siteid)}&warehousecode=${encodeURIComponent(warehousecode)}&category=${encodeURIComponent(categorytxt)}`)
@@ -874,7 +875,7 @@ function loadlist() {
 
             if (!data || data.length === 0) {
                 const tr = document.createElement('tr');
-                tr.innerHTML = '<td colspan="11" class="text-center">No items found.</td>';
+                tr.innerHTML = '<td colspan="13" class="text-center">No items found.</td>';
                 tbody.appendChild(tr);
                 return;
             }

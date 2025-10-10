@@ -162,9 +162,10 @@ function json_response($data, $status = 200) {
 }
 
 function get_download_url($key, $filename) {
-    // Always use https for Azure
     $host = $_SERVER['HTTP_HOST'];
-    return 'https://' . $host . '/Dash/datafetcher/reports_getdata.php?action=downloadfile&key=' . urlencode($key) . '&fn=' . urlencode($filename);
+    $isLocal = strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false;
+    $protocol = $isLocal ? 'http' : 'https';
+    return $protocol . '://' . $host . '/Dash/datafetcher/reports_getdata.php?action=downloadfile&key=' . urlencode($key) . '&fn=' . urlencode($filename);
 }
 
 // Progress and download endpoints

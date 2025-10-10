@@ -180,7 +180,7 @@
 <!-- Summary Card -->
 
 <!-- Table Card -->
-<div class="card text-bg-light mt-1" style="max-width: 100%; height: 480px; margin-bottom: 0.5rem; font-size: 9px;">
+<div class="card text-bg-light mt-1" style="max-width: 100%; height: 59vh; margin-bottom: 0.5rem; font-size: 9px;">
     
 <div class="card-header">
 
