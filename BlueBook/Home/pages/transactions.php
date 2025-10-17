@@ -106,7 +106,7 @@
         </a>
       </div>
        <div class="col-auto px-2">
-        <a href="#" class="card-link">
+        <a href="home.php?page=petty_cash" class="card-link">
           <div class="card-custom">
             <img src="\BlueBook\Home\img\transactions\pettycash.jpg" class="card-icon" alt="Delivery Retry Icon"/>
             <div class="card-title">🪙 Petty Cash</div>
@@ -354,7 +354,7 @@
       <div class="col-auto px-2 first-card">
         <a href="#" class="card-link">
           <div class="card-custom">
-            <img src="\Dash\Home\img\transactions\upload.png" class="card-icon" alt="Upload Orders Icon"/>
+            <img src="\BlueBook\Home\img\transactions\employee.png" class="card-icon" alt="Upload Orders Icon"/>
             <div class="card-title">👤 Employee Management</div>
             <div class="card-text">Add and manage employee details.</div>
           </div>
@@ -363,7 +363,7 @@
       <div class="col-auto px-2">
         <a href="#" class="card-link">
           <div class="card-custom">
-            <img src="\Dash\Home\img\transactions\vieworders.jpg" class="card-icon" alt="Order View Icon"/>
+            <img src="\BlueBook\Home\img\transactions\salary.jpg" class="card-icon" alt="Order View Icon"/>
             <div class="card-title">💵 Salary Processing</div>
             <div class="card-text">Calculate and process wages.</div>
           </div>
@@ -372,7 +372,7 @@
       <div class="col-auto px-2">
         <a href="#" class="card-link">
           <div class="card-custom">
-            <img src="\Dash\Home\img\transactions\orderpreps.jpg" class="card-icon" alt="Order Preparation Icon"/>
+            <img src="\BlueBook\Home\img\transactions\payslip.png" class="card-icon" alt="Order Preparation Icon"/>
             <div class="card-title">📆 Payslip History</div>
             <div class="card-text">Store and access issued payslips.</div>
           </div>
@@ -381,7 +381,7 @@
       <div class="col-auto px-2">
         <a href="#" class="card-link">
           <div class="card-custom">
-            <img src="\Dash\Home\img\transactions\retry.jpg" class="card-icon" alt="Delivery Retry Icon"/>
+            <img src="\BlueBook\Home\img\transactions\payrollreport.jpg" class="card-icon" alt="Delivery Retry Icon"/>
             <div class="card-title">🧾 Payroll Reports</div>
             <div class="card-text">Generate salary and deduction summaries.</div>
           </div>

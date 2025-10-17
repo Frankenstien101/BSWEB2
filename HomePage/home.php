@@ -150,8 +150,7 @@ if (!isset($_SESSION['SITE_CODE']) || !isset($_SESSION['COMPANY_ID']) || !isset(
 
       <div class="dropdown-divider"></div>
 
-      <!-- Dropdown Button with Selectable Items -->
-  <div class="d-flex justify-content-center">
+      <div class="d-flex justify-content-center">
       <div class="dropdown px-2">
   <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
     Select Site

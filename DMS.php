@@ -6,13 +6,12 @@ include 'DB/dbcon.php';
 $error = "";
 
 if (isset($_POST['login'])) {
-    // ... [keep your existing PHP code unchanged] ...
 
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
 
     try {
-        // Fetch user with matching username
+
         $stmt = $conn->prepare("  
             SELECT 
                 u.[UserID],

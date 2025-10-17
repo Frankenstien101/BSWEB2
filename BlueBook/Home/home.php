@@ -279,7 +279,7 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
     if ($role === 'ADMIN') {
         // Admin pages logic
         $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
-        $allowedPages = ['dashboard', 'transactions', 'reports' , 'settings'];
+        $allowedPages = ['dashboard', 'transactions', 'reports' , 'settings' , 'petty_cash'];
         if (in_array($page, $allowedPages)) {
             include "pages/{$page}.php";
         } else {

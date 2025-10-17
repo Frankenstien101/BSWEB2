@@ -43,7 +43,7 @@
 <h3>VAN LOADING TRANSACTION</h3>
 
 
-   <input type="hidden" id="categorytxt" name="categorytxt">
+<input type="hidden" id="categorytxt" name="categorytxt">
 <input type="hidden" id="warehouseid" name="warehouseid">
 
 
@@ -1226,7 +1226,6 @@ async function processLoadingAllInOne() {
 
 }
 
-
 async function processTableRows(requestedMap) { // Accept requestedMap as parameter
     const rows = document.querySelectorAll('#itemsTable tbody tr');
     const transactionid = document.getElementById('transaction_id').value;
@@ -1281,7 +1280,6 @@ async function processTableRows(requestedMap) { // Accept requestedMap as parame
                 + `&warehousecode=${encodeURIComponent(warehousecode)}`
                 + `&vanid=${encodeURIComponent(sellerid)}`
                 
-              
             );
 
             const data = await response.json();
@@ -1357,7 +1355,6 @@ function updatetransaction() {
         });
 }
 
-
 // SAVE AS DRAFT
 
 function saveasdraft() {
@@ -1387,7 +1384,6 @@ function saveasdraft() {
         .then(data => {
             if (data.success) {
                alert('Transaction saved as draft.');
-                // Optionally, refresh data or update UI
                 printReport()
 
             } else {

@@ -31,7 +31,6 @@ function cleanup_temp_files($olderThanSeconds = 3600) {
 }
 cleanup_temp_files();
 
-// Input parameters
 $action = $_GET['action'] ?? '';
 $progressKey = sanitize_progress_key($_GET['progress_key'] ?? '');
 $companyId = sanitize_id($_GET['companyid'] ?? ($_SESSION['Company_ID'] ?? ''));
@@ -40,7 +39,6 @@ $dateFrom = sanitize_date($_GET['datefrom'] ?? '');
 $dateTo = sanitize_date($_GET['dateto'] ?? '');
 $isAll = $_GET['isall'] ?? 'false';
 
-// Helper functions
 function get_protocol() {
     return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 }

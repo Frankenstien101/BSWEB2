@@ -421,25 +421,23 @@ if (isset($_GET['action']) && $_GET['action'] === 'processpo') {
             }
         }
 
-        // Include database connection
         require_once '../DB/dbcon.php';
         if (!isset($conn) || !($conn instanceof PDO)) {
             throw new Exception("Database connection failed");
         }
 
-        // Prepare SQL
         $sql = "UPDATE Aquila_PO_Transaction
         SET 
             TOTAL_QTY = :totallines, 
             TOTAL_AMOUNT = :totalamount, 
             DATE_CREATED = :datecreated, 
             EXPECTED_DAYS = :expected_days, 
-            STATUS = 'PROCESS'
+            STATUS = 'ALLOCATED'
         WHERE PO_NUMBER = :ponumber AND COMPANY_ID = :companyid        ";
 
         $stmt = $conn->prepare($sql);
         
-        // Bind parameters
+
        $totallines   = (int) $_GET['totallines'];
     $totalamount  = (float) $_GET['totalamount'];
     $expectedDays = (int) $_GET['expected_days'];   
@@ -447,7 +445,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'processpo') {
     $stmt->bindParam(':ponumber', $_GET['ponumber']);
     $stmt->bindParam(':companyid', $_GET['company']);
     $stmt->bindParam(':totallines', $totallines, PDO::PARAM_INT);
-    $stmt->bindParam(':totalamount', $totalamount); // keep decimal
+    $stmt->bindParam(':totalamount', $totalamount); 
     $stmt->bindParam(':datecreated', $_GET['datecreated']);
     $stmt->bindParam(':expected_days', $expectedDays, PDO::PARAM_INT);
 

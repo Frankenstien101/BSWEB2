@@ -1,0 +1,131 @@
+<?php 
+include 'db_connection.php';
+ ?>
+    <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <!-- DataTables Buttons CSS -->
+    <link href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.bootstrap5.min.css" rel="stylesheet">
+       <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <!-- DataTables Bootstrap 5 Integration JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <!-- DataTables Buttons JS -->
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.bootstrap5.min.js"></script>
+
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel"><i class="bi bi-trash3-fill"></i> Delete User</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" name="" id="txt_id">
+      <span>Are you sure want to delete this user?  </span>
+      </div>
+      <div class="modal-footer">
+        <button id="btn_yes"  class="btn btn-secondary" >Yes</a>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="container-fluid">
+ <div class="row justify-content-center"> <!-- Center the content horizontally -->
+  <div class="card col-12 mb-2" style="height: 50px;">
+    <div class="d-flex justify-content-start align-items-center" style="height: 100%;">
+        <button class="btn btn-sm btn-primary" id="btn_addnew" data-toggle="modal" data-target="#exampleModal">Add New</button> 
+        <button class="btn btn-sm btn-primary ml-3" style="margin-left:10px">Download</button> 
+
+    </div>
+</div>
+
+
+    <div id="BODY_" class="row ">
+        <div class="col-12" >
+        <table id="example" class="table table-striped table-horver" style="width:100%;">
+            <thead>
+                <tr>
+                    <th>Company</th>
+                    <th>Site</th>
+                    <th>Role</th>
+                    <th>User Login</th>
+                    <th>Password</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+include 'db_connection.php';
+$Q = "select b.CODE,c.SITE_CODE,a.* from [dbo].[Aquila_SC3_users] a LEFT join [dbo].[Aquila_COMPANY] b
+on a.COMPANY_ID = b.ID JOIN  [dbo].[Aquila_Sites] c on a.SITE_ID = c.SITEID where a.STATUS != 'DELETED'";
+foreach($conn->query($Q) as $row){
+  ?>
+      <tr>
+                    <td><?php echo $row["CODE"] ?></td>
+                     <td><?php echo $row["SITE_CODE"] ?></td>
+                     <td><?php echo $row["User_Role"] ?></td>
+                      <td><?php echo $row["USER_LOGIN_ID"] ?></td>
+                       <td><?php echo $row["USER_PASS"] ?></td>
+                        <td><?php echo $row["STATUS"] ?></td>
+                    <td><div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-pencil-square"></i>
+    Action
+  </button>
+  <ul class="dropdown-menu">
+    <li><a href="?page=add_newuser&LINE_ID=<?php echo  $row["LINE_ID"] ?>" class="dropdown-item" type="button"><i class="bi bi-pencil-fill"></i> Update</a></li>
+    <li><button class="dropdown-item btn_delete"  type="button"  data-id="<?php echo  $row["LINE_ID"]?>"><i class="bi bi-trash3-fill"></i> Delete</button></li>
+  </ul>
+</div></button></td>
+                </tr>  
+  <?php
+}
+
+ ?>
+            </tbody>
+        </table>
+        </div>
+  </div>
+</div>
+
+    <!-- DataTables JS -->
+
+    
+
+<script type="text/javascript">
+
+$("#btn_yes").click(function(){
+  $("#exampleModal").modal("hide");
+var ID = $("#txt_id").val();
+ $.get("query/delete_user.php?LINE_ID="+ID, function(response) {
+    // Handle the response from the server
+    showNotification("Deleted User", response)
+}).fail(function(xhr, status, error) {
+    // Handle errors that occur during the AJAX request
+  showNotification("Shomething Wrong!", error)
+});
+setInterval(function() {
+    location.reload();
+}, 2000); 
+    });
+
+    $(".btn_delete").click(function(){
+        $("#txt_id").val($(this).attr('data-id'))
+        $("#exampleModal").modal("show");
+        })
+
+ $(document).ready(function() {
+
+    $("#date").css("display", "none");
+    $("#btn_addnew").click(function(){      
+location.href = "?page=add_newuser";
+    });
+            $('#example').DataTable({
+                buttons: [
+                    'copy', 'excel', 'pdf' // Add the desired export buttons
+                ]
+            });
+        });
+</script>
