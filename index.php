@@ -97,12 +97,12 @@
             justify-content: center;
             flex-wrap: wrap;
             gap: 2rem;
-            max-width: 1500px;
+            max-width: 1400px;
             margin-top: 2rem;
         }
 
         .app-card {
-            width: 320px;
+            width: 250px;
             background: var(--card-bg);
             border-radius: 12px;
             backdrop-filter: blur(8px);
@@ -274,7 +274,18 @@
                     </p>
                     <a href="\BlueBook.php" class="app-button">Visit Site</a>
                 </div>
+  <!-- Card 5 -->
+                <div class="app-card">
+                    <img src="\Services\img\blubooknew.png" alt="ERP Logo" class="app-logo">
+                    <h2 class="app-name">PQR </h2>
+                    <p class="app-description">
+                        a smart accounting and bookkeeping solution that helps businesses track income, expenses, invoices, and taxes — all in one secure, easy-to-use platform.
+                    </p>
+                    <a href="\BlueBook.php" class="app-button">Visit Site</a>
+                </div>
+                
             </div>
+             
         </main>
 
         <footer>
