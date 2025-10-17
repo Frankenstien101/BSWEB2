@@ -117,6 +117,7 @@ $selected_page = isset($_SESSION['page']) ? $_SESSION['page'] : '';
 </div>
 </div>
 <script type="text/javascript">
+    alert("da");
 function view_table(dt_from, dt_to, page_) {
   $.ajax({
     url: 'query/VIEW_PQR.php',
