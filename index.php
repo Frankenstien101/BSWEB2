@@ -276,12 +276,12 @@
                 </div>
   <!-- Card 5 -->
                 <div class="app-card">
-                    <img src="\Services\img\blubooknew.png" alt="ERP Logo" class="app-logo">
+                    <img src="\Services\img\pqr.png" alt="ERP Logo" class="app-logo">
                     <h2 class="app-name">PQR </h2>
                     <p class="app-description">
-                        a smart accounting and bookkeeping solution that helps businesses track income, expenses, invoices, and taxes — all in one secure, easy-to-use platform.
+                        Instantly analyze and rate your photos for sharpness, lighting, and clarity — ensuring every image meets professional quality standards.
                     </p>
-                    <a href="\BlueBook.php" class="app-button">Visit Site</a>
+                    <a href="/pqr/index.php" class="app-button">Visit Site</a>
                 </div>
                 
             </div>

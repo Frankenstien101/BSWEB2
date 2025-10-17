@@ -101,8 +101,8 @@
             margin-top: 2rem;
         }
 
-        .app-card {
-            width: 320px;
+         .app-card {
+            width: 250px;
             background: var(--card-bg);
             border-radius: 12px;
             backdrop-filter: blur(8px);
@@ -275,6 +275,15 @@
                     <a href="\BlueBook.php" class="app-button">Visit Site</a>
                 </div>
 
+                 <div class="app-card">
+                    <img src="\Services\img\pqr.png" alt="ERP Logo" class="app-logo">
+                    <h2 class="app-name">PQR </h2>
+                    <p class="app-description">
+                        Instantly analyze and rate your photos for sharpness, lighting, and clarity — ensuring every image meets professional quality standards.
+                    </p>
+                    <a href="/pqr/index.php" class="app-button">Visit Site</a>
+                </div>
+                
             </div>
         </main>
 
