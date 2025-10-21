@@ -27,8 +27,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $_SESSION['SITE_ID']    = $row['SITE_ID'];
 
-        header("Location: home.php?page=dashboard&company=" . urlencode($row['COMPANY_ID']) . "&siteid=" . urlencode($row['SITE_ID']));
-        exit();
+        // Prevent redirect loop
+        if ($_GET['siteid'] !== $row['SITE_ID']) {
+            header("Location: home.php?page=dashboard&company=" . urlencode($row['COMPANY_ID']) . "&siteid=" . urlencode($row['SITE_ID']));
+            exit();
+        }
     } else {
         $_SESSION['SITE_ID']    = 'NO_SITE_ID';
     }
@@ -215,7 +218,7 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="#" class="brand-link text-center">
-      <img src="/Services/img/credit.ico" alt="Logo" style="width: 100px; height: 100px;">
+      <img src="/Services/img/credit.ico" alt="Logo" style="width: 80px; height: 80px;">
       <span class="brand-text font-weight-bold d-block">GOODS CREDIT</span>
     </a>
 
