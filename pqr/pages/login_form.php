@@ -10,7 +10,7 @@
     :root {
       --navy-blue: #0A1931;
       --navy-blue-light: #13274F;
-      --deep-orange: #120685ff;
+      --deep-orange: #1605aaff;
       --deep-orange-dark: #08067aff;
       --text: #f8fafc;
       --text-light: #e2e8f0;
@@ -241,7 +241,7 @@
         <button type="submit" class="btn btn-primary w-100" id="btn_submit">
           <span class="spinner-border spinner-border-sm visually-hidden me-2" role="status"></span>Login
         </button>
-        <a href="../../back_page.php" class="btn btn-secondary w-100 mt-2">Back</a>
+        <a href="/Services/apps.php" class="btn btn-secondary w-100 mt-2">Back</a>
         <div class="alert text-center visually-hidden mt-3">Login Failed!</div>
       </form>
     </div>

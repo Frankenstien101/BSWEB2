@@ -262,7 +262,7 @@
                     <p class="app-description">
                         Warehouse credit and replacement management system that helps businesses track, approve, and process product credits caused by damages, returns, or discrepancies. Instead of manual paperwork.
                     </p>
-                    <a href="#" class="app-button">Visit Site</a>
+                    <a href="\GoodsCredit.php" class="app-button">Visit Site</a>
                 </div>
 
                  <!-- Card 4 -->

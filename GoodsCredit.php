@@ -12,30 +12,9 @@ if (isset($_POST['login'])) {
     try {
         // Prepare and execute query
         $stmt = $conn->prepare("
-            SELECT 
-                u.[UserID],
-                u.[Username],
-                u.[Password],
-                u.[Role],
-                u.[Name_of_user],
-                u.[Company],
-                u.[Site],
-                u.[Status],
-                c.[ID] AS Company_ID,
-                c.[CODE],
-                c.[NAME] AS Company_Name,
-                c.[ADDRESS],
-                c.[STATUS] AS Company_Status,
-                c.[KEY_LETTER],
-                c.[REPORT_HEADER],
-                c.[REPORT_SUB_HEADER],
-                c.[REPORT_SUB_HEADER2]
-            FROM 
-                [dbo].[Aquila_Users] u
-            INNER JOIN 
-                [dbo].[Aquila_COMPANY] c
-                ON u.Company = c.ID 
-            WHERE u.Username = :username
+            SELECT USERNAME,PASSWORD,ROLE,NAME,COMPANY_ID, SITE_ID,LINEID
+             FROM GC_USERS
+             WHERE STATUS = 'ACTIVE' AND USERNAME = :username
         ");
         $stmt->bindParam(':username', $username, PDO::PARAM_STR); // Bind username as a string
         $stmt->execute();
@@ -43,17 +22,17 @@ if (isset($_POST['login'])) {
 
         if ($user) {
             // Compare passwords (case-sensitive)
-            if ($user['Password'] === $password) {
+            if ($user['PASSWORD'] === $password) {
                 // Password matches
                 $_SESSION['username'] = $username;
-                $_SESSION['Name_of_user'] = $user['Name_of_user'];
-                $_SESSION['Company_Name'] = $user['Company_Name'];
-                $_SESSION['UserID'] = $user['UserID'];
-                $_SESSION['Company_ID'] = $user['Company_ID']; 
-                $_SESSION['Role'] = $user['Role']; 
+                $_SESSION['Name_of_user'] = $user['NAME'];
+                $_SESSION['Company_Name'] = $user['COMPANY_ID'];
+                $_SESSION['UserID'] = $user['LINEID'];
+                $_SESSION['Company_ID'] = $user['COMPANY_ID'];
+                $_SESSION['Role'] = $user['ROLE'];
 
                 // Redirect to homepage
-                header("Location: HomePage/home.php");
+                header("Location: GC/Home/home.php");
                 exit();
             } else {
                 $error = "Invalid password.";
@@ -70,16 +49,16 @@ if (isset($_POST['login'])) {
 <!doctype html>
 <html lang="en">
   <head>
-    <link rel="icon" type="image/x-icon" href="MainImg/bscr.ico">
+    <link rel="icon" type="image/x-icon" href="Services/img/credit.ico">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Login | BLUESYS DMS</title>
+    <title>Login | Goods Credit</title>
     <style>
       :root {
-        --primary: #0d05a1ff;         /* Indigo */
-        --primary-light: #050891ff;
-        --primary-dark: #080066ff;
-        --accent: #10b981;         /* Emerald */
+        --primary: #c08f07ff;         /* Indigo */
+        --primary-light: #706903ff;
+        --primary-dark: #da8d00ff;
+        --accent: #13087aff;         /* Emerald */
         --text: #f8fafc;           /* Light gray */
         --text-light: #e2e8f0;
         --text-muted: #94a3b8;
@@ -100,7 +79,7 @@ if (isset($_POST['login'])) {
         min-height: 100vh;
         display: flex;
         flex-direction: column;
-        background-image: url('MainImg/vertudo_system-hintergrund_2880x1952-1024x694.jpg');
+        background-image: url('MainImg/gc.jpg');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -262,7 +241,7 @@ if (isset($_POST['login'])) {
         justify-content: space-between;
         align-items: center;
         padding: 1rem 2rem;
-        background-color: rgba(3, 35, 109, 0.8);
+        background-color: rgba(238, 184, 6, 0.8);
         backdrop-filter: blur(12px);
         position: relative;
         z-index: 1;
@@ -336,15 +315,15 @@ if (isset($_POST['login'])) {
     <div class="container">
       <div class="card">
         <div class="logo">
-          <img src="MainImg/download-compresskaru.com.png" alt="BLUESYS Logo" Style = "height:105px; width:100px">
-          <h1>Distributor Management System</h1>
+          <img src="\Services\img\credit.ico" alt="BLUESYS Logo" Style = "height:105px; width:100px">
+          <h1>Goods Credit</h1>
         </div>
 
         <?php if (!empty($error)): ?>
           <div class="error show"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
-        <form method="post" action="DMS.php">
+        <form method="post" action="GoodsCredit.php">
           <div class="form-group">
             <label for="username">Username</label>
             <input 
@@ -378,7 +357,7 @@ if (isset($_POST['login'])) {
     </div>
 
     <div class="footer">
-      © <?= date('Y') ?> BLUESYS. All rights reserved.
+      © <?= date('Y') ?> Goods Credit. All rights reserved.
     </div>
   </body>
 </html>

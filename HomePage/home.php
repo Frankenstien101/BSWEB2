@@ -397,6 +397,14 @@ foreach ($query_result as $data) {
     });
 
 </script>
+<script>
+  // Remove specific query parameters from the URL
+  const url = new URL(window.location.href);
+  url.searchParams.delete('site');
+  url.searchParams.delete('company');
+  url.searchParams.delete('siteid');
+  window.history.replaceState({}, document.title, url.pathname);
+</script>
 </body>
 </body>
 </html>
