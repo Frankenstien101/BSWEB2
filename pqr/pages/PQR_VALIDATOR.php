@@ -117,18 +117,24 @@ $selected_page = isset($_SESSION['page']) ? $_SESSION['page'] : '';
 </div>
 </div>
 <script type="text/javascript">
-    function view_table(dt_from,dt_to,page_){
-      $.ajax({
-        url:'query/VIEW_PQR.php',
-        method:'POST',
-        data:{dtfrom:dt_from, dtto:dt_to,page:page_},
-        success:function(data){
-           $("#tbody").html(data);
-           view_paging(dt_from,dt_to) ;
-           show_indicator('none');
-       }
-   })
-  }
+    alert("da");
+function view_table(dt_from, dt_to, page_) {
+  $.ajax({
+    url: 'query/VIEW_PQR.php',
+    method: 'POST',
+    data: { dt_from: dt_from, dt_to: dt_to, page: page_ },
+    success: function (data) {
+      $("#tbody").html(data);
+      view_paging(dt_from, dt_to);
+      show_indicator('none');
+    },
+    error: function (xhr, status, error) {
+      alert("AJAX Error:"+status+" "+error);
+      show_indicator('none');
+    }
+  });
+}
+
   $(".page-item").click(function(){
 //var page = $(this).attr('id');
 alert ('page')
