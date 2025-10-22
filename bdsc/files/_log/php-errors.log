@@ -2917,3 +2917,39 @@ Response:
   inc\includes.php:58                                include_once()
   index.php:91                                       include()
   
+[2025-10-22 07:40:13] glpiphplog.CRITICAL:   *** Uncaught Exception Error: Call to undefined function mysqli_report() in C:\Frank Files\Active file\BS DMS WEB\BLUESYS\bdsc\src\DBmysql.php at line 226
+  Backtrace :
+  src\DBmysql.php:209                                DBmysql->connect()
+  src\DBConnection.php:416                           DBmysql->__construct()
+  src\DBConnection.php:510                           DBConnection::switchToMaster()
+  inc\config.php:129                                 DBConnection::establishDBConnection()
+  inc\includes.php:58                                include_once()
+  index.php:91                                       include()
+  
+[2025-10-22 07:41:06] glpiphplog.CRITICAL:   *** Uncaught Exception Error: Call to undefined function mysqli_report() in C:\Frank Files\Active file\BS DMS WEB\BLUESYS\bdsc\src\DBmysql.php at line 226
+  Backtrace :
+  src\DBmysql.php:209                                DBmysql->connect()
+  src\DBConnection.php:416                           DBmysql->__construct()
+  src\DBConnection.php:510                           DBConnection::switchToMaster()
+  inc\config.php:129                                 DBConnection::establishDBConnection()
+  inc\includes.php:58                                include_once()
+  index.php:91                                       include()
+  
+[2025-10-22 07:58:04] glpiphplog.CRITICAL:   *** Uncaught Exception Error: Call to undefined function mysqli_report() in C:\Frank Files\Active file\BS DMS WEB\BLUESYS\bdsc\src\DBmysql.php at line 226
+  Backtrace :
+  src\DBmysql.php:209                                DBmysql->connect()
+  src\DBConnection.php:416                           DBmysql->__construct()
+  src\DBConnection.php:510                           DBConnection::switchToMaster()
+  inc\config.php:129                                 DBConnection::establishDBConnection()
+  inc\includes.php:58                                include_once()
+  index.php:91                                       include()
+  
+[2025-10-22 07:58:51] glpiphplog.CRITICAL:   *** Uncaught Exception Error: Call to undefined function mysqli_report() in C:\Frank Files\Active file\BS DMS WEB\BLUESYS\bdsc\src\DBmysql.php at line 226
+  Backtrace :
+  src\DBmysql.php:209                                DBmysql->connect()
+  src\DBConnection.php:416                           DBmysql->__construct()
+  src\DBConnection.php:510                           DBConnection::switchToMaster()
+  inc\config.php:129                                 DBConnection::establishDBConnection()
+  inc\includes.php:58                                include_once()
+  index.php:91                                       include()
+  

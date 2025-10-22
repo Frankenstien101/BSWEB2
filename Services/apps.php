@@ -46,13 +46,13 @@
         .container {
             position: relative;
             z-index: 1;
-            min-height: 100vh;
+            min-height: 50vh;
             display: flex;
             flex-direction: column;
         }
 
         header {
-            padding: 1.5rem 2rem;
+            padding: 0.8rem 2rem;
             background-color: rgba(3, 35, 109, 0.8);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -86,7 +86,7 @@
 
         main {
             flex: 1;
-            padding: 3rem 1rem;
+            padding: 1rem 1rem;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -98,11 +98,12 @@
             flex-wrap: wrap;
             gap: 2rem;
             max-width: 1500px;
-            margin-top: 2rem;
+            margin-top: -1rem;
         }
 
-         .app-card {
+        .app-card {
             width: 250px;
+            height: 325px;
             background: var(--card-bg);
             border-radius: 12px;
             backdrop-filter: blur(8px);
@@ -150,7 +151,7 @@
 
         .app-logo {
             width: 80px;
-            height: 80px;
+            height: 65px;
             object-fit: contain;
             margin-bottom: 1.5rem;
         }
@@ -163,7 +164,7 @@
         }
 
         .app-description {
-            font-size: 0.95rem;
+            font-size: 0.70rem;
             line-height: 1.6;
             color: var(--text-light);
             margin-bottom: 1.5rem;
@@ -190,7 +191,7 @@
 
         footer {
             text-align: center;
-            padding: 1.5rem;
+            padding: 0.6rem;
             font-size: 0.8rem;
             color: var(--text-muted);
             background-color: rgba(3, 35, 109, 0.5);
@@ -211,6 +212,8 @@
             .cards-container {
                 flex-direction: column;
                 align-items: center;
+                margin-bottom: 1.5rem;
+
             }
         }
     </style>
@@ -227,7 +230,7 @@
         </header>
 
         <main>
-            <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Our Solutions</h1>
+            <h1 style="font-size: 2rem; margin-bottom: 0.1rem; ">Our Solutions</h1>
             <p style="color: var(--text-muted); max-width: 600px; text-align: center; margin-bottom: 2rem;">
                 Discover our suite of powerful applications designed to streamline your business operations
             </p>
@@ -236,10 +239,10 @@
                 <!-- Card 1 -->
                 <div class="app-card">
                     <img src="\Services\img\bscr.png" alt="DMS Logo" class="app-logo">
-                    <h2 class="app-name">Distributor Management</h2>
+                    <h2 class="app-name">DMS</h2>
                     <p class="app-description">
-                        Comprehensive solution for managing your distribution network, inventory, 
-                        and sales operations with real-time analytics and reporting capabilities.
+                        Comprehensive solution for managing your distribution network, inventory,
+                        and sales operations 
                     </p>
                     <a href="\HomePage\verify.php" class="app-button">Visit Site</a>
                 </div>
@@ -250,7 +253,7 @@
                     <h2 class="app-name">Delivery Dash</h2>
                     <p class="app-description">
                         Web-based delivery management platform that optimizes delivery routes
-                        and tracks deliveries in real time. It ensures faster more efficient operations
+                        and tracks deliveries
                     </p>
                     <a href="\DeliveryDash.php" class="app-button">Visit Site</a>
                 </div>
@@ -260,31 +263,40 @@
                     <img src="\Services\img\credit.ico" alt="ERP Logo" class="app-logo">
                     <h2 class="app-name">Goods Credit</h2>
                     <p class="app-description">
-                        Warehouse credit and replacement management system that helps businesses track, approve, and process product credits caused by damages, returns, or discrepancies. Instead of manual paperwork.
+                        Warehouse credit and replacement management system that process product credits.
                     </p>
                     <a href="\GoodsCredit.php" class="app-button">Visit Site</a>
                 </div>
 
-                   <!-- Card 4 -->
+                 <!-- Card 4 -->
                 <div class="app-card">
                     <img src="\Services\img\blubooknew.png" alt="ERP Logo" class="app-logo">
                     <h2 class="app-name">Blue Book</h2>
                     <p class="app-description">
-                        a smart accounting and bookkeeping solution that helps businesses track income, expenses, invoices, and taxes — all in one secure, easy-to-use platform.
+                        a smart accounting and bookkeeping solution that helps businesses track income, expenses and invoices
                     </p>
                     <a href="\BlueBook.php" class="app-button">Visit Site</a>
                 </div>
-
-                 <div class="app-card">
+  <!-- Card 5 -->
+                <div class="app-card">
                     <img src="\Services\img\pqr.png" alt="ERP Logo" class="app-logo">
                     <h2 class="app-name">PQR </h2>
                     <p class="app-description">
-                        Instantly analyze and rate your photos for sharpness, lighting, and clarity — ensuring every image meets professional quality standards.
+                        Instantly analyze and rate your photos ensuring every image meets professional quality standards.
                     </p>
                     <a href="/pqr/index.php" class="app-button">Visit Site</a>
                 </div>
                 
+                  <div class="app-card">
+                    <img src="\Services\img\BDSC.png" alt="ERP Logo" class="app-logo">
+                    <h2 class="app-name">BDSC </h2>
+                    <p class="app-description">
+                        A web-based ticketing system that streamlines customer support, tracks issues, and manages service requests efficiently.
+                    </p>
+                    <a href="/bdsc/index.php" class="app-button">Visit Site</a>
+                </div>
             </div>
+             
         </main>
 
         <footer>
