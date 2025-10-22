@@ -1,0 +1,177 @@
+0
+921d164862748f93863ee611228f6ce3e8dde302
+s:6898:".dashboard #chart-128768501 {
+  /*!
+ * ---------------------------------------------------------------------
+ *
+ * GLPI - Gestionnaire Libre de Parc Informatique
+ *
+ * http://glpi-project.org
+ *
+ * @copyright 2015-2025 Teclib' and contributors.
+ * @copyright 2003-2014 by the INDEPNET Development Team.
+ * @licence   https://www.gnu.org/licenses/gpl-3.0.html
+ *
+ * ---------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of GLPI.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * ---------------------------------------------------------------------
+ */
+}
+.dashboard #chart-128768501 .ct-series-0 .ct-point, .dashboard #chart-128768501 .ct-series-0 .ct-line, .dashboard #chart-128768501 .ct-series-0 .ct-bar, .dashboard #chart-128768501 .ct-series-0 .ct-slice-donut {
+  stroke: #397a18;
+}
+.dashboard #chart-128768501 .ct-series-0 .ct-bar + .ct-barlabel {
+  fill: setcolor(#397a18);
+}
+.dashboard #chart-128768501 .ct-series-0 .ct-circle {
+  fill: #397a18;
+}
+.dashboard #chart-128768501 .ct-series-0 .ct-circle + .ct-label {
+  fill: #397a18;
+}
+.dashboard #chart-128768501 .ct-series-0 .ct-slice-pie, .dashboard #chart-128768501 .ct-series-0 .ct-area, .dashboard #chart-128768501 .ct-series-0 .ct-slice-donut-solid {
+  fill: #397a18;
+  stroke: setcolor(#397a18);
+}
+.dashboard #chart-128768501 .ct-series-0:before {
+  background-color: #397a18;
+  border-color: #397a18;
+}
+.dashboard #chart-128768501 .ct-series-1 .ct-point, .dashboard #chart-128768501 .ct-series-1 .ct-line, .dashboard #chart-128768501 .ct-series-1 .ct-bar, .dashboard #chart-128768501 .ct-series-1 .ct-slice-donut {
+  stroke: #4a9c22;
+}
+.dashboard #chart-128768501 .ct-series-1 .ct-bar + .ct-barlabel {
+  fill: setcolor(#4a9c22);
+}
+.dashboard #chart-128768501 .ct-series-1 .ct-circle {
+  fill: #4a9c22;
+}
+.dashboard #chart-128768501 .ct-series-1 .ct-circle + .ct-label {
+  fill: #4a9c22;
+}
+.dashboard #chart-128768501 .ct-series-1 .ct-slice-pie, .dashboard #chart-128768501 .ct-series-1 .ct-area, .dashboard #chart-128768501 .ct-series-1 .ct-slice-donut-solid {
+  fill: #4a9c22;
+  stroke: setcolor(#4a9c22);
+}
+.dashboard #chart-128768501 .ct-series-1:before {
+  background-color: #4a9c22;
+  border-color: #4a9c22;
+}
+.dashboard #chart-128768501 .ct-series-2 .ct-point, .dashboard #chart-128768501 .ct-series-2 .ct-line, .dashboard #chart-128768501 .ct-series-2 .ct-bar, .dashboard #chart-128768501 .ct-series-2 .ct-slice-donut {
+  stroke: #5dbc2d;
+}
+.dashboard #chart-128768501 .ct-series-2 .ct-bar + .ct-barlabel {
+  fill: setcolor(#5dbc2d);
+}
+.dashboard #chart-128768501 .ct-series-2 .ct-circle {
+  fill: #5dbc2d;
+}
+.dashboard #chart-128768501 .ct-series-2 .ct-circle + .ct-label {
+  fill: #5dbc2d;
+}
+.dashboard #chart-128768501 .ct-series-2 .ct-slice-pie, .dashboard #chart-128768501 .ct-series-2 .ct-area, .dashboard #chart-128768501 .ct-series-2 .ct-slice-donut-solid {
+  fill: #5dbc2d;
+  stroke: setcolor(#5dbc2d);
+}
+.dashboard #chart-128768501 .ct-series-2:before {
+  background-color: #5dbc2d;
+  border-color: #5dbc2d;
+}
+.dashboard #chart-128768501 .ct-series-3 .ct-point, .dashboard #chart-128768501 .ct-series-3 .ct-line, .dashboard #chart-128768501 .ct-series-3 .ct-bar, .dashboard #chart-128768501 .ct-series-3 .ct-slice-donut {
+  stroke: #74cf46;
+}
+.dashboard #chart-128768501 .ct-series-3 .ct-bar + .ct-barlabel {
+  fill: setcolor(#74cf46);
+}
+.dashboard #chart-128768501 .ct-series-3 .ct-circle {
+  fill: #74cf46;
+}
+.dashboard #chart-128768501 .ct-series-3 .ct-circle + .ct-label {
+  fill: #74cf46;
+}
+.dashboard #chart-128768501 .ct-series-3 .ct-slice-pie, .dashboard #chart-128768501 .ct-series-3 .ct-area, .dashboard #chart-128768501 .ct-series-3 .ct-slice-donut-solid {
+  fill: #74cf46;
+  stroke: setcolor(#74cf46);
+}
+.dashboard #chart-128768501 .ct-series-3:before {
+  background-color: #74cf46;
+  border-color: #74cf46;
+}
+.dashboard #chart-128768501 .ct-series-4 .ct-point, .dashboard #chart-128768501 .ct-series-4 .ct-line, .dashboard #chart-128768501 .ct-series-4 .ct-bar, .dashboard #chart-128768501 .ct-series-4 .ct-slice-donut {
+  stroke: #8fd56c;
+}
+.dashboard #chart-128768501 .ct-series-4 .ct-bar + .ct-barlabel {
+  fill: setcolor(#8fd56c);
+}
+.dashboard #chart-128768501 .ct-series-4 .ct-circle {
+  fill: #8fd56c;
+}
+.dashboard #chart-128768501 .ct-series-4 .ct-circle + .ct-label {
+  fill: #8fd56c;
+}
+.dashboard #chart-128768501 .ct-series-4 .ct-slice-pie, .dashboard #chart-128768501 .ct-series-4 .ct-area, .dashboard #chart-128768501 .ct-series-4 .ct-slice-donut-solid {
+  fill: #8fd56c;
+  stroke: setcolor(#8fd56c);
+}
+.dashboard #chart-128768501 .ct-series-4:before {
+  background-color: #8fd56c;
+  border-color: #8fd56c;
+}
+.dashboard #chart-128768501 .ct-series-5 .ct-point, .dashboard #chart-128768501 .ct-series-5 .ct-line, .dashboard #chart-128768501 .ct-series-5 .ct-bar, .dashboard #chart-128768501 .ct-series-5 .ct-slice-donut {
+  stroke: #a9dd90;
+}
+.dashboard #chart-128768501 .ct-series-5 .ct-bar + .ct-barlabel {
+  fill: setcolor(#a9dd90);
+}
+.dashboard #chart-128768501 .ct-series-5 .ct-circle {
+  fill: #a9dd90;
+}
+.dashboard #chart-128768501 .ct-series-5 .ct-circle + .ct-label {
+  fill: #a9dd90;
+}
+.dashboard #chart-128768501 .ct-series-5 .ct-slice-pie, .dashboard #chart-128768501 .ct-series-5 .ct-area, .dashboard #chart-128768501 .ct-series-5 .ct-slice-donut-solid {
+  fill: #a9dd90;
+  stroke: setcolor(#a9dd90);
+}
+.dashboard #chart-128768501 .ct-series-5:before {
+  background-color: #a9dd90;
+  border-color: #a9dd90;
+}
+.dashboard #chart-128768501 .ct-series-6 .ct-point, .dashboard #chart-128768501 .ct-series-6 .ct-line, .dashboard #chart-128768501 .ct-series-6 .ct-bar, .dashboard #chart-128768501 .ct-series-6 .ct-slice-donut {
+  stroke: #c4e6b3;
+}
+.dashboard #chart-128768501 .ct-series-6 .ct-bar + .ct-barlabel {
+  fill: setcolor(#c4e6b3);
+}
+.dashboard #chart-128768501 .ct-series-6 .ct-circle {
+  fill: #c4e6b3;
+}
+.dashboard #chart-128768501 .ct-series-6 .ct-circle + .ct-label {
+  fill: #c4e6b3;
+}
+.dashboard #chart-128768501 .ct-series-6 .ct-slice-pie, .dashboard #chart-128768501 .ct-series-6 .ct-area, .dashboard #chart-128768501 .ct-series-6 .ct-slice-donut-solid {
+  fill: #c4e6b3;
+  stroke: setcolor(#c4e6b3);
+}
+.dashboard #chart-128768501 .ct-series-6:before {
+  background-color: #c4e6b3;
+  border-color: #c4e6b3;
+}
+";

@@ -1,0 +1,1428 @@
+2025-06-26 05:31:35 [2@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 2 at /front/user.form.php
+2025-06-27 09:47:11 [2@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 2 at /front/login.php
+2025-07-02 06:05:57 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/login.php
+2025-07-02 09:00:37 [7@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 7 at /front/tracking.injector.php
+2025-07-02 09:00:43 [7@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 7 at /front/tracking.injector.php
+2025-07-02 09:01:56 [7@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 7 at /front/tracking.injector.php
+2025-07-03 10:43:01 [2@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 2 at /front/ldap.import.php
+2025-07-03 11:09:02 [2@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 2 at /front/login.php
+2025-07-03 11:18:10 [2@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 2 at /front/ldap.import.php
+2025-07-04 02:03:43 [2@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 2 at /front/ldap.import.php
+2025-07-04 02:14:49 [2@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 2 at /front/ldap.import.php
+2025-07-04 02:19:30 [2@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 2 at /front/ldap.import.php
+2025-07-04 02:20:01 [2@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 2 at /front/ldap.import.php
+2025-07-04 02:29:08 [2@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 2 at /front/ldap.import.php
+2025-07-04 02:35:12 [2@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 2 at /front/ldap.import.php
+2025-07-04 02:49:52 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /front/user.form.php?id=8 with insufficient rights. Additional information: Missing READ right. Cannot view the item.
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:6460 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:6553 displayAccessDeniedPage()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\user.form.php:254 displayFullPageForItem()
+2025-07-04 02:49:58 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /front/user.form.php?id=8 with insufficient rights. Additional information: Missing READ right. Cannot view the item.
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:6460 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:6553 displayAccessDeniedPage()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\user.form.php:254 displayFullPageForItem()
+2025-07-04 04:04:03 [12@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 12 at /front/tracking.injector.php
+2025-07-04 09:18:34 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/login.php
+2025-07-04 09:37:38 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-04 09:41:42 [12@WIN-62I84QS7H2J]
+User ID: 12 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-04 09:42:50 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-04 09:52:37 [9@WIN-62I84QS7H2J]
+User ID: 9 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-04 09:55:09 [9@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 9 at /front/tracking.injector.php
+2025-07-04 09:59:13 [12@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 12 at /front/tracking.injector.php
+2025-07-04 12:43:08 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /front/profile_user.form.php with insufficient rights. Additional information: User failed a can* method check for right 4 (CREATE) on item Type: Profile_User ID: -1
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:3066 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\profile_user.form.php:45 check()
+2025-07-04 12:43:13 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /front/profile_user.form.php with insufficient rights. Additional information: User failed a can* method check for right 4 (CREATE) on item Type: Profile_User ID: -1
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:3066 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\profile_user.form.php:45 check()
+2025-07-04 12:57:56 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/allassets.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\allassets.php:44 checkCentralAccess()
+2025-07-04 12:58:01 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/allassets.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\allassets.php:44 checkCentralAccess()
+2025-07-04 12:58:03 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/allassets.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\allassets.php:44 checkCentralAccess()
+2025-07-04 12:58:04 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/allassets.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\allassets.php:44 checkCentralAccess()
+2025-07-04 12:58:05 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/allassets.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\allassets.php:44 checkCentralAccess()
+2025-07-04 12:58:06 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/allassets.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\allassets.php:44 checkCentralAccess()
+2025-07-04 12:58:07 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/allassets.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\allassets.php:44 checkCentralAccess()
+2025-07-05 01:49:34 [9@WIN-62I84QS7H2J]
+User ID: 9 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-05 02:48:01 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-05 08:45:49 [13@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 13 at /front/tracking.injector.php
+2025-07-05 08:45:53 [13@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 13 at /front/tracking.injector.php
+2025-07-05 08:46:03 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-05 10:08:55 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/login.php
+2025-07-05 13:35:56 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/consumableitem.php with insufficient rights. Additional information: User is missing the 1 (READ) right for consumable
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1177 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\consumableitem.php:38 checkRight()
+2025-07-05 13:58:31 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/cartridgeitem.php with insufficient rights. Additional information: User is missing the 1 (READ) right for cartridge
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1177 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\cartridgeitem.php:38 checkRight()
+2025-07-07 03:25:18 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-07 05:58:37 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-07 05:58:39 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-07 08:35:44 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/tracking.injector.php
+2025-07-07 08:54:15 [16@WIN-62I84QS7H2J]
+User ID: 16 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-07 09:47:31 [12@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 12 at /front/tracking.injector.php
+2025-07-08 09:22:59 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/login.php
+2025-07-08 09:32:07 [19@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 19 at /front/massiveaction.php
+2025-07-08 09:32:07 [19@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 19 at /front/massiveaction.php
+2025-07-08 09:41:39 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/login.php
+2025-07-08 11:24:56 [18@WIN-62I84QS7H2J]
+User ID: 18 tried to access or perform an action on /front/dashboard_assets.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\dashboard_assets.php:43 checkCentralAccess()
+2025-07-09 01:42:36 [17@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 17 at /front/ticket.form.php
+2025-07-09 01:42:41 [17@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 17 at /front/ticket.form.php
+2025-07-09 01:44:54 [18@WIN-62I84QS7H2J]
+User ID: 18 tried to access or perform an action on /front/dashboard_assets.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\dashboard_assets.php:43 checkCentralAccess()
+2025-07-09 02:21:37 [18@WIN-62I84QS7H2J]
+User ID: 18 tried to access or perform an action on /front/dashboard_assets.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\dashboard_assets.php:43 checkCentralAccess()
+2025-07-09 05:15:27 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /front/ticket.form.php?id=189 with insufficient rights. Additional information: Missing READ right. Cannot view the item.
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:6460 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:6553 displayAccessDeniedPage()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\ticket.form.php:265 displayFullPageForItem()
+2025-07-09 05:18:44 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=2 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 05:18:47 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=2 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 05:18:48 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=2 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 05:18:49 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=2 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 05:18:49 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=2 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 05:18:49 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=2 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 05:46:09 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=1 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 05:47:15 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=1 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 05:52:30 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-09 05:58:47 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=3 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 05:58:49 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=3 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 05:58:53 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=3 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 05:58:55 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=3 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 05:58:57 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=3 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 05:59:00 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=3 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 05:59:02 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=3 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 05:59:04 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=3 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 05:59:06 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=3 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 05:59:06 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=3 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 05:59:07 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=3 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 05:59:07 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=3 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 05:59:07 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=3 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 06:00:03 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=1 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 06:05:52 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=2 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 06:07:31 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=3 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 06:13:26 [2@WIN-62I84QS7H2J]
+User ID: 2 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=4 with insufficient rights. Additional information: No additional information given
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonGLPI.php:1206 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:142 display()
+2025-07-09 07:11:38 [@WIN-62I84QS7H2J]
+User ID:  tried to access a non-existent item /plugins/formcreator/front/formdisplay.php?id=1. Additional information: 
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\formdisplay.php:52 displayNotFoundError()
+2025-07-09 07:13:20 [@WIN-62I84QS7H2J]
+User ID:  tried to access a non-existent item /plugins/formcreator/front/formdisplay.php?id=1. Additional information: 
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\formdisplay.php:52 displayNotFoundError()
+2025-07-09 07:21:01 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/tracking.injector.php
+2025-07-09 07:21:11 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/tracking.injector.php
+2025-07-09 09:49:13 [15@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 15 at /front/massiveaction.php
+2025-07-09 09:58:51 [9@WIN-62I84QS7H2J]
+User ID: 9 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-09 10:51:43 [12@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 12 at /front/itilfollowup.form.php
+2025-07-09 10:51:49 [12@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 12 at /front/itilfollowup.form.php
+2025-07-09 11:15:21 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/login.php
+2025-07-09 12:12:08 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/login.php
+2025-07-10 01:34:06 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-10 05:11:19 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/login.php
+2025-07-10 06:42:06 [18@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 18 at /front/ticket.form.php?id=272
+2025-07-10 07:20:39 [13@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 13 at /front/tracking.injector.php
+2025-07-10 07:20:46 [13@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 13 at /front/tracking.injector.php
+2025-07-10 07:20:57 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-10 10:35:53 [18@WIN-62I84QS7H2J]
+User ID: 18 tried to access or perform an action on /front/ticket.form.php?id=268 with insufficient rights. Additional information: Missing READ right. Cannot view the item.
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:6460 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:6553 displayAccessDeniedPage()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\ticket.form.php:265 displayFullPageForItem()
+2025-07-11 01:44:15 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-11 05:36:37 [14@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 14 at /front/tracking.injector.php
+2025-07-11 05:36:41 [14@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 14 at /front/tracking.injector.php
+2025-07-11 08:56:36 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-12 01:50:55 [15@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 15 at /front/tracking.injector.php
+2025-07-12 05:54:44 [18@WIN-62I84QS7H2J]
+User ID: 18 tried to access or perform an action on /front/ticket.form.php?id=399 with insufficient rights. Additional information: Missing READ right. Cannot view the item.
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:6460 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:6553 displayAccessDeniedPage()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\ticket.form.php:265 displayFullPageForItem()
+2025-07-12 05:54:47 [18@WIN-62I84QS7H2J]
+User ID: 18 tried to access or perform an action on /front/ticket.form.php?id=399 with insufficient rights. Additional information: Missing READ right. Cannot view the item.
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:6460 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:6553 displayAccessDeniedPage()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\ticket.form.php:265 displayFullPageForItem()
+2025-07-12 07:00:59 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-12 07:50:30 [9@WIN-62I84QS7H2J]
+User ID: 9 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-12 09:51:01 [9@WIN-62I84QS7H2J]
+User ID: 9 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-14 00:15:24 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-14 06:01:19 [9@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 9 at /front/tracking.injector.php
+2025-07-14 06:04:11 [9@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 9 at /front/tracking.injector.php
+2025-07-14 09:21:11 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-14 09:27:08 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-15 00:15:20 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-15 01:44:25 [9@WIN-62I84QS7H2J]
+User ID: 9 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-15 02:39:32 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-15 05:20:55 [15@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 15 at /front/tracking.injector.php
+2025-07-15 05:21:00 [15@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 15 at /front/tracking.injector.php
+2025-07-15 05:49:30 [20@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 20 at /front/ticket.form.php
+2025-07-15 08:14:57 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/tracking.injector.php
+2025-07-15 08:15:55 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-16 01:05:28 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-16 09:34:52 [9@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 9 at /ajax/getDropdownValue.php
+2025-07-16 09:34:55 [9@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 9 at /ajax/getDropdownValue.php
+2025-07-18 01:17:59 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-18 02:17:16 [7@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 7 at /front/ticket.form.php
+2025-07-18 02:17:20 [7@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 7 at /front/ticket.form.php
+2025-07-18 05:46:33 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/tracking.injector.php
+2025-07-18 06:26:04 [20@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 20 at /front/ticket.form.php
+2025-07-18 07:35:57 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/tracking.injector.php
+2025-07-18 07:36:02 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/tracking.injector.php
+2025-07-18 07:36:37 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-18 10:40:11 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/login.php
+2025-07-19 02:57:43 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-19 06:57:24 [9@WIN-62I84QS7H2J]
+User ID: 9 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-19 08:15:01 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/tracking.injector.php
+2025-07-19 08:15:04 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/tracking.injector.php
+2025-07-19 08:35:04 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-21 00:29:19 [9@WIN-62I84QS7H2J]
+User ID: 9 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-21 00:32:07 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-21 06:14:11 [20@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 20 at /front/ticket.form.php
+2025-07-21 09:11:06 [9@WIN-62I84QS7H2J]
+User ID: 9 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-21 09:40:09 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/tracking.injector.php
+2025-07-21 09:40:19 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-22 04:24:36 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-22 08:44:55 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-22 10:46:41 [12@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 12 at /front/tracking.injector.php
+2025-07-22 10:49:36 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/login.php
+2025-07-23 01:18:29 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-23 10:03:56 [12@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 12 at /front/ticket.form.php?id=855
+2025-07-24 01:21:43 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-24 02:41:52 [17@WIN-62I84QS7H2J]
+User ID: 17 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-24 02:50:31 [17@WIN-62I84QS7H2J]
+User ID: 17 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-24 06:00:53 [17@WIN-62I84QS7H2J]
+User ID: 17 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-24 06:00:56 [7@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 7 at /ajax/massiveaction.php
+2025-07-24 10:34:45 [14@WIN-62I84QS7H2J]
+User ID: 14 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-24 15:05:37 [7@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 7 at /front/massiveaction.php
+2025-07-25 03:05:57 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-25 07:53:20 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-25 18:05:57 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-26 02:11:04 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-26 05:38:27 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-26 09:53:46 [9@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 9 at /ajax/getDropdownValue.php
+2025-07-26 09:53:48 [9@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 9 at /ajax/getDropdownValue.php
+2025-07-26 09:53:54 [9@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 9 at /ajax/getDropdownValue.php
+2025-07-26 09:53:56 [9@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 9 at /ajax/actors.php
+2025-07-28 01:10:58 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-28 02:53:23 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-28 07:24:50 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-28 07:24:53 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-28 07:24:55 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-28 07:24:56 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-28 07:24:56 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-28 07:24:56 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-28 07:24:56 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-28 07:24:57 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-28 09:16:46 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-28 10:32:48 [18@WIN-62I84QS7H2J]
+User ID: 18 tried to access or perform an action on /front/ticket.form.php?id=1116 with insufficient rights. Additional information: Missing READ right. Cannot view the item.
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:6460 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:6553 displayAccessDeniedPage()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\ticket.form.php:265 displayFullPageForItem()
+2025-07-29 03:13:00 [20@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 20 at /front/ticket.form.php
+2025-07-29 05:21:42 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-29 09:32:28 [9@WIN-62I84QS7H2J]
+User ID: 9 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-29 10:18:17 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/tracking.injector.php
+2025-07-29 14:18:55 [7@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 7 at /ajax/massiveaction.php
+2025-07-30 01:50:57 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-31 03:47:44 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-07-31 23:53:04 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-01 05:31:06 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-01 05:34:34 [@WIN-62I84QS7H2J]
+User ID:  tried to access a non-existent item /plugins/formcreator/front/formdisplay.php?id=1. Additional information: 
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\formdisplay.php:52 displayNotFoundError()
+2025-08-01 05:36:25 [16@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 16 at /front/massiveaction.php
+2025-08-02 01:05:25 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-02 02:07:09 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-02 06:03:09 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-04 02:21:31 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-04 09:06:00 [2@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 2 at /front/ticket.form.php?id=1441
+2025-08-04 09:48:55 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-04 10:22:47 [7@WIN-62I84QS7H2J]
+User ID: 7 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=2 with insufficient rights. Additional information: User is missing the 2 (Update) right for entity
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1177 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:129 checkRight()
+2025-08-04 10:23:38 [7@WIN-62I84QS7H2J]
+User ID: 7 tried to access or perform an action on /plugins/formcreator/front/form.form.php?id=2 with insufficient rights. Additional information: User is missing the 2 (Update) right for entity
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1177 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.form.php:129 checkRight()
+2025-08-04 10:23:40 [7@WIN-62I84QS7H2J]
+User ID: 7 tried to access or perform an action on /plugins/formcreator/front/form.php with insufficient rights. Additional information: User is missing the 2 (Update) right for entity
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1177 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.php:35 checkRight()
+2025-08-04 10:54:50 [19@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 19 at /front/ticket.form.php
+2025-08-05 06:01:44 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/rule.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\rule.php:40 checkCentralAccess()
+2025-08-05 07:05:22 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-05 08:50:47 [9@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 9 at /front/tracking.injector.php
+2025-08-06 01:45:21 [17@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 17 at /front/ticketvalidation.form.php
+2025-08-06 02:06:05 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-06 09:55:35 [13@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 13 at /front/tracking.injector.php
+2025-08-06 09:56:42 [13@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 13 at /front/tracking.injector.php
+2025-08-06 09:56:49 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-06 11:49:16 [7@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 7 at /front/massiveaction.php
+2025-08-07 02:48:58 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-07 10:48:30 [2@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 2 at /ajax/massiveaction.php
+2025-08-08 00:56:06 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-09 06:06:30 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-09 07:49:07 [18@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 18 at /front/ticket.form.php
+2025-08-09 10:07:13 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/tracking.injector.php
+2025-08-11 03:28:04 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-12 02:41:15 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-12 03:08:12 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-12 08:11:18 [18@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 18 at /front/ticket.form.php
+2025-08-12 08:11:23 [18@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 18 at /front/ticket.form.php
+2025-08-12 11:10:20 [18@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 18 at /front/ticket.form.php
+2025-08-13 08:43:08 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-14 02:36:50 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-15 03:42:19 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/login.php
+2025-08-15 07:18:50 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-15 14:49:45 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/login.php
+2025-08-16 00:49:37 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-18 01:16:03 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-18 09:29:15 [20@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 20 at /ajax/search.php
+2025-08-18 11:43:20 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-18 11:43:24 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-19 05:53:34 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-19 13:57:45 [7@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 7 at /front/massiveaction.php
+2025-08-20 01:30:32 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-20 09:47:11 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-21 00:25:14 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-21 00:28:51 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-21 00:29:10 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-22 00:27:08 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-22 10:24:39 [@WIN-62I84QS7H2J]
+User ID:  tried to access a non-existent item /plugins/formcreator/front/formdisplay.php?id=1. Additional information: 
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\formdisplay.php:52 displayNotFoundError()
+2025-08-22 13:41:29 [19@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 19 at /front/massiveaction.php
+2025-08-22 13:41:33 [19@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 19 at /front/massiveaction.php
+2025-08-22 13:41:40 [19@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 19 at /front/massiveaction.php
+2025-08-22 13:41:44 [19@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 19 at /front/massiveaction.php
+2025-08-22 13:41:50 [19@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 19 at /front/massiveaction.php
+2025-08-22 13:42:33 [19@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 19 at /front/massiveaction.php
+2025-08-23 00:47:26 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-23 02:35:02 [16@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 16 at /ajax/getDropdownValue.php
+2025-08-23 10:48:05 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/login.php
+2025-08-23 10:48:49 [7@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 7 at /front/massiveaction.php
+2025-08-23 13:07:29 [19@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 19 at /front/login.php
+2025-08-25 01:09:44 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-25 02:42:47 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-25 07:12:32 [18@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 18 at /ajax/dropdownMassiveAction.php
+2025-08-25 07:37:54 [20@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 20 at /ajax/massiveaction.php
+2025-08-26 00:39:22 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-26 03:50:03 [13@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 13 at /front/tracking.injector.php
+2025-08-26 03:50:08 [13@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 13 at /front/tracking.injector.php
+2025-08-26 03:50:18 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-26 10:17:41 [16@WIN-62I84QS7H2J]
+User ID: 16 tried to access or perform an action on /plugins/formcreator/front/form.php with insufficient rights. Additional information: User is missing the 2 (UPDATE) right for entity
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1177 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\plugins\formcreator\front\form.php:35 checkRight()
+2025-08-28 09:40:34 [7@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 7 at /ajax/massiveaction.php
+2025-08-28 09:41:03 [7@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 7 at /front/massiveaction.php
+2025-08-28 10:20:07 [8@WIN-62I84QS7H2J]
+User ID: 8 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-08-28 10:31:45 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/massiveaction.php
+2025-08-28 13:27:48 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/login.php
+2025-08-28 13:27:52 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/login.php
+2025-09-01 10:34:51 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/ticket.form.php
+2025-09-02 09:54:06 [12@WIN-62I84QS7H2J]
+User ID: 12 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-02 10:13:54 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/ticket.form.php
+2025-09-03 00:37:59 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-03 10:00:52 [9@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 9 at /front/massiveaction.php
+2025-09-03 10:00:58 [9@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 9 at /front/massiveaction.php
+2025-09-04 00:26:20 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-04 08:27:24 [18@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 18 at /ajax/search.php
+2025-09-04 10:05:34 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/login.php
+2025-09-04 12:44:23 [9@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 9 at /front/massiveaction.php
+2025-09-05 02:00:45 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-06 06:28:21 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-08 01:52:18 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-09 00:13:51 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-10 00:15:49 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-11 09:19:46 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/ticket.form.php
+2025-09-11 09:26:13 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-11 09:28:23 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/ticket.form.php
+2025-09-12 07:05:41 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-12 09:08:39 [7@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 7 at /front/massiveaction.php
+2025-09-12 09:40:02 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/massiveaction.php
+2025-09-12 10:07:27 [19@WIN-62I84QS7H2J]
+User ID: 19 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-12 10:07:32 [19@WIN-62I84QS7H2J]
+User ID: 19 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-12 10:07:35 [19@WIN-62I84QS7H2J]
+User ID: 19 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-12 10:07:37 [19@WIN-62I84QS7H2J]
+User ID: 19 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-13 01:58:59 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-15 01:54:52 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-15 04:06:46 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-15 08:11:58 [13@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 13 at /front/tracking.injector.php
+2025-09-15 09:08:15 [13@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 13 at /front/tracking.injector.php
+2025-09-15 09:08:31 [13@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 13 at /front/tracking.injector.php
+2025-09-15 09:08:39 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-15 09:49:00 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/ticket.form.php
+2025-09-15 09:49:28 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/ticket.form.php
+2025-09-15 10:30:06 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/ticket.form.php
+2025-09-15 11:12:57 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/ticket.form.php
+2025-09-16 00:18:01 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-16 08:57:59 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/massiveaction.php
+2025-09-16 09:43:53 [15@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 15 at /front/tracking.injector.php
+2025-09-16 09:53:00 [15@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 15 at /front/tracking.injector.php
+2025-09-16 09:58:57 [15@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 15 at /front/tracking.injector.php
+2025-09-16 10:09:32 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-17 08:50:55 [20@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 20 at /front/ticket.form.php?id=3173
+2025-09-17 09:19:27 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/massiveaction.php
+2025-09-17 09:27:38 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-18 01:53:55 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-19 00:03:42 [20@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 20 at /front/ticket.form.php
+2025-09-19 08:42:28 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-20 00:40:29 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-20 09:33:14 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-20 10:19:00 [15@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 15 at /front/tracking.injector.php
+2025-09-22 05:04:48 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-22 10:14:43 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/ticket.form.php
+2025-09-22 12:05:27 [7@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 7 at /front/massiveaction.php
+2025-09-22 12:05:27 [7@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 7 at /front/massiveaction.php
+2025-09-22 12:05:47 [7@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 7 at /front/massiveaction.php
+2025-09-24 00:34:10 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-24 08:31:33 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/massiveaction.php
+2025-09-25 01:43:27 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-25 08:15:05 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/login.php
+2025-09-25 08:57:02 [18@WIN-62I84QS7H2J]
+User ID: 18 tried to access or perform an action on /front/ticket.form.php?id=3520 with insufficient rights. Additional information: Missing READ right. Cannot view the item.
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:6460 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:6553 displayAccessDeniedPage()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\ticket.form.php:265 displayFullPageForItem()
+2025-09-26 02:22:39 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-27 02:10:12 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-27 08:50:05 [13@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 13 at /front/tracking.injector.php
+2025-09-27 08:50:10 [13@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 13 at /front/tracking.injector.php
+2025-09-27 08:50:20 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-29 07:21:10 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/massiveaction.php
+2025-09-29 07:27:28 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-30 00:33:34 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-09-30 09:20:37 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/massiveaction.php
+2025-09-30 09:21:16 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/massiveaction.php
+2025-09-30 09:27:19 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/ticket.form.php
+2025-09-30 09:27:28 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/ticket.form.php
+2025-09-30 09:37:40 [@WIN-62I84QS7H2J]
+CSRF check failed for User ID:  at /front/login.php
+2025-09-30 10:07:04 [18@WIN-62I84QS7H2J]
+User ID: 18 tried to access or perform an action on /front/ticket.form.php?id=3732 with insufficient rights. Additional information: Missing READ right. Cannot view the item.
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:6460 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:6553 displayAccessDeniedPage()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\ticket.form.php:265 displayFullPageForItem()
+2025-10-01 02:29:42 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-10-01 08:07:23 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-10-01 08:46:19 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/massiveaction.php
+2025-10-01 09:53:59 [20@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 20 at /front/ticket.form.php?id=3795
+2025-10-01 10:15:21 [7@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 7 at /front/massiveaction.php
+2025-10-01 10:47:46 [18@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 18 at /ajax/massiveaction.php
+2025-10-02 03:16:55 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-10-02 08:46:52 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/massiveaction.php
+2025-10-03 02:10:03 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-10-04 00:10:33 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/massiveaction.php
+2025-10-04 04:31:54 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-10-04 10:27:43 [15@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 15 at /front/tracking.injector.php
+2025-10-04 10:28:04 [15@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 15 at /front/tracking.injector.php
+2025-10-04 13:47:24 [18@WIN-62I84QS7H2J]
+User ID: 18 tried to access or perform an action on /front/ticket.form.php?id=3934 with insufficient rights. Additional information: Missing READ right. Cannot view the item.
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:6460 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:6553 displayAccessDeniedPage()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\ticket.form.php:265 displayFullPageForItem()
+2025-10-04 13:47:29 [18@WIN-62I84QS7H2J]
+User ID: 18 tried to access or perform an action on /front/ticket.form.php?id=3934 with insufficient rights. Additional information: Missing READ right. Cannot view the item.
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:6460 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\CommonDBTM.php:6553 displayAccessDeniedPage()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\ticket.form.php:265 displayFullPageForItem()
+2025-10-06 01:46:53 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-10-07 02:32:36 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-10-08 02:33:59 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-10-09 08:56:16 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-10-09 09:40:05 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/ticket.form.php
+2025-10-09 10:00:50 [18@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 18 at /ajax/massiveaction.php
+2025-10-10 02:11:39 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-10-11 03:24:38 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-10-13 00:37:28 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-10-13 01:03:50 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/ticket.form.php
+2025-10-13 06:48:53 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/ticket.form.php
+2025-10-13 07:45:02 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/ticket.form.php
+2025-10-13 08:35:56 [22@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 22 at /front/ticket.form.php
+2025-10-13 09:06:35 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-10-14 00:53:56 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-10-15 02:42:24 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-10-16 02:23:10 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-10-17 03:00:59 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-10-17 07:00:46 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-10-18 02:20:28 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-10-20 01:09:02 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-10-20 07:27:08 [20@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 20 at /front/ticket.form.php
+2025-10-20 09:15:30 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-10-21 00:41:26 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-10-21 09:22:15 [15@WIN-62I84QS7H2J]
+CSRF check failed for User ID: 15 at /front/tracking.injector.php
+2025-10-22 00:32:26 [13@WIN-62I84QS7H2J]
+User ID: 13 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()
+2025-10-22 01:56:22 [23@WIN-62I84QS7H2J]
+User ID: 23 tried to access or perform an action on /front/central.php with insufficient rights. Additional information: The current profile does not use the standard interface
+	Stack Trace:
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\Session.php:1052 displayRightError()
+		C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\front\central.php:87 checkCentralAccess()

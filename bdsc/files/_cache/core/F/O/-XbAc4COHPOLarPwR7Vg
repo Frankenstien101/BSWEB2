@@ -1,0 +1,117 @@
+0
+18caafa8219960e33e976035ca1f4cfb294f2980
+s:4507:".dashboard #chart-1214414450 {
+  /*!
+ * ---------------------------------------------------------------------
+ *
+ * GLPI - Gestionnaire Libre de Parc Informatique
+ *
+ * http://glpi-project.org
+ *
+ * @copyright 2015-2025 Teclib' and contributors.
+ * @copyright 2003-2014 by the INDEPNET Development Team.
+ * @licence   https://www.gnu.org/licenses/gpl-3.0.html
+ *
+ * ---------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of GLPI.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * ---------------------------------------------------------------------
+ */
+}
+.dashboard #chart-1214414450 .ct-series-0 .ct-point, .dashboard #chart-1214414450 .ct-series-0 .ct-line, .dashboard #chart-1214414450 .ct-series-0 .ct-bar, .dashboard #chart-1214414450 .ct-series-0 .ct-slice-donut {
+  stroke: #93301f;
+}
+.dashboard #chart-1214414450 .ct-series-0 .ct-bar + .ct-barlabel {
+  fill: setcolor(#93301f);
+}
+.dashboard #chart-1214414450 .ct-series-0 .ct-circle {
+  fill: #93301f;
+}
+.dashboard #chart-1214414450 .ct-series-0 .ct-circle + .ct-label {
+  fill: #93301f;
+}
+.dashboard #chart-1214414450 .ct-series-0 .ct-slice-pie, .dashboard #chart-1214414450 .ct-series-0 .ct-area, .dashboard #chart-1214414450 .ct-series-0 .ct-slice-donut-solid {
+  fill: #93301f;
+  stroke: setcolor(#93301f);
+}
+.dashboard #chart-1214414450 .ct-series-0:before {
+  background-color: #93301f;
+  border-color: #93301f;
+}
+.dashboard #chart-1214414450 .ct-series-1 .ct-point, .dashboard #chart-1214414450 .ct-series-1 .ct-line, .dashboard #chart-1214414450 .ct-series-1 .ct-bar, .dashboard #chart-1214414450 .ct-series-1 .ct-slice-donut {
+  stroke: #cc4933;
+}
+.dashboard #chart-1214414450 .ct-series-1 .ct-bar + .ct-barlabel {
+  fill: setcolor(#cc4933);
+}
+.dashboard #chart-1214414450 .ct-series-1 .ct-circle {
+  fill: #cc4933;
+}
+.dashboard #chart-1214414450 .ct-series-1 .ct-circle + .ct-label {
+  fill: #cc4933;
+}
+.dashboard #chart-1214414450 .ct-series-1 .ct-slice-pie, .dashboard #chart-1214414450 .ct-series-1 .ct-area, .dashboard #chart-1214414450 .ct-series-1 .ct-slice-donut-solid {
+  fill: #cc4933;
+  stroke: setcolor(#cc4933);
+}
+.dashboard #chart-1214414450 .ct-series-1:before {
+  background-color: #cc4933;
+  border-color: #cc4933;
+}
+.dashboard #chart-1214414450 .ct-series-2 .ct-point, .dashboard #chart-1214414450 .ct-series-2 .ct-line, .dashboard #chart-1214414450 .ct-series-2 .ct-bar, .dashboard #chart-1214414450 .ct-series-2 .ct-slice-donut {
+  stroke: #d78375;
+}
+.dashboard #chart-1214414450 .ct-series-2 .ct-bar + .ct-barlabel {
+  fill: setcolor(#d78375);
+}
+.dashboard #chart-1214414450 .ct-series-2 .ct-circle {
+  fill: #d78375;
+}
+.dashboard #chart-1214414450 .ct-series-2 .ct-circle + .ct-label {
+  fill: #d78375;
+}
+.dashboard #chart-1214414450 .ct-series-2 .ct-slice-pie, .dashboard #chart-1214414450 .ct-series-2 .ct-area, .dashboard #chart-1214414450 .ct-series-2 .ct-slice-donut-solid {
+  fill: #d78375;
+  stroke: setcolor(#d78375);
+}
+.dashboard #chart-1214414450 .ct-series-2:before {
+  background-color: #d78375;
+  border-color: #d78375;
+}
+.dashboard #chart-1214414450 .ct-series-3 .ct-point, .dashboard #chart-1214414450 .ct-series-3 .ct-line, .dashboard #chart-1214414450 .ct-series-3 .ct-bar, .dashboard #chart-1214414450 .ct-series-3 .ct-slice-donut {
+  stroke: #e6bab3;
+}
+.dashboard #chart-1214414450 .ct-series-3 .ct-bar + .ct-barlabel {
+  fill: setcolor(#e6bab3);
+}
+.dashboard #chart-1214414450 .ct-series-3 .ct-circle {
+  fill: #e6bab3;
+}
+.dashboard #chart-1214414450 .ct-series-3 .ct-circle + .ct-label {
+  fill: #e6bab3;
+}
+.dashboard #chart-1214414450 .ct-series-3 .ct-slice-pie, .dashboard #chart-1214414450 .ct-series-3 .ct-area, .dashboard #chart-1214414450 .ct-series-3 .ct-slice-donut-solid {
+  fill: #e6bab3;
+  stroke: setcolor(#e6bab3);
+}
+.dashboard #chart-1214414450 .ct-series-3:before {
+  background-color: #e6bab3;
+  border-color: #e6bab3;
+}
+";

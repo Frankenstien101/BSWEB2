@@ -3,44 +3,38 @@ session_start();
 
 include '../../DB/dbcon.php';
 
-   // Unset all session variables
-
 // Check if site is passed via GET
-if (isset($_GET['site'])  && isset($_GET['siteid'])) {
-  
-    $_SESSION['SITE_ID']    = $_GET['siteid'];
-  
-
-} elseif (!isset($_SESSION['SITE_NAME'])  || !isset($_SESSION['SITE_ID'])) {
+if (isset($_GET['site']) && isset($_GET['siteid'])) {
+    $_SESSION['SITE_ID'] = $_GET['siteid'];
+} elseif (!isset($_SESSION['SITE_NAME']) || !isset($_SESSION['SITE_ID'])) {
     // Fetch default site
+    $sql = "SELECT TOP 1 SITE_ID, COMPANY_ID
+            FROM GC_USERS
+            WHERE LINEID = :userid
+            ORDER BY SITE_ID ASC";
 
-$sql = "SELECT TOP 1  SITE_ID,COMPANY_ID
-        FROM GC_USERS
-        WHERE LINEID = :userid
-        ORDER BY SITE_ID ASC";
-
-$stmt = $conn->prepare($sql);
-$stmt->execute(['userid' => $_SESSION['UserID']]);
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt = $conn->prepare($sql);
+    $stmt->execute(['userid' => $_SESSION['UserID']]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($row) {
+        $_SESSION['SITE_ID'] = $row['SITE_ID'];
 
-        $_SESSION['SITE_ID']    = $row['SITE_ID'];
-
-        // Prevent redirect loop
-        if ($_GET['siteid'] !== $row['SITE_ID']) {
+        // Redirect only if the page parameter is missing or invalid
+        $allowedPages = ['dashboard', 'transactions', 'reports', 'settings', 'petty_cash'];
+        if (!isset($_GET['page']) || !in_array($_GET['page'], $allowedPages)) {
             header("Location: home.php?page=dashboard&company=" . urlencode($row['COMPANY_ID']) . "&siteid=" . urlencode($row['SITE_ID']));
             exit();
         }
     } else {
-        $_SESSION['SITE_ID']    = 'NO_SITE_ID';
+        $_SESSION['SITE_ID'] = 'NO_SITE_ID';
     }
 }
+
 if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
     $_SESSION['SITE_NAME'] = $_GET['site'];
-    $_SESSION['SITE_ID']    = $_GET['siteid'];
+    $_SESSION['SITE_ID'] = $_GET['siteid'];
 }
-
 ?>
 <!doctype html>
 <html lang="en">
@@ -98,7 +92,7 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
   <li class="nav-item dropdown">
     
     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-<?= $_SESSION['SITE_NAME'] ?? 'NO_SITE' ?> &nbsp;
+<?= $_SESSION['SITE_ID'] ?? 'NO_SITE' ?> &nbsp;
 
     <i class="far fa-bell"></i>
       <img src="/MainImg/icons8-user-50.png" alt="User Icon" style="width:20px; height:20px; margin-left:5px;">
@@ -236,25 +230,25 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
           <li class="nav-item">
             <a href="home.php?page=dashboard" class="nav-link d-flex align-items-center">
-              <img src="\BlueBook\Home\img\dashboard.png" style=" width: 30px; height: 30px; margin-right: 10px;">
+              <img src="\GC\Home\img\dashboard.png" style=" width: 30px; height: 30px; margin-right: 10px;">
               <p class="mb-0">Dashboard</p>
             </a>
           </li>
           <li class="nav-item">
             <a href="home.php?page=transactions" class="nav-link d-flex align-items-center">
-              <img src="\BlueBook\Home\img\sheet.png" style="width: 30px; height: 30px; margin-right: 10px;">
+              <img src="\GC\Home\img\transaction.png" style="width: 30px; height: 30px; margin-right: 10px;">
               <p class="mb-0">Transactions</p>
             </a>
           </li>
           <li class="nav-item">
             <a href="home.php?page=reports" class="nav-link d-flex align-items-center">
-              <img src="\BlueBook\Home\img\calculator.png" style="width: 30px; height: 30px; margin-right: 10px;">
+              <img src="\GC\Home\img\file.png" style="width: 25px; height: 25px; margin-right: 10px;">
               <p class="mb-0">Reports</p>
             </a>
           </li>
           <li class="nav-item">
             <a href="home.php?page=settings" class="nav-link d-flex align-items-center">
-              <img src="\BlueBook\Home\img\ability.png" style="width: 30px; height: 30px; margin-right: 10px;">
+              <img src="\GC\Home\img\settingset.png" style="width: 30px; height: 30px; margin-right: 10px;">
               <p class="mb-0">Settings</p>
             </a>
           </li>

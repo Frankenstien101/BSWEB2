@@ -1,0 +1,11 @@
+[2025-07-09 06:26:51] glpisqllog.ERROR: DBmysql::doQuery() in C:\Users\Administrator\Documents\BSPI_SERVER\DEPLOYMENT\glpi\src\DBmysql.php line 395
+  *** MySQL query error:
+  SQL: INSERT INTO `glpi_entities` (`id`, `level`, `name`, `completename`, `entities_id`, `comment`, `max_closedate`, `custom_css_code`, `date_creation`, `date_mod`) VALUES ('3', '2', 'DevOps', 'Root Entity > DevOps', '0', '', '2025-07-09 06:26:51', '', '2025-07-09 06:26:51', '2025-07-09 06:26:51')
+  Error: Duplicate entry '0-DevOps' for key 'glpi_entities.unicity'
+  Backtrace :
+  src\DBmysql.php:1377                               DBmysql->doQuery()
+  src\CommonDBTM.php:730                             DBmysql->insert()
+  src\CommonDBTM.php:1356                            CommonDBTM->addToDB()
+  front\dropdown.common.form.php:62                  CommonDBTM->add()
+  front\entity.form.php:58                           include()
+  {"user":"2@WIN-62I84QS7H2J"} 

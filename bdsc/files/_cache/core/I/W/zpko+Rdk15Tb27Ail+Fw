@@ -1,0 +1,77 @@
+0
+840a4d256ff9ff2c1555be5f51070bdcc0242c30
+s:2585:"#chart_395428122 {
+  /*!
+ * ---------------------------------------------------------------------
+ *
+ * GLPI - Gestionnaire Libre de Parc Informatique
+ *
+ * http://glpi-project.org
+ *
+ * @copyright 2015-2025 Teclib' and contributors.
+ * @copyright 2003-2014 by the INDEPNET Development Team.
+ * @licence   https://www.gnu.org/licenses/gpl-3.0.html
+ *
+ * ---------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of GLPI.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * ---------------------------------------------------------------------
+ */
+}
+#chart_395428122 .ct-series-0 .ct-point, #chart_395428122 .ct-series-0 .ct-line, #chart_395428122 .ct-series-0 .ct-bar, #chart_395428122 .ct-series-0 .ct-slice-donut {
+  stroke: #4d80b3;
+}
+#chart_395428122 .ct-series-0 .ct-bar + .ct-barlabel {
+  fill: setcolor(#4d80b3);
+}
+#chart_395428122 .ct-series-0 .ct-circle {
+  fill: #4d80b3;
+}
+#chart_395428122 .ct-series-0 .ct-circle + .ct-label {
+  fill: #4d80b3;
+}
+#chart_395428122 .ct-series-0 .ct-slice-pie, #chart_395428122 .ct-series-0 .ct-area, #chart_395428122 .ct-series-0 .ct-slice-donut-solid {
+  fill: #4d80b3;
+  stroke: setcolor(#4d80b3);
+}
+#chart_395428122 .ct-series-0:before {
+  background-color: #4d80b3;
+  border-color: #4d80b3;
+}
+#chart_395428122 .ct-series-1 .ct-point, #chart_395428122 .ct-series-1 .ct-line, #chart_395428122 .ct-series-1 .ct-bar, #chart_395428122 .ct-series-1 .ct-slice-donut {
+  stroke: #1a334d;
+}
+#chart_395428122 .ct-series-1 .ct-bar + .ct-barlabel {
+  fill: setcolor(#1a334d);
+}
+#chart_395428122 .ct-series-1 .ct-circle {
+  fill: #1a334d;
+}
+#chart_395428122 .ct-series-1 .ct-circle + .ct-label {
+  fill: #1a334d;
+}
+#chart_395428122 .ct-series-1 .ct-slice-pie, #chart_395428122 .ct-series-1 .ct-area, #chart_395428122 .ct-series-1 .ct-slice-donut-solid {
+  fill: #1a334d;
+  stroke: setcolor(#1a334d);
+}
+#chart_395428122 .ct-series-1:before {
+  background-color: #1a334d;
+  border-color: #1a334d;
+}
+";

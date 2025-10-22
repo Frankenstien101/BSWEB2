@@ -1,0 +1,277 @@
+0
+87abd854fe72b9c7f0e3453b4b26b01a2a2d55f1
+s:9517:"#chart_564748780 {
+  /*!
+ * ---------------------------------------------------------------------
+ *
+ * GLPI - Gestionnaire Libre de Parc Informatique
+ *
+ * http://glpi-project.org
+ *
+ * @copyright 2015-2025 Teclib' and contributors.
+ * @copyright 2003-2014 by the INDEPNET Development Team.
+ * @licence   https://www.gnu.org/licenses/gpl-3.0.html
+ *
+ * ---------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of GLPI.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * ---------------------------------------------------------------------
+ */
+}
+#chart_564748780 .ct-series-0 .ct-point, #chart_564748780 .ct-series-0 .ct-line, #chart_564748780 .ct-series-0 .ct-bar, #chart_564748780 .ct-series-0 .ct-slice-donut {
+  stroke: #b9d3ab;
+}
+#chart_564748780 .ct-series-0 .ct-bar + .ct-barlabel {
+  fill: setcolor(#b9d3ab);
+}
+#chart_564748780 .ct-series-0 .ct-circle {
+  fill: #b9d3ab;
+}
+#chart_564748780 .ct-series-0 .ct-circle + .ct-label {
+  fill: #b9d3ab;
+}
+#chart_564748780 .ct-series-0 .ct-slice-pie, #chart_564748780 .ct-series-0 .ct-area, #chart_564748780 .ct-series-0 .ct-slice-donut-solid {
+  fill: #b9d3ab;
+  stroke: setcolor(#b9d3ab);
+}
+#chart_564748780 .ct-series-0:before {
+  background-color: #b9d3ab;
+  border-color: #b9d3ab;
+}
+#chart_564748780 .ct-series-1 .ct-point, #chart_564748780 .ct-series-1 .ct-line, #chart_564748780 .ct-series-1 .ct-bar, #chart_564748780 .ct-series-1 .ct-slice-donut {
+  stroke: #aacc99;
+}
+#chart_564748780 .ct-series-1 .ct-bar + .ct-barlabel {
+  fill: setcolor(#aacc99);
+}
+#chart_564748780 .ct-series-1 .ct-circle {
+  fill: #aacc99;
+}
+#chart_564748780 .ct-series-1 .ct-circle + .ct-label {
+  fill: #aacc99;
+}
+#chart_564748780 .ct-series-1 .ct-slice-pie, #chart_564748780 .ct-series-1 .ct-area, #chart_564748780 .ct-series-1 .ct-slice-donut-solid {
+  fill: #aacc99;
+  stroke: setcolor(#aacc99);
+}
+#chart_564748780 .ct-series-1:before {
+  background-color: #aacc99;
+  border-color: #aacc99;
+}
+#chart_564748780 .ct-series-2 .ct-point, #chart_564748780 .ct-series-2 .ct-line, #chart_564748780 .ct-series-2 .ct-bar, #chart_564748780 .ct-series-2 .ct-slice-donut {
+  stroke: #9bc587;
+}
+#chart_564748780 .ct-series-2 .ct-bar + .ct-barlabel {
+  fill: setcolor(#9bc587);
+}
+#chart_564748780 .ct-series-2 .ct-circle {
+  fill: #9bc587;
+}
+#chart_564748780 .ct-series-2 .ct-circle + .ct-label {
+  fill: #9bc587;
+}
+#chart_564748780 .ct-series-2 .ct-slice-pie, #chart_564748780 .ct-series-2 .ct-area, #chart_564748780 .ct-series-2 .ct-slice-donut-solid {
+  fill: #9bc587;
+  stroke: setcolor(#9bc587);
+}
+#chart_564748780 .ct-series-2:before {
+  background-color: #9bc587;
+  border-color: #9bc587;
+}
+#chart_564748780 .ct-series-3 .ct-point, #chart_564748780 .ct-series-3 .ct-line, #chart_564748780 .ct-series-3 .ct-bar, #chart_564748780 .ct-series-3 .ct-slice-donut {
+  stroke: #8dbe74;
+}
+#chart_564748780 .ct-series-3 .ct-bar + .ct-barlabel {
+  fill: setcolor(#8dbe74);
+}
+#chart_564748780 .ct-series-3 .ct-circle {
+  fill: #8dbe74;
+}
+#chart_564748780 .ct-series-3 .ct-circle + .ct-label {
+  fill: #8dbe74;
+}
+#chart_564748780 .ct-series-3 .ct-slice-pie, #chart_564748780 .ct-series-3 .ct-area, #chart_564748780 .ct-series-3 .ct-slice-donut-solid {
+  fill: #8dbe74;
+  stroke: setcolor(#8dbe74);
+}
+#chart_564748780 .ct-series-3:before {
+  background-color: #8dbe74;
+  border-color: #8dbe74;
+}
+#chart_564748780 .ct-series-4 .ct-point, #chart_564748780 .ct-series-4 .ct-line, #chart_564748780 .ct-series-4 .ct-bar, #chart_564748780 .ct-series-4 .ct-slice-donut {
+  stroke: #7eb860;
+}
+#chart_564748780 .ct-series-4 .ct-bar + .ct-barlabel {
+  fill: setcolor(#7eb860);
+}
+#chart_564748780 .ct-series-4 .ct-circle {
+  fill: #7eb860;
+}
+#chart_564748780 .ct-series-4 .ct-circle + .ct-label {
+  fill: #7eb860;
+}
+#chart_564748780 .ct-series-4 .ct-slice-pie, #chart_564748780 .ct-series-4 .ct-area, #chart_564748780 .ct-series-4 .ct-slice-donut-solid {
+  fill: #7eb860;
+  stroke: setcolor(#7eb860);
+}
+#chart_564748780 .ct-series-4:before {
+  background-color: #7eb860;
+  border-color: #7eb860;
+}
+#chart_564748780 .ct-series-5 .ct-point, #chart_564748780 .ct-series-5 .ct-line, #chart_564748780 .ct-series-5 .ct-bar, #chart_564748780 .ct-series-5 .ct-slice-donut {
+  stroke: #6fb34d;
+}
+#chart_564748780 .ct-series-5 .ct-bar + .ct-barlabel {
+  fill: setcolor(#6fb34d);
+}
+#chart_564748780 .ct-series-5 .ct-circle {
+  fill: #6fb34d;
+}
+#chart_564748780 .ct-series-5 .ct-circle + .ct-label {
+  fill: #6fb34d;
+}
+#chart_564748780 .ct-series-5 .ct-slice-pie, #chart_564748780 .ct-series-5 .ct-area, #chart_564748780 .ct-series-5 .ct-slice-donut-solid {
+  fill: #6fb34d;
+  stroke: setcolor(#6fb34d);
+}
+#chart_564748780 .ct-series-5:before {
+  background-color: #6fb34d;
+  border-color: #6fb34d;
+}
+#chart_564748780 .ct-series-6 .ct-point, #chart_564748780 .ct-series-6 .ct-line, #chart_564748780 .ct-series-6 .ct-bar, #chart_564748780 .ct-series-6 .ct-slice-donut {
+  stroke: #63a343;
+}
+#chart_564748780 .ct-series-6 .ct-bar + .ct-barlabel {
+  fill: setcolor(#63a343);
+}
+#chart_564748780 .ct-series-6 .ct-circle {
+  fill: #63a343;
+}
+#chart_564748780 .ct-series-6 .ct-circle + .ct-label {
+  fill: #63a343;
+}
+#chart_564748780 .ct-series-6 .ct-slice-pie, #chart_564748780 .ct-series-6 .ct-area, #chart_564748780 .ct-series-6 .ct-slice-donut-solid {
+  fill: #63a343;
+  stroke: setcolor(#63a343);
+}
+#chart_564748780 .ct-series-6:before {
+  background-color: #63a343;
+  border-color: #63a343;
+}
+#chart_564748780 .ct-series-7 .ct-point, #chart_564748780 .ct-series-7 .ct-line, #chart_564748780 .ct-series-7 .ct-bar, #chart_564748780 .ct-series-7 .ct-slice-donut {
+  stroke: #57923a;
+}
+#chart_564748780 .ct-series-7 .ct-bar + .ct-barlabel {
+  fill: setcolor(#57923a);
+}
+#chart_564748780 .ct-series-7 .ct-circle {
+  fill: #57923a;
+}
+#chart_564748780 .ct-series-7 .ct-circle + .ct-label {
+  fill: #57923a;
+}
+#chart_564748780 .ct-series-7 .ct-slice-pie, #chart_564748780 .ct-series-7 .ct-area, #chart_564748780 .ct-series-7 .ct-slice-donut-solid {
+  fill: #57923a;
+  stroke: setcolor(#57923a);
+}
+#chart_564748780 .ct-series-7:before {
+  background-color: #57923a;
+  border-color: #57923a;
+}
+#chart_564748780 .ct-series-8 .ct-point, #chart_564748780 .ct-series-8 .ct-line, #chart_564748780 .ct-series-8 .ct-bar, #chart_564748780 .ct-series-8 .ct-slice-donut {
+  stroke: #4c8131;
+}
+#chart_564748780 .ct-series-8 .ct-bar + .ct-barlabel {
+  fill: setcolor(#4c8131);
+}
+#chart_564748780 .ct-series-8 .ct-circle {
+  fill: #4c8131;
+}
+#chart_564748780 .ct-series-8 .ct-circle + .ct-label {
+  fill: #4c8131;
+}
+#chart_564748780 .ct-series-8 .ct-slice-pie, #chart_564748780 .ct-series-8 .ct-area, #chart_564748780 .ct-series-8 .ct-slice-donut-solid {
+  fill: #4c8131;
+  stroke: setcolor(#4c8131);
+}
+#chart_564748780 .ct-series-8:before {
+  background-color: #4c8131;
+  border-color: #4c8131;
+}
+#chart_564748780 .ct-series-9 .ct-point, #chart_564748780 .ct-series-9 .ct-line, #chart_564748780 .ct-series-9 .ct-bar, #chart_564748780 .ct-series-9 .ct-slice-donut {
+  stroke: #417029;
+}
+#chart_564748780 .ct-series-9 .ct-bar + .ct-barlabel {
+  fill: setcolor(#417029);
+}
+#chart_564748780 .ct-series-9 .ct-circle {
+  fill: #417029;
+}
+#chart_564748780 .ct-series-9 .ct-circle + .ct-label {
+  fill: #417029;
+}
+#chart_564748780 .ct-series-9 .ct-slice-pie, #chart_564748780 .ct-series-9 .ct-area, #chart_564748780 .ct-series-9 .ct-slice-donut-solid {
+  fill: #417029;
+  stroke: setcolor(#417029);
+}
+#chart_564748780 .ct-series-9:before {
+  background-color: #417029;
+  border-color: #417029;
+}
+#chart_564748780 .ct-series-10 .ct-point, #chart_564748780 .ct-series-10 .ct-line, #chart_564748780 .ct-series-10 .ct-bar, #chart_564748780 .ct-series-10 .ct-slice-donut {
+  stroke: #355f21;
+}
+#chart_564748780 .ct-series-10 .ct-bar + .ct-barlabel {
+  fill: setcolor(#355f21);
+}
+#chart_564748780 .ct-series-10 .ct-circle {
+  fill: #355f21;
+}
+#chart_564748780 .ct-series-10 .ct-circle + .ct-label {
+  fill: #355f21;
+}
+#chart_564748780 .ct-series-10 .ct-slice-pie, #chart_564748780 .ct-series-10 .ct-area, #chart_564748780 .ct-series-10 .ct-slice-donut-solid {
+  fill: #355f21;
+  stroke: setcolor(#355f21);
+}
+#chart_564748780 .ct-series-10:before {
+  background-color: #355f21;
+  border-color: #355f21;
+}
+#chart_564748780 .ct-series-11 .ct-point, #chart_564748780 .ct-series-11 .ct-line, #chart_564748780 .ct-series-11 .ct-bar, #chart_564748780 .ct-series-11 .ct-slice-donut {
+  stroke: #2a4d1a;
+}
+#chart_564748780 .ct-series-11 .ct-bar + .ct-barlabel {
+  fill: setcolor(#2a4d1a);
+}
+#chart_564748780 .ct-series-11 .ct-circle {
+  fill: #2a4d1a;
+}
+#chart_564748780 .ct-series-11 .ct-circle + .ct-label {
+  fill: #2a4d1a;
+}
+#chart_564748780 .ct-series-11 .ct-slice-pie, #chart_564748780 .ct-series-11 .ct-area, #chart_564748780 .ct-series-11 .ct-slice-donut-solid {
+  fill: #2a4d1a;
+  stroke: setcolor(#2a4d1a);
+}
+#chart_564748780 .ct-series-11:before {
+  background-color: #2a4d1a;
+  border-color: #2a4d1a;
+}
+";

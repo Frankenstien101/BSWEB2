@@ -1,0 +1,137 @@
+0
+6298979b450dc4324be77e99e3723916dc62e546
+s:4714:"#chart_1890633000 {
+  /*!
+ * ---------------------------------------------------------------------
+ *
+ * GLPI - Gestionnaire Libre de Parc Informatique
+ *
+ * http://glpi-project.org
+ *
+ * @copyright 2015-2025 Teclib' and contributors.
+ * @copyright 2003-2014 by the INDEPNET Development Team.
+ * @licence   https://www.gnu.org/licenses/gpl-3.0.html
+ *
+ * ---------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of GLPI.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * ---------------------------------------------------------------------
+ */
+}
+#chart_1890633000 .ct-series-0 .ct-point, #chart_1890633000 .ct-series-0 .ct-line, #chart_1890633000 .ct-series-0 .ct-bar, #chart_1890633000 .ct-series-0 .ct-slice-donut {
+  stroke: #92adc9;
+}
+#chart_1890633000 .ct-series-0 .ct-bar + .ct-barlabel {
+  fill: setcolor(#92adc9);
+}
+#chart_1890633000 .ct-series-0 .ct-circle {
+  fill: #92adc9;
+}
+#chart_1890633000 .ct-series-0 .ct-circle + .ct-label {
+  fill: #92adc9;
+}
+#chart_1890633000 .ct-series-0 .ct-slice-pie, #chart_1890633000 .ct-series-0 .ct-area, #chart_1890633000 .ct-series-0 .ct-slice-donut-solid {
+  fill: #92adc9;
+  stroke: setcolor(#92adc9);
+}
+#chart_1890633000 .ct-series-0:before {
+  background-color: #92adc9;
+  border-color: #92adc9;
+}
+#chart_1890633000 .ct-series-1 .ct-point, #chart_1890633000 .ct-series-1 .ct-line, #chart_1890633000 .ct-series-1 .ct-bar, #chart_1890633000 .ct-series-1 .ct-slice-donut {
+  stroke: #648fb9;
+}
+#chart_1890633000 .ct-series-1 .ct-bar + .ct-barlabel {
+  fill: setcolor(#648fb9);
+}
+#chart_1890633000 .ct-series-1 .ct-circle {
+  fill: #648fb9;
+}
+#chart_1890633000 .ct-series-1 .ct-circle + .ct-label {
+  fill: #648fb9;
+}
+#chart_1890633000 .ct-series-1 .ct-slice-pie, #chart_1890633000 .ct-series-1 .ct-area, #chart_1890633000 .ct-series-1 .ct-slice-donut-solid {
+  fill: #648fb9;
+  stroke: setcolor(#648fb9);
+}
+#chart_1890633000 .ct-series-1:before {
+  background-color: #648fb9;
+  border-color: #648fb9;
+}
+#chart_1890633000 .ct-series-2 .ct-point, #chart_1890633000 .ct-series-2 .ct-line, #chart_1890633000 .ct-series-2 .ct-bar, #chart_1890633000 .ct-series-2 .ct-slice-donut {
+  stroke: #41709f;
+}
+#chart_1890633000 .ct-series-2 .ct-bar + .ct-barlabel {
+  fill: setcolor(#41709f);
+}
+#chart_1890633000 .ct-series-2 .ct-circle {
+  fill: #41709f;
+}
+#chart_1890633000 .ct-series-2 .ct-circle + .ct-label {
+  fill: #41709f;
+}
+#chart_1890633000 .ct-series-2 .ct-slice-pie, #chart_1890633000 .ct-series-2 .ct-area, #chart_1890633000 .ct-series-2 .ct-slice-donut-solid {
+  fill: #41709f;
+  stroke: setcolor(#41709f);
+}
+#chart_1890633000 .ct-series-2:before {
+  background-color: #41709f;
+  border-color: #41709f;
+}
+#chart_1890633000 .ct-series-3 .ct-point, #chart_1890633000 .ct-series-3 .ct-line, #chart_1890633000 .ct-series-3 .ct-bar, #chart_1890633000 .ct-series-3 .ct-slice-donut {
+  stroke: #2c5277;
+}
+#chart_1890633000 .ct-series-3 .ct-bar + .ct-barlabel {
+  fill: setcolor(#2c5277);
+}
+#chart_1890633000 .ct-series-3 .ct-circle {
+  fill: #2c5277;
+}
+#chart_1890633000 .ct-series-3 .ct-circle + .ct-label {
+  fill: #2c5277;
+}
+#chart_1890633000 .ct-series-3 .ct-slice-pie, #chart_1890633000 .ct-series-3 .ct-area, #chart_1890633000 .ct-series-3 .ct-slice-donut-solid {
+  fill: #2c5277;
+  stroke: setcolor(#2c5277);
+}
+#chart_1890633000 .ct-series-3:before {
+  background-color: #2c5277;
+  border-color: #2c5277;
+}
+#chart_1890633000 .ct-series-4 .ct-point, #chart_1890633000 .ct-series-4 .ct-line, #chart_1890633000 .ct-series-4 .ct-bar, #chart_1890633000 .ct-series-4 .ct-slice-donut {
+  stroke: #1a334d;
+}
+#chart_1890633000 .ct-series-4 .ct-bar + .ct-barlabel {
+  fill: setcolor(#1a334d);
+}
+#chart_1890633000 .ct-series-4 .ct-circle {
+  fill: #1a334d;
+}
+#chart_1890633000 .ct-series-4 .ct-circle + .ct-label {
+  fill: #1a334d;
+}
+#chart_1890633000 .ct-series-4 .ct-slice-pie, #chart_1890633000 .ct-series-4 .ct-area, #chart_1890633000 .ct-series-4 .ct-slice-donut-solid {
+  fill: #1a334d;
+  stroke: setcolor(#1a334d);
+}
+#chart_1890633000 .ct-series-4:before {
+  background-color: #1a334d;
+  border-color: #1a334d;
+}
+";
