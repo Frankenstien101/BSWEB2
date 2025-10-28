@@ -19,9 +19,9 @@ if (isset($_GET['site']) && isset($_GET['siteid'])) {
 
     if ($row) {
         $_SESSION['SITE_ID'] = $row['SITE_ID'];
-
+        $_SESSION['COMPANY_ID'] = $row['COMPANY_ID'];
         // Redirect only if the page parameter is missing or invalid
-        $allowedPages = ['dashboard', 'transactions', 'reports', 'settings', 'petty_cash'];
+        $allowedPages = ['dashboard', 'transactions', 'reports', 'settings', 'CreditCreation'];
         if (!isset($_GET['page']) || !in_array($_GET['page'], $allowedPages)) {
             header("Location: home.php?page=dashboard&company=" . urlencode($row['COMPANY_ID']) . "&siteid=" . urlencode($row['SITE_ID']));
             exit();
@@ -266,7 +266,7 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
     if ($role === 'ADMIN') {
         // Admin pages logic
         $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
-        $allowedPages = ['dashboard', 'transactions', 'reports' , 'settings' , 'petty_cash'];
+        $allowedPages = ['dashboard', 'transactions', 'reports' , 'settings' , 'CreditCreation'];
         if (in_array($page, $allowedPages)) {
             include "pages/{$page}.php";
         } else {

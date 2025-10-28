@@ -293,7 +293,7 @@
                     <p class="app-description">
                         A web-based ticketing system that streamlines customer support, tracks issues, and manages service requests efficiently.
                     </p>
-                    <a href="/bdsc/index.php" class="app-button">Visit Site</a>
+                    <a href="https://bspidev.great-site.net/index.php" class="app-button">Visit Site</a>
                 </div>
             </div>
              
