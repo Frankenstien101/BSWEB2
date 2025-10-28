@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Petty Cash Management</title>
+  <title>Credit Creation</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" />
@@ -105,6 +105,47 @@
         </div>
     </div>
 </div>
+
+
+<div class="card text-bg-light" data-bs-spy="scroll" style="max-width: 100%; height:55vh; margin-bottom: .5rem; Font-size: 10px;">
+      <div class="card-header">
+       <div class="col-md-3 col-sm-6 col-12 mb-0 d-flex align-items-center">
+  <span class="me-2" style = "">Insert Item:</span>
+  <input type="text" id="insertitem" style="width: 150px; height: 25px" class="form-control form-control-sm ml-1" value="">
+  </div>
+
+
+      </div>
+      <div class="card-body" style="overflow-y: auto; max-width: 100%; height: 55vh;"  >
+        <table id="itemsTable" class="table table-striped table-hover table-bordered table-sm " style="font-size: 10px;">
+          
+  <thead>
+    <tr>
+      <th>ITEM ID</th>
+      <th>BARCODE</th>
+<th>DESCRIPTION</th>
+<th>QTY</th>
+<th>UOM</th>
+<th>PRICE</th>
+<th>LESS</th>
+<th>TOTAL</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Filled dynamically -->
+  </tbody>
+
+            <!-- ...repeat rows as needed... -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="text-right mb-0">
+<button class="btn btn-success mb-2" onclick="exportToExcel()">Process</button>  </div>
+
+
+
 
 <script>
   // Safely pass PHP session variables to JavaScript
