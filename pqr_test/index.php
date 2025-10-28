@@ -3,7 +3,7 @@ session_start();
 include 'query/user_login.php';
 $page_main = $_SESSION['page_main'] ?? '';
 if (!isset($_SESSION['user_id'])) {
-    header('Location:../' . $page_main . '/pages/login_form.php');
+    header('Location:../pqr_test/pages/login_form.php');
 }
 $selected_comp = $_SESSION['comp_id'] ?? '';
 $selected_site = $_SESSION['ses_site'] ?? '';

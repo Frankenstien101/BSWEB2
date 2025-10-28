@@ -40,7 +40,7 @@
                 <input type="password" name="password" class="form-control" id="password" placeholder="Password">
             </div>
             <button type="submit" class="btn btn-primary w-100" id="btn_submit" >  <span class="spinner-border spinner-border-sm visually-hidden" role="status" aria-hidden="true" ></span>Login</button>
-              <a href="../../back_page.php" class="btn btn-secondary w-100 mt-2" id="btn_back" >Back</a>
+              <a href="../../" class="btn btn-secondary w-100 mt-2" id="btn_back" >Back</a>
             <div class="alert text-center alert-danger mt-2 visually-hidden" role="alert">
             	Login Failed!
             </div>

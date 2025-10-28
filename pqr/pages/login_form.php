@@ -231,7 +231,7 @@
       <h2>PQR</h2>
       <form id="form-data" method="POST">
         <div class="mb-3">
-          <label for="USERID">User ID</label>
+          <label for="USERID">User IDs</label>
           <input type="text" id="USERID" name="userid" class="form-control" placeholder="Enter User ID" required>
         </div>
         <div class="mb-3">
@@ -241,7 +241,7 @@
         <button type="submit" class="btn btn-primary w-100" id="btn_submit">
           <span class="spinner-border spinner-border-sm visually-hidden me-2" role="status"></span>Login
         </button>
-        <a href="/Services/apps.php" class="btn btn-secondary w-100 mt-2">Back</a>
+        <a href="../../" class="btn btn-secondary w-100 mt-2">Back</a>
         <div class="alert text-center visually-hidden mt-3">Login Failed!</div>
       </form>
     </div>
