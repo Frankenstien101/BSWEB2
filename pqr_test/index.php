@@ -18,7 +18,7 @@ $condition = ($role != 'Admin') ? " AND USER_ID=$user_id" : "";
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PQR Incentive System</title>
+    <title>PQR Incentive System v1</title>
 
     <!-- Icons & Fonts -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
