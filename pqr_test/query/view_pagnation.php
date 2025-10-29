@@ -1,9 +1,6 @@
 <?php
-// ⚠️ DO NOT start session here — it's already started in VIEW_PQR.php
-if (!isset($_SESSION)) {
-    // When called via AJAX, PHP may not automatically keep the session.
-    // Safely reattach to existing one if needed:
-    @session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
 $totalPages = isset($_SESSION['total_pages']) ? intval($_SESSION['total_pages']) : 1;
