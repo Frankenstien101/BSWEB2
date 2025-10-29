@@ -228,7 +228,7 @@
         document.getElementById('creditorname').value = '';
         document.getElementById('paymenttype').value = 'Credit';
 
-        const insertURL = `${baseURL}/HomePage/datafetcher/transactions/Van_Loading_getdata.php?action=insertnewtrans&companyid=${companyId}&siteid=${siteId}&transactionid=${transaction_id}`;
+        //const insertURL = `${baseURL}/HomePage/datafetcher/transactions/Van_Loading_getdata.php?action=insertnewtrans&companyid=${companyId}&siteid=${siteId}&transactionid=${transaction_id}`;
         console.log("Inserting new transaction:", insertURL);
 
         return safeFetch(insertURL);
