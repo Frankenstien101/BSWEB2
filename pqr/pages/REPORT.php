@@ -85,7 +85,9 @@ $selected_dateto = isset($_SESSION['ses_dateto']) ? $_SESSION['ses_dateto'] : da
                     <div class="form-group col-md-12 mb-3">
         <select class="form-select col-1 sel sel-site" id="select_user" multiple>
           <?php 
-          $query = "select SITEID,SITE_CODE from [dbo].[Aquila_Sites] where COMPANY_ID='".$_SESSION['comp_id']."'";
+
+
+          $query = "select SITEID,SITE_CODE from [dbo].[Aquila_Sites]  s join [dbo].[Aquila_PQR_Users_Branch_Mapping] b on s.SITEID=b.SITE_ID  where COMPANY_ID='".$_SESSION['comp_id']."' and USER_ID={$_SESSION['id']}";
           foreach($conn->query($query) as $row) {
             ?>
             <option selected value="<?php echo $row['SITEID'] ?>" ><?php echo $row["SITE_CODE"] ?></option>

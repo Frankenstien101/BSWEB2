@@ -229,14 +229,14 @@ SELECT CU_ID, CU_NAME, COUNT(CTE.ID) AS TOTAL,
                         
                         <ul class="list-group list-group-flush">
                           <li class="list-group-item d-flex justify-content-between align-items-center text-muted"> Compliant
-                            <span class="badge bg-secondary rounded-pill " data-name="<?php echo $row["CU_NAME"] ?>" data-id="<?php echo $row["CU_ID"] ?>" data-status="COMPLIANT"><?php echo $row['COMPLIANT']; ?></span>
+                            <span class="badge bg-success rounded-pill " data-name="<?php echo $row["CU_NAME"] ?>" data-id="<?php echo $row["CU_ID"] ?>" data-status="COMPLIANT"><?php echo $row['COMPLIANT']; ?></span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center text-muted"> Non Compliant
-                            <span class="badge bg-secondary rounded-pill " data-name="<?php echo $row["CU_NAME"] ?>" data-id="<?php echo $row["CU_ID"] ?>" data-status="NON-COMPLIANT"><?php echo $row['NON_COMPLIANT']; ?></span>
+                            <span class="badge bg-danger rounded-pill " data-name="<?php echo $row["CU_NAME"] ?>" data-id="<?php echo $row["CU_ID"] ?>" data-status="NON-COMPLIANT"><?php echo $row['NON_COMPLIANT']; ?></span>
                         </li>
 
                         <li class="list-group-item d-flex justify-content-between align-items-center  text-muted"> Pending
-                            <span  data-id="<?php echo $row["CU_ID"] ?>" data-name="<?php echo $row["CU_NAME"] ?>" data-status="PENDING" class="badge bg-secondary rounded-pill ">
+                            <span  data-id="<?php echo $row["CU_ID"] ?>" data-name="<?php echo $row["CU_NAME"] ?>" data-status="PENDING" class="badge bg-warning rounded-pill ">
                                  
                                 <?php echo $row['PENDING']; ?>
                             </span>

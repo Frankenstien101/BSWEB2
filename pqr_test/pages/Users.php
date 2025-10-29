@@ -46,6 +46,8 @@ include 'db_connection.php';
         <div class="col-12" >
         <table id="example" class="table table-striped table-horver" style="width:100%;">
             <thead>
+                    <th>Principal</th>
+                    <th>Site</th>
                     <th>Fullname</th>
                     <th>Username</th>
                     <th>Password</th>
@@ -55,31 +57,73 @@ include 'db_connection.php';
                 </tr>
             </thead>
             <tbody>
-                <?php
+               <?php
 include 'db_connection.php';
-$Q = "SELECT * FROM Aquila_PQR_User";
-foreach($conn->query($Q) as $row){
-  ?>
-      <tr>
-                    <td><?php echo $row["FULLNAME"] ?></td>
-                     <td><?php echo $row["USERNAME"] ?></td>
-                     <td><?php echo $row["PASSWORD"] ?></td>
-                      <td><?php echo $row["ROLE"] ?></td>
-                       <td><?php echo ($row["STATUS"] == 1)?'ACTIVE':'INACTIVE' ?></td>                        
-                    <td><div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-pencil-square"></i>
-    Action
-  </button>
-  <ul class="dropdown-menu">
-    <li><a href="?page=add_newuser&LINE_ID=<?php echo  $row["ID"] ?>" class="dropdown-item" type="button"><i class="bi bi-pencil-fill"></i> Update</a></li>
-    <li><button class="dropdown-item btn_delete"  type="button"  data-id="<?php echo  $row["ID"]?>"><i class="bi bi-trash3-fill"></i> Delete</button></li>
-  </ul>
-</div></button></td>
-                </tr>  
-  <?php
-}
 
- ?>
+$Q = "SELECT * FROM Aquila_PQR_User";
+$stmt = $conn->query($Q);
+
+foreach ($stmt as $row) {
+
+    // 🔹 Get principal sites
+    $principal_stmt = $conn->prepare("
+        SELECT s.SITE_CODE 
+        FROM [dbo].[Aquila_PQR_Users_Branch_Mapping] m
+        JOIN [dbo].[Aquila_Sites] s ON m.SITE_ID = s.SITEID
+        WHERE m.USER_ID = ?
+        GROUP BY s.SITE_CODE
+    ");
+    $principal_stmt->execute([$row['ID']]);
+    $principal_rows = $principal_stmt->fetchAll(PDO::FETCH_COLUMN);
+
+    // 🔹 Get company codes
+    $site_stmt = $conn->prepare("
+        SELECT c.CODE 
+        FROM [dbo].[Aquila_PQR_Users_Company_Mapping] m
+        JOIN [dbo].[Aquila_COMPANY] c ON m.COMPANY_ID = c.ID
+        WHERE m.USER_ID = ?
+        GROUP BY c.CODE
+    ");
+    $site_stmt->execute([$row['ID']]);
+    $site_rows = $site_stmt->fetchAll(PDO::FETCH_COLUMN);
+
+    // Convert arrays to comma-separated strings
+    $principal_list = !empty($principal_rows) ? implode(', ', $principal_rows) : '-';
+    $site_list = !empty($site_rows) ? implode(', ', $site_rows) : '-';
+    ?>
+    <tr>
+         <td><?= htmlspecialchars($site_list) ?></td>
+        <td><?= htmlspecialchars($principal_list) ?></td>
+     
+        <td><?= htmlspecialchars($row["FULLNAME"]) ?></td>
+        <td><?= htmlspecialchars($row["USERNAME"]) ?></td>
+        <td><?= htmlspecialchars($row["PASSWORD"]) ?></td>
+        <td><?= htmlspecialchars($row["ROLE"]) ?></td>
+        <td><?= ($row["STATUS"] == 1) ? 'ACTIVE' : 'INACTIVE' ?></td>
+        <td>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-pencil-square"></i> Action
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="?page=add_newuser&LINE_ID=<?= $row['ID'] ?>" class="dropdown-item">
+                            <i class="bi bi-pencil-fill"></i> Update
+                        </a>
+                    </li>
+                    <li>
+                        <button class="dropdown-item btn_delete" type="button" data-id="<?= $row['ID'] ?>">
+                            <i class="bi bi-trash3-fill"></i> Delete
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+    <?php
+}
+?>
+
             </tbody>
         </table>
         </div>
