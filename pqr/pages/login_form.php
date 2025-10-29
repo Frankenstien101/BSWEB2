@@ -120,7 +120,7 @@
       font-size: 1.75rem;
       font-weight: 700;
       background: linear-gradient(45deg, var(--text-light), var(--deep-orange));
-      -webkit-background-clip: text;
+    
       -webkit-text-fill-color: transparent;
       margin-bottom: 1.75rem;
     }

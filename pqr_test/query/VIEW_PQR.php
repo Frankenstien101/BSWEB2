@@ -9,7 +9,7 @@ if (empty($_SESSION['comp_id']) || empty($_SESSION['ses_site'])) {
 # ==============================
 # CONFIG
 # ==============================
-$recordsPerPage = 100;
+$recordsPerPage = 50;
 $page = max(1, intval($_POST['page'] ?? ($_SESSION['page'] ?? 1)));
 $_SESSION['page'] = $page;
 $offset = ($page - 1) * $recordsPerPage;
@@ -22,7 +22,7 @@ $_SESSION['ses_datefrom'] = $dtFrom;
 $_SESSION['ses_dateto'] = $dtTo;
 
 $seller_id = $_POST['seller_id'] ?? '';
-$seller_filter = ($seller_id && $seller_id !== 'All') ? "AND SELLER_SUB_ID = :seller_id" : "";
+$seller_filter = ($seller_id && $seller_id !== 'All') ? "AND SELLER_ID = '{$seller_id}'" : "";
 
 # ==============================
 # COUNT QUERY (OPTIMIZED)
@@ -31,7 +31,7 @@ $countSql = "
 SELECT COUNT(DISTINCT CONCAT(CU_ID, '-', DATE_PROCESS)) AS total
 FROM [dbo].[Aquila_PQR] WITH (NOLOCK)
 WHERE COMPANY_ID = :comp_id 
-  AND SITE_ID = :site_id 
+  AND SITE_ID = :site_id   $seller_filter
   AND DATE_PROCESS BETWEEN :dtFrom AND :dtTo
 ";
 $stmt = $conn->prepare($countSql);
@@ -48,8 +48,7 @@ $_SESSION['total_pages'] = $totalPages;
 # ==============================
 # MAIN QUERY (OPTIMIZED)
 # ==============================
-$sql = "
-;WITH CTE AS (
+$sql = "WITH CTE AS (
     SELECT 
         MAX(A.LINE_ID) AS ID,
         MIN(A.DISTANCE) AS CAP_DISTANCE,
@@ -94,7 +93,7 @@ LEFT JOIN [dbo].[Aquila_PQR_Incentive] I WITH (NOLOCK) ON B.ID = I.PQR_ID
 ORDER BY B.ID
 OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY;
 ";
-
+echo  $seller_filter; // For debugging purposes
 $stmt = $conn->prepare($sql);
 $stmt->bindValue(':comp_id', $comp_id, PDO::PARAM_STR);
 $stmt->bindValue(':site_id', $site_id, PDO::PARAM_STR);
@@ -102,7 +101,7 @@ $stmt->bindValue(':dtFrom', $dtFrom, PDO::PARAM_STR);
 $stmt->bindValue(':dtTo', $dtTo, PDO::PARAM_STR);
 $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 $stmt->bindValue(':limit', $recordsPerPage, PDO::PARAM_INT);
-if ($seller_filter) $stmt->bindValue(':seller_id', $seller_id, PDO::PARAM_STR);
+
 $stmt->execute();
 
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
