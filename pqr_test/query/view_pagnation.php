@@ -1,31 +1,39 @@
- <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+<?php
+// ⚠️ DO NOT start session here — it's already started in VIEW_PQR.php
+if (!isset($_SESSION)) {
+    // When called via AJAX, PHP may not automatically keep the session.
+    // Safely reattach to existing one if needed:
+    @session_start();
 }
 
- if (isset($_SESSION['page'])) {
-     $totalPages = isset($_SESSION['total_pages']) ? $_SESSION['total_pages']:1;
- $page = $_SESSION['page'];
- if ($totalPages>1) { ?>
-    <?php
-    for ($i = 1; $i <= $totalPages; $i++){?><li class="page-item" id="<?php echo $i; ?>" style="z-index: 1;"><span class="page-link"><?php echo $i; ?></span></li> 
-    <?php }}
- }
- 
- ?>  
-<script type="text/javascript">
-        $(document).ready(function(){
+$totalPages = isset($_SESSION['total_pages']) ? intval($_SESSION['total_pages']) : 1;
+$page = isset($_SESSION['page']) ? intval($_SESSION['page']) : 1;
 
-            var current_page = "<?php echo $page ?>";
-            $("#"+current_page).addClass("active");
-        });
-        $(".page-item").click(function(){
-            $(this).removeClass("active")
-            show_indicator('block');
-            var page = $(this).attr('id');
-             $("#"+page).addClass("active");
-            var dt_from='<?php echo  $_SESSION['ses_datefrom'] ?>';
-            var dt_to='<?php echo  $_SESSION['ses_dateto'] ?>';
-            view_table(dt_from,dt_to,page);
-        });
+if ($totalPages > 1): ?>
+    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+        <li class="page-item <?= ($i == $page ? 'active' : '') ?>" id="<?= $i ?>" style="z-index: 1;">
+            <span class="page-link"><?= $i ?></span>
+        </li>
+    <?php endfor; ?>
+<?php endif; ?>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    // Highlight active page
+    const current_page = "<?php echo $page; ?>";
+    $("#" + current_page).addClass("active");
+});
+
+$(".page-item").click(function() {
+    $(".page-item").removeClass("active");
+    show_indicator('block');
+
+    const page = $(this).attr('id');
+    $("#" + page).addClass("active");
+
+    const dt_from = "<?php echo $_SESSION['ses_datefrom'] ?? ''; ?>";
+    const dt_to   = "<?php echo $_SESSION['ses_dateto'] ?? ''; ?>";
+
+    view_table(dt_from, dt_to, page);
+});
 </script>
