@@ -84,8 +84,7 @@
                         <input type="text" id="charge_id" style = "width: 150px;" class="form-control form-control-sm" value="" > 
                     </div>
 
-                    
-
+                  
                       <!-- Row 2 -->
                     <div class="col-md-3 col-sm-6 col-12 mb-0">
                         <label for="creditorname" class="mb-0">CREDITOR NAME</label>
@@ -108,12 +107,21 @@
 
 
 <div class="card text-bg-light" data-bs-spy="scroll" style="max-width: 100%; height:55vh; margin-bottom: .5rem; Font-size: 10px;">
-      <div class="card-header">
-       <div class="col-md-3 col-sm-6 col-12 mb-0 d-flex align-items-center">
-  <span class="me-2" style = "">Insert Item:</span>
-  <input type="text" id="insertitem" style="width: 150px; height: 25px" class="form-control form-control-sm ml-1" value="">
-  </div>
+      
+    <div class="card-header">
+      
+    <div class="col-md-3 col-sm-6 col-12 mb-0 d-flex align-items-center">
+  <span class="me-2" style = "font-size: 12px;">Insert Item:</span>
+  <input type="text" id="insertitem" 
+         style="width: 150px; height: 25px ; font-size: 12px;" 
+         class="form-control form-control-sm ml-1" 
+         value="">
 
+  <!-- Scan Button -->
+  <button type="button" class="btn btn-primary btn-sm ms-2 ml-1" id="scanBtn" style="height: 30px; font-size: 13px;">
+    <i class="fas fa-qrcode"></i> <!-- Font Awesome Scan Icon -->
+  </button>
+</div>
 
       </div>
       <div class="card-body" style="overflow-y: auto; max-width: 100%; height: 55vh;"  >
@@ -145,36 +153,73 @@
 <button class="btn btn-success mb-2" onclick="exportToExcel()">Process</button>  </div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/es6-promise/dist/es6-promise.auto.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@3.6.2/dist/fetch.umd.min.js"></script>
 
 
 <script>
-  // Safely pass PHP session variables to JavaScript
-
-  document.getElementById('newTransBtn').addEventListener('click', function(event) {
-  // Prevent the default behavior (page refresh)
-  event.preventDefault();
-
-  const companyId = <?php echo json_encode($_SESSION['COMPANY_ID'] ?? ''); ?>;
-  const siteId = <?php echo json_encode($_SESSION['SITE_ID'] ?? ''); ?>;
-
-  if (!companyId || !siteId) {
-    console.error('Session variables COMPANY_ID or SITE_ID are not set.');
-    alert('Session variables are missing. Please log in again.');
-    window.location.href = '/login.php'; // Redirect to login page
+ document.addEventListener("DOMContentLoaded", function () {
+  const newTransBtn = document.getElementById('newTransBtn');
+  if (!newTransBtn) {
+    alert("New Transaction button not found!");
     return;
   }
 
-  fetch(`/GC/datafetcher/transaction/creditcreation_data.php?action=get_new_transaction&company=${companyId}&siteid=${siteId}`)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+  newTransBtn.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    // Get PHP session variables safely
+    const companyId = <?php echo json_encode($_SESSION['COMPANY_ID'] ?? ''); ?>;
+    const siteId = <?php echo json_encode($_SESSION['SITE_ID'] ?? ''); ?>;
+
+    if (!companyId || !siteId) {
+      alert('Session expired or missing. Please log in again.');
+      window.location.href = '/login.php';
+      return;
+    }
+
+    const baseURL = window.location.origin;
+    const getTransURL = `${baseURL}/GC/datafetcher/transaction/creditcreation_data.php?action=get_new_transaction&company=${companyId}&siteid=${siteId}`;
+
+    console.log("Fetching from:", getTransURL);
+
+    // Modern fetch version
+    const safeFetch = async (url) => {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("HTTP Error " + response.status);
+        return await response.json();
+      } catch (e) {
+        console.warn("Fetch failed, trying XHR fallback...", e);
+        // Fallback using XMLHttpRequest for older browsers
+        return new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open("GET", url);
+          xhr.onload = () => {
+            if (xhr.status === 200) {
+              try {
+                resolve(JSON.parse(xhr.responseText));
+              } catch (err) {
+                reject(err);
+              }
+            } else reject(new Error("XHR Error " + xhr.status));
+          };
+          xhr.onerror = () => reject(new Error("XHR network error"));
+          xhr.send();
+        });
       }
-      return response.json();
-    })
-    .then(data => {
-      if (data.count !== undefined) {
+    };
+
+    safeFetch(getTransURL)
+      .then(data => {
+        if (!data || typeof data.count === 'undefined') {
+          alert('No count value returned from server.');
+          console.warn("Response data:", data);
+          return;
+        }
+
         const dttimeid = new Date().toISOString().slice(0, 19).replace(/[-:T]/g, '');
-        const transaction_id = 'TRN-' + companyId + '-' + siteId + '-' + dttimeid + '-' + data.count;
+        const transaction_id = `TRN-${companyId}-${siteId}-${dttimeid}-${data.count}`;
 
         document.getElementById('transaction_id').value = transaction_id;
         document.getElementById('status').value = 'DRAFT';
@@ -183,28 +228,23 @@
         document.getElementById('creditorname').value = '';
         document.getElementById('paymenttype').value = 'Credit';
 
-        return fetch(`/HomePage/datafetcher/transactions/Van_Loading_getdata.php?action=insertnewtrans&companyid=${companyId}&siteid=${siteId}&transactionid=${transaction_id}`);
-      } else {
-        alert('No count value returned from server.');
-        console.warn('Response data:', data);
-      }
-    })
-    .then(response => {
-      if (response) return response.json();
-    })
-    .then(insertResult => {
-      if (insertResult) {
-        if (insertResult.success) {
-          console.log("Insert success:", insertResult.transactionid);
-        } else {
-          console.error("Insert failed:", insertResult.error);
+        const insertURL = `${baseURL}/HomePage/datafetcher/transactions/Van_Loading_getdata.php?action=insertnewtrans&companyid=${companyId}&siteid=${siteId}&transactionid=${transaction_id}`;
+        console.log("Inserting new transaction:", insertURL);
+
+        return safeFetch(insertURL);
+      })
+      .then(insertResult => {
+        if (insertResult && insertResult.success) {
+          alert("✅ New Transaction Created Successfully!");
+        } else if (insertResult) {
+          alert("❌ Failed to insert transaction: " + (insertResult.error || 'Unknown error'));
         }
-      }
-    })
-    .catch(error => {
-      console.error('Error fetching or inserting PO:', error);
-      alert('Error occurred. Check console for details.');
-    });
+      })
+      .catch(err => {
+        alert("⚠️ Error during transaction creation: " + err.message);
+        console.error(err);
+      });
+  });
 });
 </script>
 
