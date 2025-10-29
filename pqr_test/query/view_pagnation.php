@@ -1,6 +1,8 @@
  <?php
+if (!isset($_SESSION)) {
+    session_start();
+}
 
- session_start();
  if (isset($_SESSION['page'])) {
      $totalPages = isset($_SESSION['total_pages']) ? $_SESSION['total_pages']:1;
  $page = $_SESSION['page'];
