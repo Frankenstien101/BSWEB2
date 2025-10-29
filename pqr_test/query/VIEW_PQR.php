@@ -93,7 +93,7 @@ LEFT JOIN [dbo].[Aquila_PQR_Incentive] I WITH (NOLOCK) ON B.ID = I.PQR_ID
 ORDER BY B.ID
 OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY;
 ";
-echo  $seller_filter; // For debugging purposes
+
 $stmt = $conn->prepare($sql);
 $stmt->bindValue(':comp_id', $comp_id, PDO::PARAM_STR);
 $stmt->bindValue(':site_id', $site_id, PDO::PARAM_STR);
