@@ -3,7 +3,7 @@ session_start();
 include 'query/user_login.php';
 $page_main = $_SESSION['page_main'] ?? '';
 if (!isset($_SESSION['user_id'])) {
-    header('Location:../' . $page_main . '/pages/login_form.php');
+    header('Location:../pqr_test/pages/login_form.php');
 }
 $selected_comp = $_SESSION['comp_id'] ?? '';
 $selected_site = $_SESSION['ses_site'] ?? '';
@@ -14,11 +14,10 @@ $condition = ($role != 'Admin') ? " AND USER_ID=$user_id" : "";
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PQR Incentive System</title>
+    <title>PQR Incentive System v1</title>
 
     <!-- Icons & Fonts -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>

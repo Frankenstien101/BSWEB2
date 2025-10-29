@@ -284,7 +284,7 @@
                     <p class="app-description">
                         Instantly analyze and rate your photos ensuring every image meets professional quality standards.
                     </p>
-                    <a href="/pqr/index.php" class="app-button">Visit Site</a>
+                    <a href="pqr_test/index.php" class="app-button">Visit Site</a>
                 </div>
                 
                   <div class="app-card">

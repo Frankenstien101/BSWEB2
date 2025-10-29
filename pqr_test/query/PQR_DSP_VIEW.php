@@ -80,43 +80,142 @@ ORDER BY
 $result = $conn->query($query);
 while($row=$result->fetch(PDO::FETCH_ASSOC)){
     ?>
-    <div class="col-md-6 col-lg-4 mb-4 ">
-            <a style="cursor: pointer;" data-id="<?php echo $row["SELLER_SUB_ID"]; ?>"  class="text-decoration-none card-a btn_view_str">
-                <div class="card text-center" id="card_a" data-id="A">
-                    <div class="card-body">   
-                    <div class="row">
-                        <div class="col"><h5 class="card-title">
-                            <?php echo $row['SELLER_SUB_ID']; ?>
-                        </h5></div>                       
-                        
-                        <ul class="list-group list-group-flush">
-                          <li class="list-group-item d-flex justify-content-between align-items-center text-muted"> Total
-                            <span class="badge bg-info rounded-pill"><?php echo $row['TOTAL'] ?></span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center text-muted"> Compliant
-                            <span class="badge bg-success rounded-pill"><?php echo $row['COMPLIANT'] ?></span>
-                        </li>
-
-                        <li class="list-group-item d-flex justify-content-between align-items-center text-muted"> Non Complaint
-                               <span class="badge bg-danger rounded-pill"><?php echo $row['NON_COMPLIANT'] ?></span>
-                        </li>
-   <li class="list-group-item d-flex justify-content-between align-items-center text-muted"> Pending
-                              <span class="badge bg-secondary rounded-pill"><?php echo $row['PENDING'] ?></span>
-                        </li>
-                      
-                    </ul>
-                </div>
-            </div>   
-        </div>
-        </a>
-    </div>    
+   <div class="col-12 col-sm-6 col-lg-4 mb-4">
+    <div class="card seller-card h-100 btn_view_str" data-id="<?php echo $row["SELLER_SUB_ID"]; ?>">
+        <div class="card-body">   
+            <div class="card-header">
+                <h5 class="card-title"><?php echo $row['SELLER_SUB_ID']; ?></h5>
+            </div>
+            
+            <ul class="status-list">
+                <li class="status-item">
+                    <span class="status-label">Total</span>
+                    <span class="badge total"><?php echo $row['TOTAL'] ?></span>
+                </li>
+                <li class="status-item">
+                    <span class="status-label">Compliant</span>
+                    <span class="badge compliant"><?php echo $row['COMPLIANT'] ?></span>
+                </li>
+                <li class="status-item">
+                    <span class="status-label">Non Compliant</span>
+                    <span class="badge non-compliant"><?php echo $row['NON_COMPLIANT'] ?></span>
+                </li>
+                <li class="status-item">
+                    <span class="status-label">Pending</span>
+                    <span class="badge pending"><?php echo $row['PENDING'] ?></span>
+                </li>
+            </ul>
+        </div>   
+    </div>
+</div>
 <?php
 }
  ?>        
 </div>
 </div>
-<script>
+<style>
+.seller-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
 
+.seller-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 1rem;
+    margin: -1rem -1rem 1rem -1rem;
+    border-radius: 8px 8px 0 0;
+}
+
+.card-title {
+    color: #2c3e50;
+    font-weight: 600;
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.status-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.status-item:last-child {
+    border-bottom: none;
+}
+
+.status-label {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.badge {
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    min-width: 50px;
+    text-align: center;
+}
+
+.badge.total {
+    background-color: #3498db;
+    color: white;
+}
+
+.badge.compliant {
+    background-color: #27ae60;
+    color: white;
+}
+
+.badge.non-compliant {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.badge.pending {
+    background-color: #FFC107;
+    color: white;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .seller-card {
+        margin: 0.5rem;
+    }
+    
+    .status-item {
+        padding: 1rem 0;
+    }
+    
+    .card-title {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .col-sm-6 {
+        padding: 0 0.5rem;
+    }
+}
+</style>
+<script>
     function view_cas_str(compid,siteid,sellerid,filter){
       $.ajax({
         url:'query/PQR_DSP_VIEW_STORES.php',

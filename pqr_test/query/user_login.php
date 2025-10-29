@@ -7,6 +7,6 @@ $query->execute([$ID]);
 $USER = $query->fetch(PDO::FETCH_ASSOC);
 }
 else if(!isset($_SESSION['user_id'])){
- header('Location:../'.$_SESSION['page'].'/pages/login_form.php');  
+ header('Location:../pqr_test/pages/login_form.php');  
 }
  ?>
