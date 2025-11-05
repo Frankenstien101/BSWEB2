@@ -156,7 +156,7 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
     <aside class="main-sidebar sidebar-dark-primary elevation-4" style="position:fixed;">
         <a href="#" class="brand-link text-center">
             <img src="/Services/img/credit.ico" alt="Logo" style="width:80px;height:80px;">
-            <span class="brand-text font-weight-bold d-block">GOODS CREDIT</span>
+            <span class="brand-text font-weight-bold d-block">TBC</span>
         </a>
         <div class="sidebar">
             <div class="user-panel mt-3 pb-3 mb-1 d-flex">
