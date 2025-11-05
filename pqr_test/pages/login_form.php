@@ -228,7 +228,7 @@
   <div class="login-container">
     <div class="login-card">
       <img src="../images/pqr_icon.png" alt="PQR Logo">
-      <h2>PQR</h2>
+      <h2>PQR V1</h2>
       <form id="form-data" method="POST">
         <div class="mb-3">
           <label for="USERID">User ID</label>
