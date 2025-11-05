@@ -197,6 +197,7 @@ $selected_page = isset($_SESSION['page']) ? $_SESSION['page'] : '';
   <div class="card mb-3">
     <div class="filter-bar">
       <div class="row g-2 align-items-center">
+        
         <!-- Date Filter -->
         <div class="col-lg-2 col-md-4 col-sm-12">
           <div class="dropdown w-100">
