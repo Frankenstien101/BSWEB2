@@ -286,7 +286,7 @@
                     </p>
                     <a href="pqr_test/index.php" class="app-button">Visit Site</a>
                 </div>
-                
+    <!-- Card 6 -->
                   <div class="app-card">
                     <img src="\Services\img\BDSC.png" alt="ERP Logo" class="app-logo">
                     <h2 class="app-name">BDSC </h2>
@@ -295,12 +295,22 @@
                     </p>
                     <a href="https://bspidev.great-site.net/index.php" class="app-button">Visit Site</a>
                 </div>
+
+    <!-- Card 7 -->
+                  <div class="app-card">
+                      <img src="\Services\img\BDSC.png" alt="ERP Logo" class="app-logo">
+                      <h2 class="app-name">BDSC </h2>
+                      <p class="app-description">
+                          A web-based ticketing system that streamlines customer support, tracks issues, and manages service requests efficiently.
+                      </p>
+                      <a href="https://bspidev.great-site.net/index.php" class="app-button">Visit Site</a>
+                  </div>
             </div>
              
         </main>
 
         <footer>
-            © 2025 BLUESYS. All rights reserved.
+            © <?php echo date("Y"); ?> BLUESYS. All rights reserved.
         </footer>
     </div>
 </body>
