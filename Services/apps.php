@@ -295,12 +295,23 @@
                     </p>
                     <a href="https://bspidev.great-site.net/index.php" class="app-button">Visit Site</a>
                 </div>
+
+                  <!-- Card 7 -->
+                  <div class="app-card">
+                      <img src="\Services\img\TBC.png" alt="ERP Logo" class="app-logo">
+                      <h2 class="app-name">TBC </h2>
+                      <p class="app-description">
+                          A smart tele-verification system that automatically validates customer purchase information, ensures sales accuracy.
+                      </p>
+                      <a href="\TBC.php" class="app-button">Visit Site</a>
+                  </div>
+                  
             </div>
              
         </main>
 
         <footer>
-            © 2025 BLUESYS. All rights reserved.
+            © <?php echo date("Y"); ?> BLUESYS. All rights reserved.
         </footer>
     </div>
 </body>

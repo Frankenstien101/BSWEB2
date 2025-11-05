@@ -298,12 +298,12 @@
 
     <!-- Card 7 -->
                   <div class="app-card">
-                      <img src="\Services\img\BDSC.png" alt="ERP Logo" class="app-logo">
-                      <h2 class="app-name">BDSC </h2>
+                      <img src="\Services\img\TBC.png" alt="ERP Logo" class="app-logo">
+                      <h2 class="app-name">TBC </h2>
                       <p class="app-description">
-                          A web-based ticketing system that streamlines customer support, tracks issues, and manages service requests efficiently.
+                          A smart tele-verification system that automatically validates customer purchase information, ensures sales accuracy.
                       </p>
-                      <a href="https://bspidev.great-site.net/index.php" class="app-button">Visit Site</a>
+                      <a href="\TBC.php" class="app-button">Visit Site</a>
                   </div>
             </div>
              
