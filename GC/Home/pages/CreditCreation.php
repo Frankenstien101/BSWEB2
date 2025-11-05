@@ -1,164 +1,134 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Credit Creation</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" />
-<style>
-    .filter-container {
-        display: flex;
-        justify-content: left;
-        align-items: left;
-        margin-top: 5px;
-    }
-
-    .filter-container .card {
-        font-size: 9px;
-    }
-
-    .filter-container .card-body .row {
-        display: flex;
-        align-items: top;
-         margin-top: 0px;
-    }
-
-    .filter-container label {
-        font-weight: bold;
-        font-size: 9px;
-    }
-
-    .filter-container input,
-    .filter-container select {
-        font-size: 9px;
-    }
-
-</style>
-
-</head>
-<body>
-
-    <h3 class="mt-0">Credit Creation</h3>
+<!-- pages/CreditCreation.php -->
+<h3 class="mt-0">Credit Creation</h3>
 
 <div class="filter-container">
-    <div class="card text-bg-light" style="font-size: 11px; text-align: left;">
-    <div class="card-header">
-      
-    <div class="d-flex flex-wrap gap-2 mb 1">
-  <button class="btn btn-primary btn-sm" id="newTransBtn">
-    <i class="fas fa-plus"></i> New Transaction
-  </button>
-
-  <button type="button" style="height: 32px; font-size: 13px;" class="btn btn-primary mb-0 ml-1" data-toggle="modal" data-target="#loadmodal">
-    <i class="fas fa-folder-open"></i> Load Transaction
-  </button>
-</div>
-
-    </div>
-    <div class="card-body">
+    <div class="card text-bg-light" style="font-size:11px;text-align:left;">
+        <div class="card-header">
+            <div class="d-flex flex-wrap gap-2 mb-1">
+                <button class="btn btn-primary btn-sm" id="newTransBtn"><i class="fas fa-plus"></i> New Transaction</button>
+                <button type="button" class="btn btn-primary btn-sm ml-1" data-toggle="modal" data-target="#loadModal">
+                    <i class="fas fa-folder-open"></i> Load Transaction
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
             <div class="container-fluid p-0">
                 <div class="row">
-                    <!-- Row 1 -->
                     <div class="col-md-3 col-sm-6 col-12 mb-0">
                         <label for="transaction_id" class="mb-0">TRANSACTION ID</label>
-                        <input type="text" id="transaction_id"  style = "max-width: 100%;" class="form-control form-control-sm" placeholder="Auto generated" readonly>
+                        <input type="text" id="transaction_id" class="form-control form-control-sm" placeholder="Auto generated" readonly>
                     </div>
-                 <div class="col-md-3 col-sm-6 col-12 mb-0">
-                  <label for="creditor_id" class="mb-0">CREDITOR ID</label>
-                  <div class="input-group input-group-sm">
-                    <input type="text" id="creditor_id" class="form-control" style="width: 100px; height: 25px;" value="" readonly>
-                    <button class="btn btn-primary ml-1" type="button" id="btnSelect" style ="height: 25px; font-size: 8px;">Select</button>
-                  </div>
-                </div>
-
+                    <div class="col-md-3 col-sm-6 col-12 mb-0">
+                        <label for="creditor_id" class="mb-0">CREDITOR ID</label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" id="creditor_id" style="height:30px;font-size:8px;" class="form-control" readonly>
+                            <button class="btn btn-primary ml-1" type="button" data-toggle="modal" data-target="#selectcreditor" style="height:30px;font-size:8px;">Select</button>
+                        </div>
+                    </div>
                     <div class="col-md-5 col-sm-6 col-12 mb-0">
-                        <label for="status" class="mb-0" >STATUS</label>
-                        <input type="text" id="status" style = "width: 100px;" class="form-control form-control-sm" value="DRAFT" readonly>
+                        <label for="status" class="mb-0">STATUS</label>
+                        <input type="text" style="width:100px;" id="status" style="height:25px;font-size:8px;" class="form-control form-control-sm" value="DRAFT" readonly>
                     </div>
-
-                  
-                      <div class="col-md-3 col-sm-6 col-12 mb-0">
-                        <label for="charge_id" class="mb-0" >CHARGE ID</label>
-                        <input type="text" id="charge_id" style = "width: 150px;" class="form-control form-control-sm" value="" > 
+                    <div class="col-md-3 col-sm-6 col-12 mb-0">
+                        <label for="charge_id" class="mb-0">CHARGE ID</label>
+                        <input type="text" id="charge_id" class="form-control form-control-sm">
                     </div>
-
-                  
-                      <!-- Row 2 -->
                     <div class="col-md-3 col-sm-6 col-12 mb-0">
                         <label for="creditorname" class="mb-0">CREDITOR NAME</label>
-                        <input type="text" id="creditorname"  style = "max-width: 300px;" class="form-control form-control-sm" readonly>
+                        <input type="text" id="creditorname" class="form-control form-control-sm" readonly>
                     </div>
-                    
                     <div class="col-md-6 col-sm-6 col-12 mb-0">
-                  <label for="paymenttype" class="mb-0">PAYMENT TYPE</label>
-                  <select id="paymenttype" class="form-control form-control-sm" style="max-width: 100px; font-size: 10px; height: 25px;">
-                    <option value="Credit">CREDIT</option>
-                    <option value="Cash">CASH</option>
-                  </select>
-                </div>                
-
+                        <label for="paymenttype" class="mb-0">PAYMENT TYPE</label>
+                        <select id="paymenttype" class="form-control form-control-sm" style="max-width:100px;font-size:10px;height:30px;">
+                            <option value="Credit">CREDIT</option>
+                            <option value="Cash">CASH</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-
-<div class="card text-bg-light" data-bs-spy="scroll" style="max-width: 100%; height:55vh; margin-bottom: .5rem; Font-size: 10px;">
-      
+<div class="card text-bg-light" style="max-width:100%;height:54vh;margin-bottom:.5rem;font-size:10px;">
     <div class="card-header">
-      
-    <div class="col-md-3 col-sm-6 col-12 mb-0 d-flex align-items-center">
-  <span class="me-2" style = "font-size: 12px;">Insert Item:</span>
-  <input type="text" id="insertitem" 
-         style="width: 150px; height: 25px ; font-size: 12px;" 
-         class="form-control form-control-sm ml-1" 
-         value="">
-
-  <!-- Scan Button -->
-  <button type="button" class="btn btn-primary btn-sm ms-2 ml-1" id="scanBtn" style="height: 30px; font-size: 13px;">
-    <i class="fas fa-qrcode"></i> <!-- Font Awesome Scan Icon -->
-  </button>
+        <div class="col-md-3 col-sm-6 col-12 mb-0 d-flex align-items-center">
+            <span class="me-2" style="font-size:12px;">Insert Item:</span>
+            <input type="text" id="insertitem" style="width:150px;height:25px;font-size:12px;" class="form-control form-control-sm ml-1">
+            <button type="button" class="btn btn-primary btn-sm ms-2 ml-1" id="scanBtn" style="height:30px;font-size:13px;">
+                <i class="fas fa-qrcode"></i>
+            </button>
+        </div>
+    </div>
+ <div class="card-body p-0" style="max-height:55vh; overflow:hidden;">
+    <div class="table-responsive" style="max-height:55vh; overflow-y:auto;">
+        <table id="lineitems" class="table table-striped table-hover table-bordered table-sm mb-0" style="font-size:10px; width:100%;">
+            <!-- FROZEN HEADER -->
+            <thead class="thead-dark" style="position:sticky; top:0; z-index:10; background:#343a40; color:white;">
+                <tr>
+                    <th style="width:10%; min-width:80px;">ITEM ID</th>
+                    <th style="width:12%; min-width:90px;">BARCODE</th>
+                    <th style="width:25%; min-width:150px;">DESCRIPTION</th>
+                    <th style="width:5%;  min-width:60px;" class="text-center">INV QTY</th>
+                    <th style="width:5%;  min-width:60px;" class="text-center">QTY TO CHARGE</th>
+                    <th style="width:5%;  min-width:50px;" class="text-center">UOM</th>
+                    <th style="width:8%; min-width:50px;" class="text-center">PRICE</th>
+                    <th style="width:8%; min-width:50px;" class="text-center">AMOUNT</th>
+                    <th style="width:2%; min-width:20px;" class="text-center">LESS</th>
+                    <th style="width:9%; min-width:90px;" class="text-center">LESS TYPE</th>
+                    <th style="width:10%; min-width:70px;" class="text-right">LESS AMOUNT</th>
+                    <th style="width:12%; min-width:90px;" class="text-right">TOTAL</th>
+                    <th style="width:8%;  min-width:60px;" class="text-center">ACTION</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Filled by JS -->
+            </tbody>
+        </table>
+    </div>
+</div>
 </div>
 
-      </div>
-      <div class="card-body" style="overflow-y: auto; max-width: 100%; height: 55vh;"  >
-        <table id="itemsTable" class="table table-striped table-hover table-bordered table-sm " style="font-size: 10px;">
-          
-  <thead>
-    <tr>
-      <th>ITEM ID</th>
-      <th>BARCODE</th>
-<th>DESCRIPTION</th>
-<th>QTY</th>
-<th>UOM</th>
-<th>PRICE</th>
-<th>LESS</th>
-<th>TOTAL</th>
-    </tr>
-  </thead>
-  <tbody>
-    <!-- Filled dynamically -->
-  </tbody>
+<div class="text-right mb-0">
+    <button class="btn btn-success mb-2" onclick="exportToExcel()">Process</button>
+</div>
 
-            <!-- ...repeat rows as needed... -->
-          </tbody>
-        </table>
-      </div>
+
+<div id="loading" style="
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;">
+    <div style="text-align:center;">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+        <div style="margin-top:10px;">Loading Data...</div>
     </div>
-
-    <div class="text-right mb-0">
-<button class="btn btn-success mb-2" onclick="exportToExcel()">Process</button>  </div>
-
-
-<script src="https://cdn.jsdelivr.net/npm/es6-promise/dist/es6-promise.auto.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@3.6.2/dist/fetch.umd.min.js"></script>
-
+</div>
 
 <script>
- document.addEventListener("DOMContentLoaded", function () {
+
+  
+function showLoader() {
+    const transactionEl = document.getElementById('transaction_id');
+    const warehouseEl = document.getElementById('warehouse');
+    const warehousecode = warehouseEl ? warehouseEl.value.trim() : "";
+
+    // ✅ Show loader only if both checks passed
+    document.getElementById("loading").style.display = "flex";
+    return true;
+}
+
+
+function hideLoader() {
+    document.getElementById("loading").style.display = "none";
+}
+
+
+   document.addEventListener("DOMContentLoaded", function () {
   const newTransBtn = document.getElementById('newTransBtn');
   if (!newTransBtn) {
     alert("New Transaction button not found!");
@@ -228,7 +198,7 @@
         document.getElementById('creditorname').value = '';
         document.getElementById('paymenttype').value = 'Credit';
 
-        //const insertURL = `${baseURL}/HomePage/datafetcher/transactions/Van_Loading_getdata.php?action=insertnewtrans&companyid=${companyId}&siteid=${siteId}&transactionid=${transaction_id}`;
+        const insertURL = `${baseURL}/HomePage/datafetcher/transactions/Van_Loading_getdata.php?action=insertnewtrans&companyid=${companyId}&siteid=${siteId}&transactionid=${transaction_id}`;
         console.log("Inserting new transaction:", insertURL);
 
         return safeFetch(insertURL);
@@ -246,7 +216,196 @@
       });
   });
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    showLoader();
+
+    loadcreditors();
+    loaditems();
+
+    hideLoader();
+});
+let loadedCreditors = []; // Keep a reference to the data (optional, for later use)
+
+function loadcreditors() {
+    const companyid = "<?php echo $_SESSION['COMPANY_ID'] ?? ''; ?>";
+    const tbody = document.querySelector('#creditors tbody');
+    if (!tbody) return;
+
+    tbody.innerHTML = '<tr><td colspan="6" class="text-center">Loading...</td></tr>';
+
+    fetch(`/GC/datafetcher/transaction/creditcreation_data.php?action=loadcreditors&company=${encodeURIComponent(companyid)}`)
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            loadedCreditors = data || [];
+            tbody.innerHTML = ''; // Clear loader
+
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No creditors found.</td></tr>';
+                return;
+            }
+
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+
+                tr.innerHTML = `
+                    <td>${item.SITE_ID || ''}</td>
+                    <td>${item.DEPARTMENT || ''}</td>
+                    <td>${item.EMPLOYEE_ID || ''}</td>
+                    <td>${item.EMPLOYEE_NAME || ''}</td>
+                    <td class="text-right">
+                        ${item.CURRENT_BALANCE 
+                            ? parseFloat(item.CURRENT_BALANCE).toLocaleString('en-PH', { 
+                                minimumFractionDigits: 2, 
+                                maximumFractionDigits: 2 
+                              }) 
+                            : '0.00'
+                        }
+                    </td>
+                    <td>
+                        <button class="btn btn-success btn-sm select-creditor-btn" 
+                                style="height:30px;width:80px;font-size:9px;" 
+                                title="Select Creditor">
+                            <i class="fa fa-check"></i> Select
+                        </button>
+                    </td>
+                `;
+
+                // Attach data to the row for easy access
+                tr.dataset.employeeId = item.EMPLOYEE_ID;
+                tr.dataset.employeeName = item.EMPLOYEE_NAME;
+
+                tbody.appendChild(tr);
+            });
+
+            // === ATTACH CLICK HANDLER TO ALL SELECT BUTTONS ===
+            attachSelectCreditorHandlers();
+        })
+        .catch(err => {
+            console.error('Error loading creditors:', err);
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Error loading data.</td></tr>';
+        });
+}
+
+/* ============================================================= */
+/* === ATTACH CLICK HANDLER TO ALL "Select" BUTTONS === */
+/* ============================================================= */
+function attachSelectCreditorHandlers() {
+    document.querySelectorAll('.select-creditor-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const row = this.closest('tr');
+
+            const creditorId   = row.dataset.employeeId;
+            const creditorName = row.dataset.employeeName;
+
+            // === CORRECT FIELD IDs FROM YOUR HTML ===
+            const creditorIdField   = document.getElementById('creditor_id');     // OK
+            const creditorNameField = document.getElementById('creditorname');   // FIXED: was 'creditor_name'
+
+            if (creditorIdField)   creditorIdField.value = creditorId;
+            if (creditorNameField) creditorNameField.value = creditorName;
+
+            // Trigger change events (useful for validation)
+            [creditorIdField, creditorNameField].forEach(field => {
+                if (field) field.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+
+            // Close modal
+            $('#selectcreditor').modal('hide');
+
+            // Optional: Focus next field (e.g., insert item)
+            document.getElementById('insertitem')?.focus();
+        });
+    });
+}
+
+ function formatCurrency(value) {
+    return value ? Number(value).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '';
+}
+
+
+function loaditems() {
+    const companyid = "<?php echo $_SESSION['COMPANY_ID'] ?? ''; ?>";
+    const siteid = "<?php echo $_SESSION['SITE_ID'] ?? ''; ?>";
+
+    const tbody = document.querySelector('#lineitems tbody');
+    if (!tbody) return;
+
+    tbody.innerHTML = ''; // Clear previous rows
+  //  showLoader(); // Show loader before fetch
+
+    fetch(`/GC/datafetcher/transaction/creditcreation_data.php?action=loaditems&company=${encodeURIComponent(companyid)}&siteid=${encodeURIComponent(siteid)}`)
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            loadedPOs = data;
+            if (!data || data.length === 0) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = '<td colspan="11" class="text-center">No items found.</td>';
+                tbody.appendChild(tr);
+                return;
+            }
+
+            data.forEach((item, index) => {
+    const tr = document.createElement('tr');
+
+    tr.innerHTML = `
+        <td>${item.ITEM_ID || ''}</td>
+        <td>${item.BARCODE || ''}</td>
+        <td>${item.DESCRIPTION || ''}</td>
+        <td>${item.QTY || ''}</td>
+        <td>
+            <input type="number" min="0" max="${item.QTY || 0}" value="0"
+                class="form-control form-control-sm qty-to-charge"
+                style="width:60px; height:25px; font-size:10px;">
+        </td>
+        <td>
+            <select class="form-control form-control-sm" style="max-width:100px;font-size:9px;height:25px;">
+                <option value="PCS">PCS</option>
+                <option value="PACK">PACK</option>
+            </select> 
+        </td>
+        <td>${item.PRICE || 0}</td>
+        <td class="price-total">${(item.PRICE * 0).toFixed(2)}</td> <!-- total cell -->
+        <td>
+            <input type="number" min="0" value="0"
+                class="form-control form-control-sm discount"
+                style="width:60px; height:25px; font-size:10px;">
+        </td>
+        <td>
+            <select class="form-control form-control-sm" style="max-width:100px;font-size:9px;height:25px;">
+                <option value="PERCENTAGE">PERCENTAGE</option>
+                <option value="AMOUNT">AMOUNT</option>
+            </select>
+        </td>
+    `;
+
+    tbody.appendChild(tr);
+
+    // --- Calculate price * qty dynamically ---
+    const qtyInput = tr.querySelector('.qty-to-charge');
+    const totalCell = tr.querySelector('.price-total');
+    qtyInput.addEventListener('input', () => {
+        const qty = parseFloat(qtyInput.value) || 0;
+        const total = (item.PRICE || 0) * qty;
+        totalCell.textContent = total.toFixed(2);
+    });
+});
+        })
+        .catch(err => {
+            console.error('Error loading items:', err);
+        })
+        .finally(() => {
+       //     hideLoader(); // Hide loader when done
+        });
+}
+
+
 </script>
 
-</body>
-</html>
