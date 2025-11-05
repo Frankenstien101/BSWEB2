@@ -34,9 +34,10 @@ jobs:
         run: composer validate --no-check-publish && composer install --prefer-dist --no-progress
 
       # ✅ No artifact upload here
-      #- name: Copy files for deployment
-      #  run: mkdir deploy && cp -R * deploy/
-      #  shell: bash
+      - name: Prepare deploy folder
+  run: |
+    mkdir -p deploy
+    rsync -a --exclude='deploy' . deploy/
 
   deploy:
     runs-on: ubuntu-latest
