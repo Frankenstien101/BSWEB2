@@ -49,8 +49,7 @@ $_SESSION['total_pages'] = $totalPages;
 # MAIN QUERY (OPTIMIZED)
 # ==============================
 $sql = "WITH CTE AS (
-    SELECT 
-        MAX(A.LINE_ID) AS ID,
+    SELECT MAX(A.LINE_ID) AS ID,
         MIN(A.DISTANCE) AS CAP_DISTANCE,
         ISNULL(A.BRAND, 'DEFAULT') AS BRAND,
         A.COMPANY_ID,
