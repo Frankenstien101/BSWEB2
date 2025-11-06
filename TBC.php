@@ -12,28 +12,31 @@ if (isset($_POST['login'])) {
     try {
         // Prepare and execute query
         $stmt = $conn->prepare("
-            SELECT USERNAME,PASSWORD,ROLE,NAME,COMPANY_ID, SITE_ID,LINEID
-             FROM GC_USERS
-             WHERE STATUS = 'ACTIVE' AND USERNAME = :username
+            SELECT USER_NAME,PASSWORD,ROLE,NAME_OF_USER,COMPANY_ID, SITE_ID,LINE_ID
+             FROM TBC_Users
+             WHERE STATUS = 'ACTIVE' AND USER_NAME = :username
         ");
         $stmt->bindParam(':username', $username, PDO::PARAM_STR); // Bind username as a string
         $stmt->execute();
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user) {
+
             // Compare passwords (case-sensitive)
             if ($user['PASSWORD'] === $password) {
                 // Password matches
                 $_SESSION['username'] = $username;
-                $_SESSION['Name_of_user'] = $user['NAME'];
+                $_SESSION['Name_of_user'] = $user['NAME_OF_USER'];
                 $_SESSION['Company_Name'] = $user['COMPANY_ID'];
-                $_SESSION['UserID'] = $user['LINEID'];
+                $_SESSION['UserID'] = $user['LINE_ID'];
                 $_SESSION['Company_ID'] = $user['COMPANY_ID'];
                 $_SESSION['Role'] = $user['ROLE'];
+                $_SESSION['SITE_ID'] = $user['SITE_ID'];
 
                 // Redirect to homepage
                 header("Location: TBC/Home/home.php");
                 exit();
+
             } else {
                 $error = "Invalid password.";
             }
@@ -44,6 +47,7 @@ if (isset($_POST['login'])) {
         $error = "Database error: " . htmlspecialchars($e->getMessage());
     }
 }
+
 ?>
 
 <!doctype html>
@@ -308,7 +312,7 @@ if (isset($_POST['login'])) {
       <div class="nav-links">
         <a href="/Services/contact.php">Contact</a>
         <a href="/Services/abouts.php">About</a>
-        <a href="/Services/apps.php">Services</a>
+        <a href="/index.php">Services</a>
       </div>
     </nav>
 
