@@ -489,7 +489,12 @@ $condition = ($role != 'Admin') ? " AND USER_ID=$user_id" : "";
             <?php
                 // code...
             } ?>
-
+                <li id="agent_dash" class="<?= ($_GET['page'] ?? '') === 'agent_dash' || $_GET['page'] ?? '' === 'view_coverage' ? 'active' : '' ?>">
+                    <a href="index.php?page=agent_dash">
+                        <i class='fas fa-map'></i>
+                        <span class="menu-text">Agent Trip</span>
+                    </a>
+                </li>
             <li id="PQR_VALIDATOR" class="<?= ($_GET['page'] ?? '') === 'PQR_VALIDATOR' ? 'active' : '' ?>">
                 <a href="index.php?page=PQR_VALIDATOR">
                     <i class='fas fa-check-double'></i>
