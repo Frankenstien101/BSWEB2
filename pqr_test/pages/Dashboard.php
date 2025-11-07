@@ -1,18 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sales Dashboard</title>
+<?php
+include_once("db_connection.php");
 
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Chart.js Data Labels plugin -->
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
-  <!-- jQuery -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+$year = date("Y");
+$company_id = $_SESSION['comp_id'] ?? "";
 
-  <style>
+/* ✅ Fast Month Summary Query */
+$month_query = "
+    SELECT MONTH, TOTAL_AMOUNT
+    FROM Sales_Summary_By_Month
+    WHERE COMPANY_ID = :company_id AND YEAR = :year
+    ORDER BY MONTH ASC
+";
+
+$month_stmt = $conn->prepare($month_query);
+$month_stmt->execute([
+    ':company_id' => $company_id,
+    ':year' => $year
+]);
+
+$month_results = $month_stmt->fetchAll(PDO::FETCH_ASSOC);
+$month_json = json_encode($month_results ?: []);
+
+/* ✅ Fast Year Summary Query */
+$year_query = "
+    SELECT YEAR, TOTAL_AMOUNT
+    FROM Sales_Summary_By_Year
+    WHERE COMPANY_ID = :company_id
+    ORDER BY YEAR ASC
+";
+
+$year_stmt = $conn->prepare($year_query);
+$year_stmt->execute([
+    ':company_id' => $company_id
+]);
+$year_results = $year_stmt->fetchAll(PDO::FETCH_ASSOC);
+$year_json = json_encode($year_results ?: []);
+?>
+
+<style>
     :root {
       --primary: #4361ee;
       --primary-light: #4895ef;
@@ -44,7 +69,6 @@
     }
 
     .dashboard {
-      max-width: 1400px;
       margin: 0 auto;
     }
 
@@ -299,7 +323,7 @@
       .chart-section {
         grid-template-columns: 1fr;
       }
-      
+
       .chart-small {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -311,26 +335,26 @@
         flex-direction: column;
         align-items: flex-start;
       }
-      
+
       .dashboard-controls {
         width: 100%;
         justify-content: space-between;
       }
-      
+
       .stats-container {
         grid-template-columns: repeat(2, 1fr);
       }
-      
+
       .chart-small {
         grid-template-columns: 1fr;
       }
-      
+
       .chart-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 15px;
       }
-      
+
       .chart-actions {
         width: 100%;
         justify-content: space-between;
@@ -341,18 +365,18 @@
       .stats-container {
         grid-template-columns: 1fr;
       }
-      
+
       .tabs {
         flex-direction: column;
         padding: 5px;
       }
-      
+
       .dashboard-title {
         font-size: 1.8rem;
       }
     }
   </style>
-</head>
+
 <body>
   <div class="dashboard">
     <!-- Header -->
@@ -382,7 +406,7 @@
         </div>
         <div class="stat-info">
           <h3>Total Sales</h3>
-          <div class="stat-value">$810,000</div>
+          <div class="stat-value">₱810,000</div>
         </div>
       </div>
       <div class="stat-card">
@@ -414,8 +438,6 @@
       </div>
     </div>
 
-    <!-- Tabs -->
-
     <!-- Charts -->
     <div class="chart-section">
       <div class="chart-large">
@@ -439,263 +461,198 @@
           <h4>Sales by Site</h4>
           <canvas id="siteChart"></canvas>
         </div>
-       
+
       </div>
     </div>
   </div>
-
+  
   <script>
-    // Data
-    const monthlySales2025 = [12000, 15000, 18000, 22000, 25000, 30000, 28000, 35000, 40000, 42000, 45000, 47000];
-    const yearlySales = {
-      2023: 170000,
-      2024: 250000,
-      2025: 390000
-    };
 
-    const siteSales = {
-      KOR: 150000,
-      DVO: 120000,
-      CDO: 90000
-    };
 
-    const pqrData = {
-      executed: 75,
-      pending: 15,
-      failed: 10
-    };
 
-    // PQR Chart
-    const ctxPqr = document.getElementById("pqrChart").getContext("2d");
-    new Chart(ctxPqr, {
-      type: "doughnut",
-      data: {
-        labels: ["KOR", "DVO", "CDO"],
-        datasets: [
-          {
-            data: [pqrData.executed, pqrData.pending, pqrData.failed],
-            backgroundColor: ["#2ecc71", "#f1c40f", "#e74c3c"],
-            borderWidth: 0,
-          },
-        ],
-      },
-      options: {
-        plugins: { 
-          legend: { 
-            position: "bottom",
-            labels: {
-              padding: 20,
-              usePointStyle: true,
-            }
-          } 
-        },
-        responsive: true,
-        cutout: '70%',
-      },
-    });
 
-    // Site Sales Chart
-    const ctxSite = document.getElementById("siteChart").getContext("2d");
-    new Chart(ctxSite, {
-      type: "bar",
-      data: {
-        labels: Object.keys(siteSales),
-        datasets: [
-          {
-            label: "Site Sales ($)",
-            data: Object.values(siteSales),
-            backgroundColor: ["#4e79a7", "#59a14f", "#9c755f"],
-            borderRadius: 6,
-          },
-        ],
-      },
-      options: {
+/* ✅ SAMPLE DATA FOR PIE CHART - Sales per Site */
+const siteLabels = ["Site A", "Site B", "Site C", "Site D"];
+const siteSales = [25000, 18000, 32000, 15000]; // sample values
+
+const ctxSite = document.getElementById("pqrChart").getContext("2d");
+
+let siteChart = new Chart(ctxSite, {
+    type: "pie",
+    data: {
+        labels: siteLabels,
+        datasets: [{
+            data: siteSales,
+            backgroundColor: [
+                "#4e79a7",
+                "#f28e2b",
+                "#e15759",
+                "#76b7b2"
+            ]
+        }]
+    },
+    plugins: [ChartDataLabels],
+    options: {
         responsive: true,
         plugins: {
-          legend: { display: false },
-          datalabels: {
-            anchor: "end",
-            align: "top",
-            formatter: (val) => "$" + val.toLocaleString(),
-            color: "#333",
-            font: {
-              weight: 'bold'
+            legend: {
+                position: "bottom"
+            },
+            datalabels: {
+                color: "#ffffff",
+                font: {
+                    weight: "bold"
+                },
+                formatter: (value) => "₱" + value.toLocaleString()
             }
-          },
-        },
-        scales: { 
-          y: { 
-            beginAtZero: true,
-            grid: {
-              drawBorder: false
-            }
-          },
-          x: {
-            grid: {
-              display: false
-            }
-          }
-        },
-      },
-      plugins: [ChartDataLabels],
-    });
+        }
+    }
+});
 
-    // Sales Chart
-    const ctxSales = document.getElementById("salesChart").getContext("2d");
-    let salesChart = new Chart(ctxSales, {
-      type: "bar",
-      data: {
-        labels: ["2023", "2024", "2025"],
-        datasets: [
-          {
-            label: "Total Sales ($)",
-            data: Object.values(yearlySales),
+
+
+/* ✅ Load PHP results into JS */
+const monthData = <?php echo $month_json ?>;
+const yearData  = <?php echo $year_json ?>;
+
+/* ✅ Convert DB results to chart arrays (Fix Month Name) */
+const monthLabels = monthData.map(r => {
+    const names = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return names[r.MONTH];
+});
+const monthValues = monthData.map(r => Number(r.TOTAL_AMOUNT));
+
+const yearLabels = yearData.map(r => r.YEAR);
+const yearValues = yearData.map(r => Number(r.TOTAL_AMOUNT));
+
+/* ✅ Create Chart */
+const ctxSales = document.getElementById("salesChart").getContext("2d");
+let salesChart = new Chart(ctxSales, {
+    type: "bar",
+    data: { 
+        labels: yearLabels, 
+        datasets: [{
+            data: yearValues,
             backgroundColor: "#4e79a7",
-            borderRadius: 6,
-          },
-        ],
-      },
-      options: {
+            borderRadius: 6
+        }]
+    },
+    plugins: [ChartDataLabels],
+    options: {
         responsive: true,
         plugins: {
-          legend: { display: false },
-          datalabels: {
-            anchor: "end",
-            align: "top",
-            formatter: (val) => "$" + val.toLocaleString(),
-            color: "#333",
-            font: {
-              weight: 'bold'
+            legend: { display: false },
+            datalabels: {
+                color: "#FFFFFF",
+                anchor: "bottom",
+                align: "start",
+                rotation: -90,       // ✅ Vertical Label
+                clamp: true,
+                font: { weight: "bold" },
+                formatter: value => "₱" + value.toLocaleString()
             }
-          },
         },
-        scales: { 
-          y: { 
-            beginAtZero: true,
-            grid: {
-              drawBorder: false
-            }
-          },
-          x: {
-            grid: {
-              display: false
-            }
-          }
-        },
-      },
-      plugins: [ChartDataLabels],
-    });
+        scales: {
+            y: { beginAtZero: true }
+        }
+    }
+});
 
-    $("#totalSales").text(`$${yearlySales[2025].toLocaleString()}`);
 
-    // Tab switch handler
-    $(".tab").click(function () {
+/* ✅ Tab Switch Logic */
+$(".tab").click(function () {
     $(".tab").removeClass("active");
     $(this).addClass("active");
 
-      const mode = $(this).data("mode");
-      if (mode === "year") {
-        $("#chartTitle").text("Sales Overview (Per Year)");
-        salesChart.destroy();
-        salesChart = new Chart(ctxSales, {
-          type: "bar",
-          data: {
-            labels: ["2023", "2024", "2025"],
-            datasets: [
-              {
-                label: "Total Sales ($)",
-                data: Object.values(yearlySales),
-                backgroundColor: "#4e79a7",
-                borderRadius: 6,
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: { display: true },
-              datalabels: {
-                anchor: "end",
-                align: "top",
-                formatter: (val) => "$" + val.toLocaleString(),
-                color: "#333",
-                font: {
-                  weight: 'bold'
-                }
-              },
-            },
-            scales: { 
-              y: { 
-                beginAtZero: true,
-                grid: {
-                  drawBorder: false
-                }
-              },
-              x: {
-                grid: {
-                  display: false
-                }
-              }
-            },
-          },
-          plugins: [ChartDataLabels],
-        });
-        $("#totalSales").text(`$${yearlySales[2025].toLocaleString()}`);
-      }
-      else {
-        $("#chartTitle").text("Sales Overview (Per Month, 2025)");
-        salesChart.destroy();
-        salesChart = new Chart(ctxSales, {
-          type: "bar",
-          data: {
-            labels: [
-              "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-              "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-            ],
-            datasets: [
-              {
-                label: "Monthly Sales ($)",
-                data: monthlySales2025,
-                 backgroundColor: "#4e79a7",
-                borderRadius: 6,
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: { display: false },
-              datalabels: {
-                anchor: "end",
-                align: "top",
-                formatter: (val) => "$" + val.toLocaleString(),
-                color: "#333",
-                font: {
-                  weight: 'bold'
-                }
-              },
-            },
-            scales: { 
-              y: { 
-                beginAtZero: true,
-                grid: {
-                  drawBorder: false
-                }
-              },
-              x: {
-                grid: {
-                  display: false
-                }
-              }
-            },
-          },
-          plugins: [ChartDataLabels],
-        });
+    const mode = $(this).data("mode");
+    salesChart.destroy();
 
-        const total2025 = monthlySales2025.reduce((a, b) => a + b, 0);
-        $("#totalSales").text(`$${total2025.toLocaleString()}`);
-      }
-    });
-  </script>
-</body>
-</html>
+    if (mode === "year") {
+        $("#chartTitle").text("Sales Overview (Per Year)");
+        salesChart = new Chart(ctxSales, {
+            type: "bar",
+            data: { 
+                labels: yearLabels, 
+                datasets: [{ data: yearValues, backgroundColor: "#4e79a7", borderRadius: 6 }]
+            },
+            plugins: [ChartDataLabels],
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                      datalabels: {
+                color: "#FFFFFF",
+                anchor: "bottom",
+                align: "start",
+                rotation: -90,       // ✅ Vertical Label
+                clamp: true,
+                font: { weight: "bold" },
+                formatter: value => "₱" + value.toLocaleString()
+            }
+                },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+    }
+
+    if (mode === "month") {
+        $("#chartTitle").text("Sales Overview (Per Month)");
+        salesChart = new Chart(ctxSales, {
+            type: "bar",
+            data: { 
+                labels: monthLabels, 
+                datasets: [{ data: monthValues, backgroundColor: "#4e79a7", borderRadius: 6 }]
+            },
+            plugins: [ChartDataLabels],
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                      datalabels: {
+                color: "#FFFFFF",
+                anchor: "bottom",
+                align: "start",
+                rotation: -90,       // ✅ Vertical Label
+                clamp: true,
+                font: { weight: "bold" },
+                formatter: value => "₱" + value.toLocaleString()
+            }
+                },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+    }
+
+    if (mode === "today") {
+        $("#chartTitle").text("Today's Sales");
+
+        // ✅ If no data for month, today = 0
+        const todayValue = monthValues.length > 0 ? monthValues[monthValues.length - 1] : 0;
+
+        salesChart = new Chart(ctxSales, {
+            type: "bar",
+            data: {
+                labels: ["Today"],
+                datasets: [{ data: [todayValue], backgroundColor: "#4e79a7", borderRadius: 6 }],
+            },
+            plugins: [ChartDataLabels],
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                     datalabels: {
+                color: "#FFFFFF",
+                anchor: "bottom",
+                align: "start",
+                rotation: -90,       // ✅ Vertical Label
+                clamp: true,
+                font: { weight: "bold" },
+                formatter: value => "₱" + value.toLocaleString()
+            }
+                },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+    }
+});
+</script>
