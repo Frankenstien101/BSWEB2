@@ -65,84 +65,31 @@
 </head>
 <body>
 
-  <h3>TRANSACTION</h3>
+  <h3>SELECT TRANSACTION</h3>
   <div class="section-container">
     <div class="row row-cards d-flex flex-wrap">
       <!-- Wrap each card in a col -->
       <div class="col-auto px-2 first-card">
-        <a href="Home.php?page=CreditCreation" class="card-link">
+        <a href="Home.php?page=CallCreation" class="card-link">
           <div class="card-custom">
-            <img src="\BlueBook\Home\img\transactions\receipt.jpg" class="card-icon" alt="Upload Orders Icon"/>
-            <div class="card-title">CREDIT CREATION</div>
-            <div class="card-text">Track money coming into your business.</div>
+            <img src="\TBC\Home\img\transactions\online.png" class="card-icon" alt="Upload Orders Icon"/>
+            <div class="card-title">CALL CREATION</div>
+            <div class="card-text">Start call creation on store.</div>
           </div>
         </a>
       </div>
       <div class="col-auto px-2">
         <a href="#" class="card-link">
           <div class="card-custom">
-            <img src="\BlueBook\Home\img\transactions\payments.jpg" class="card-icon" alt="Order View Icon"/>
-            <div class="card-title">CHARGE MANAGEMENT</div>
-            <div class="card-text">Log outgoing payments and bills.</div>
+            <img src="\TBC\Home\img\transactions\delay.png" class="card-icon" alt="Order View Icon"/>
+            <div class="card-title">PREVIOUS CALL</div>
+            <div class="card-text">Show previous call transaction.</div>
           </div>
         </a>
       </div>
     </div>
   </div>
 
-  <h3>INVENTORY</h3>
-  <div class="section-container">
-    <div class="row row-cards d-flex flex-wrap">
-      <div class="col-auto px-2">
-        <a href="#" class="card-link">
-          <div class="card-custom">
-            <img src="\BlueBook\Home\img\transactions\chart.jpg" class="card-icon" alt="Delivery Plan Icon"/>
-            <div class="card-title">STOCK MANAGEMENT</div>
-            <div class="card-text">List and organize all accounts used in bookkeeping.</div>
-          </div>
-        </a>
-      </div>
-    </div>
-  </div>
-
-   <h3>PAYMENTS</h3>
-  <div class="section-container">
-    <div class="row row-cards d-flex flex-wrap">
-      <!-- Wrap each card in a col -->
-      <div class="col-auto px-2 first-card">
-        <a href="#" class="card-link">
-          <div class="card-custom">
-            <img src="\Dash\Home\img\transactions\upload.png" class="card-icon" alt="Upload Orders Icon"/>
-            <div class="card-title">CHARGE PAYMENT</div>
-            <div class="card-text">Manage items you sell or purchase.</div>
-          </div>
-        </a>
-      </div>
-      <div class="col-auto px-2">
-        <a href="#" class="card-link">
-          <div class="card-custom">
-            <img src="\Dash\Home\img\transactions\vieworders.jpg" class="card-icon" alt="Order View Icon"/>
-            <div class="card-title">CASH PAYMENT</div>
-            <div class="card-text">Record goods bought from suppliers.</div>
-          </div>
-        </a>
-      </div>
-    </div>
-  </div>
-
-   <h3>ADJUSTMENTS</h3>
-  <div class="section-container">
-    <div class="row row-cards d-flex flex-wrap">
-      <!-- Wrap each card in a col -->
-      <div class="col-auto px-2 first-card">
-        <a href="#" class="card-link">
-          <div class="card-custom">
-            <img src="\BlueBook\Home\img\transactions\invoice.jpg" class="card-icon" alt="Upload Orders Icon"/>
-            <div class="card-title">VOID TRANSACTION</div>
-            <div class="card-text">Generate a new invoice.</div>
-          </div>
-        </a>
-    </div>
 
 </body>
 </html>
