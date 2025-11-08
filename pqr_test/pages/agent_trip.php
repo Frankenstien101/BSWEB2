@@ -351,8 +351,8 @@ async function initMap(){
 
     polyline = new google.maps.Polyline({
         map,
-        strokeColor: '#4361ee',
-        strokeWeight: 3
+        strokeColor: '#0A0A0A',
+        strokeWeight: 2
     });
    addMarkersToMap(map, markerData);
     setupSlider(coords);

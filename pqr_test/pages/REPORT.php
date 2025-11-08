@@ -71,7 +71,7 @@ $selected_dateto = isset($_SESSION['ses_dateto']) ? $_SESSION['ses_dateto'] : da
 <div class="col-lg-4">
                 <div class="card upload-card">
                     <div class="card-header">
-                        <h6 class="card-title mb-0">PQR Validated Detail</h6>
+                        <h6 class="card-title mb-0">PQR Validated Details</h6>
                     </div>
                     <div class="card-body">
                     <div class="row">

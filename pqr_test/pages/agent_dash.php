@@ -304,11 +304,18 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <div class="container-fluid">
   <div class="dashboard-container">
  <div class="row">  
-<div class="col-md-12 mb-3 d-flex justify-content-end">
-    <div class="col-md-3 col-sm-12" data-mode="month">
-        <input type="date"  id="dt_filter" value="<?= $date_selected ?>" class="date-filter">
+<div class="row g-2 justify-content-end align-items-center mb-3">
+    <div class="col-md-1 col-sm-4 col-12 d-flex justify-content-md-end justify-content-start" data-mode="dsp">
+        <a href="#" class="btn btn-primary w-100">DSP</a>
+    </div>
+    <div class="col-md-1 col-sm-4 col-12 d-flex justify-content-md-end justify-content-start" data-mode="da">
+        <a href="#" class="btn btn-secondary w-100">DA</a>
+    </div>
+    <div class="col-md-3 col-sm-4 col-12 d-flex justify-content-md-end justify-content-start">
+        <input type="date" id="dt_filter" value="<?= $date_selected ?>" class="form-control">
     </div>
 </div>
+
 <?php
 foreach($result as $row){    
 ?>
