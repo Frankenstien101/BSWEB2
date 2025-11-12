@@ -341,6 +341,7 @@ async function initMap(){
     const coords = tripData.map(x => ({
         lat: parseFloat(x.LAT_CAPTURED),
         lng: parseFloat(x.LONG_CAPTURED),
+        bat_percentage: x.BATTERY_PERCENTAGE,
         time: x.TIME_MINUTES
     }));
 

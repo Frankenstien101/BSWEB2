@@ -14,7 +14,7 @@ try {
         WHERE TIME_MINUTES BETWEEN '06:00' AND '24:00'
           AND DELIVERY_DATE = :delivery_date
           AND AGENT_ID = :agent_id
-        ORDER BY TIME_MINUTES ASC
+        ORDER BY  TIME_MINUTES,TIME_STAMP ASC
     ";
 
     $stmt = $conn->prepare($sql);
