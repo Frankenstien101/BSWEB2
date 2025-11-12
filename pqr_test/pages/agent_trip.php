@@ -313,9 +313,9 @@ $BATCH_ID = $_GET['BATCH_ID'] ?? '';
         </div>
     </div>
 </div>
-
 <script>
 let map, polyline, tripData = [], markerData = [];
+let panelMarker = null; // 🚚 marker that moves along the route
 
 $(document).ready(async function(){
     await loadData();
@@ -355,74 +355,86 @@ async function initMap(){
         strokeColor: '#0A0A0A',
         strokeWeight: 2
     });
-   addMarkersToMap(map, markerData);
+
+    // add store markers
+    addMarkersToMap(map, markerData);
+
+    // initialize slider + panel icon
     setupSlider(coords);
+
+    // add final icon at end of trip
+    addPanelIcon(map, coords);
 }
-        function addMarkersToMap(map, markers) {
-            markers.forEach((marker, index) => {
-                const mapMarker = new google.maps.Marker({
-                    position: {lat: parseFloat(marker.LATITUDE), lng: parseFloat(marker.LONGITUDE)},
-                    map: map,
-                    title: marker.CUSTOMER_NAME,
-                    icon: getStatusIcon(marker.VISIT_STATUS)
-                });
-                
-                // Add click event
-                mapMarker.addListener('click', () => {
-                    showCustomerModal(marker);
-                });
-            });
-        }
-        function getStatusIcon(status) {
-            const baseUrl = "https://maps.google.com/mapfiles/ms/icons/";
-            switch(status) {
-                case "VISITED":
-                    return {
-                        url: baseUrl + "green-dot.png",
-                        scaledSize: new google.maps.Size(32, 32)
-                    };
-                case "PASSED BY":
-                    return {
-                        url: baseUrl + "yellow-dot.png",
-                        scaledSize: new google.maps.Size(32, 32)
-                    };
-                default:
-                    return {
-                        url: baseUrl + "red-dot.png",
-                        scaledSize: new google.maps.Size(32, 32)
-                    };
-            }
-        }
-                function showCustomerModal(customer) {
-            // Set modal content
-            $('#customerName').text(customer.CUSTOMER_NAME);
-            $('#customerId').text(customer.CUSTOMER_ID);
-            $('#customerAvatar').attr('src', customer.IMAGE1 || 'https://images.stackbox.xyz/qe1p4ipfjg13bs5mssak6fdpsizjz5.jpeg');
-            $('#storeEntry').text(customer.STORE_ENTRY || '--:-- --');
-            $('#storeExit').text(customer.STORE_EXIT || '--:-- --');
-            $('#timeSpent').text(customer.STORE_TIME_SPENT || '--');
-            
-            // Set modal header color based on status
-            const gradientHeader = $(".gradient-header");
-            gradientHeader.removeClass("status-visited status-failed status-redeliver status-default");
-            
 
-            // if (customer.VISIT_STATUS === "VISITED") {
-            //     gradientHeader.addClass("status-visited");
-            // } else if (customer.VISIT_STATUS === "PASSED BY") {
-            //     gradientHeader.addClass("status-failed");
-            // } else if (customer.VISIT_STATUS === "REDELIVER") {
-            //     gradientHeader.addClass("status-redeliver");
-            // } else {
-            //     gradientHeader.addClass("status-default");
-            // }
- //gradientHeader.addClass("status-failed");
+function addMarkersToMap(map, markers) {
+    markers.forEach((marker, index) => {
+        const mapMarker = new google.maps.Marker({
+            position: {lat: parseFloat(marker.LATITUDE), lng: parseFloat(marker.LONGITUDE)},
+            map: map,
+            title: marker.CUSTOMER_NAME,
+            icon: getStatusIcon(marker.VISIT_STATUS)
+        });
+        
+        mapMarker.addListener('click', () => {
+            showCustomerModal(marker);
+        });
+    });
+}
 
-            
-            // Show modal
-            const modal = new bootstrap.Modal(document.getElementById('customerModal'));
-            modal.show();
-        }
+function getStatusIcon(status) {
+    const baseUrl = "https://maps.google.com/mapfiles/ms/icons/";
+    switch(status) {
+        case "VISITED":
+            return {
+                url: baseUrl + "green-dot.png",
+                scaledSize: new google.maps.Size(32, 32)
+            };
+        case "PASSED BY":
+            return {
+                url: baseUrl + "yellow-dot.png",
+                scaledSize: new google.maps.Size(32, 32)
+            };
+        default:
+            return {
+                url: baseUrl + "red-dot.png",
+                scaledSize: new google.maps.Size(32, 32)
+            };
+    }
+}
+
+function showCustomerModal(customer) {
+    $('#customerName').text(customer.CUSTOMER_NAME);
+    $('#customerId').text(customer.CUSTOMER_ID);
+    $('#customerAvatar').attr('src', customer.IMAGE1 || 'https://images.stackbox.xyz/qe1p4ipfjg13bs5mssak6fdpsizjz5.jpeg');
+    $('#storeEntry').text(customer.STORE_ENTRY || '--:-- --');
+    $('#storeExit').text(customer.STORE_EXIT || '--:-- --');
+    $('#timeSpent').text(customer.STORE_TIME_SPENT || '--');
+
+    const modal = new bootstrap.Modal(document.getElementById('customerModal'));
+    modal.show();
+}
+
+// 🚚 Panel icon function (adds last icon)
+function addPanelIcon(map, coords) {
+    if (!coords || coords.length === 0) return;
+
+    const lastCoord = coords[coords.length - 1];
+
+    const panelIcon = {
+        url: "https://img.icons8.com/plasticine/50/truck--v1.png", // truck/panel icon
+        scaledSize: new google.maps.Size(40, 40),
+        anchor: new google.maps.Point(20, 40)
+    };
+
+    panelMarker = new google.maps.Marker({
+        position: lastCoord,
+        map: map,
+        icon: panelIcon,
+        title: "Final Destination"
+    });
+}
+
+// 🎚️ Slider control
 function setupSlider(coords){
     let minT = toMin(coords[0].time);
     let maxT = toMin(coords.at(-1).time);
@@ -441,15 +453,29 @@ function setupSlider(coords){
         let t = formatMinutes(currentValue);
         $("#currentTime").text(t);
         $("#txt_time").text(t);
-
         $("#progressBar").css("width", ((currentValue-minT)/(maxT-minT))*100 + "%");
 
         if(filtered.length > 0){
-            map.setCenter(filtered.at(-1));
+            const last = filtered.at(-1);
+            map.setCenter(last);
+
+            // 🚚 Move panel icon dynamically
+            if (panelMarker) panelMarker.setMap(null);
+            panelMarker = new google.maps.Marker({
+                position: last,
+                map: map,
+                icon: {
+                    url: "https://img.icons8.com/plasticine/50/truck--v1.png",
+                    scaledSize: new google.maps.Size(40, 40),
+                    anchor: new google.maps.Point(20, 40)
+                },
+                title: "Current Vehicle Position"
+            });
         }
     });
 }
 
+// Utility functions
 function toMin(t){ let [h,m] = t.split(":").map(Number); return h*60+m; }
 function formatMinutes(m){ let h=Math.floor(m/60), mm=m%60; return `${String(h).padStart(2,"0")}:${String(mm).padStart(2,"0")}`; }
 </script>
