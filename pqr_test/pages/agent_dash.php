@@ -339,8 +339,14 @@ foreach($result as $row){
         <div><strong><i class="fas fa-map-marker-alt"></i> Market</strong><span>0.0 km</span></div>
       </div>
       <div class="section">
-        <div><strong><i class="far fa-clock"></i> Market timing</strong><span>–</span></div>
-        <div><strong><i class="fas fa-door-open"></i> Entry / Exit</strong><span> <?= 
+        <div><strong><i class="far fa-clock"></i> WH Entry/Depart/Rerun</strong><span> <?= 
+    ($row['WH_ENTRY'] ? date("g:i A", strtotime($row['WH_ENTRY'])) : '-') . 
+    " / " . 
+    ($row['WH_DEPARTURE'] ? date("g:i A", strtotime($row['WH_DEPARTURE'])) : '-') . 
+    " / " . 
+    ($row['WH_RETURN'] ? date("g:i A", strtotime($row['WH_RETURN'])) : '-') 
+?></span></div>
+        <div><strong><i class="fas fa-door-open"></i>Market Entry / Exit</strong><span> <?= 
     ($row['TIME_ENTRY'] ? date("g:i A", strtotime($row['TIME_ENTRY'])) : '-') . 
     " / " . 
     ($row['TIME_EXIT'] ? date("g:i A", strtotime($row['TIME_EXIT'])) : '-') 
@@ -355,6 +361,7 @@ foreach($result as $row){
         <div><strong><i class="fas fa-user-clock"></i>AVG In Store</strong><span>–</span></div>
       </div>
     </div>
+
     <div class="footer">
       <div>
         <strong><i class="fas fa-chart-line"></i> Productivity</strong>
