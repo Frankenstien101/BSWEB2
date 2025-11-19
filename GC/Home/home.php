@@ -271,7 +271,7 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
         </div>
     </div>
 
-</div><!-- /.wrapper -->
+</div>
 
 <!-- ==================== SCRIPTS ==================== -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -285,7 +285,6 @@ function confirmLogout(){
     if(confirm('Are you sure you want to logout?')) window.location.href='verify.php';
 }
 
-/* ---------- MODAL BLUR & BACKDROP CLEANUP ---------- */
 $(function(){
     // show custom blur when any modal opens
     $('.modal').on('show.bs.modal', function(){ $('.modal-blur').show(); });

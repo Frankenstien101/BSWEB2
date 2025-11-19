@@ -40,12 +40,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-<h3>VAN LOADING TRANSACTION</h3>
 
+<h3>VAN LOADING TRANSACTION</h3>
 
 <input type="hidden" id="categorytxt" name="categorytxt">
 <input type="hidden" id="warehouseid" name="warehouseid">
-
 
 <!-- Filter Cards Container -->
 <div class="d-flex flex-wrap gap-2 mb-1">
