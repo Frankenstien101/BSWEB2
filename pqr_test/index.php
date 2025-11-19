@@ -486,8 +486,15 @@ $condition = ($role != 'Admin') ? " AND USER_ID=$user_id" : "";
                         <span class="menu-text">PQR View</span>
                     </a>
                 </li>
+                                <li id="agent_dash" class="<?= ($_GET['page'] ?? '') === 'agent_dash' || ($_GET['page'] ?? '') === 'view_coverage' ? 'active' : '' ?>">
+                    <a href="index.php?page=agent_dash">
+                        <i class='fas fa-map'></i>
+                        <span class="menu-text">Agent Trip</span>
+                    </a>
+                </li>
             <?php
-                // code...
+               
+               
             } ?>
 
             <li id="PQR_VALIDATOR" class="<?= ($_GET['page'] ?? '') === 'PQR_VALIDATOR' ? 'active' : '' ?>">
@@ -502,7 +509,7 @@ $condition = ($role != 'Admin') ? " AND USER_ID=$user_id" : "";
                     <span class="menu-text">PQR Validator ISKU</span>
                 </a>
             </li>
-            <?php if ($role == "Admin" || $role == "GSM") {
+            <?php if ($role == "Admin" || $role == "GSM"|| $role == "OM") {
             ?>
                 <li id="PQR_CAS_VALIDATOR" class="<?= ($_GET['page'] ?? '') === 'PQR_CAS_VALIDATOR' ? 'active' : '' ?>">
                     <a href="index.php?page=PQR_CAS_VALIDATOR">
