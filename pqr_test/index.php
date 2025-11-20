@@ -598,7 +598,7 @@ $condition = ($role != 'Admin') ? " AND USER_ID=$user_id" : "";
             </div>
 
             <button class="btn btn-outline-dark d-md-none filter-toggle-btn" type="button">
-                <i class="bi bi-sliders"></i> Filters
+                <i class="bi bi-sliders"></i> Filter
             </button>
 
             <div class="filter-controls">
