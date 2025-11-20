@@ -339,7 +339,7 @@ foreach($result as $row){
         <div><strong><i class="fas fa-map-marker-alt"></i> Market</strong><span>0.0 km</span></div>
       </div>
       <div class="section">
-        <div><strong><i class="far fa-clock"></i> WH Entry/Depart/Rerun</strong><span> <?= 
+        <div><strong><i class="far fa-clock"></i> WH Entry/Depart/Return</strong><span> <?= 
     ($row['WH_ENTRY'] ? date("g:i A", strtotime($row['WH_ENTRY'])) : '-') . 
     " / " . 
     ($row['WH_DEPARTURE'] ? date("g:i A", strtotime($row['WH_DEPARTURE'])) : '-') . 
