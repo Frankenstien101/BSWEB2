@@ -274,7 +274,7 @@ $sql = "WITH CTE AS (
       AND BD.SITE_ID     = :site1
     GROUP BY BD.BATCH
 )
-SELECT *
+SELECT  LOGIN_ID AS LG_ID,*
 FROM Dash_Plan_Batch_Transaction BT
 LEFT JOIN Dash_Agent_Performance_Summary PS
     ON BT.AGENT = PS.AGENT_ID
@@ -317,15 +317,16 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <?php
-foreach($result as $row){    
+foreach($result as $row){   
+ $DA_ID =  ($row['LG_ID'] == NULL)? $row['AGENT']: $row['LG_ID'] 
 ?>
  <div class="col-md-6 col-sm-12 col-lg-4 mb-2">
-  <a class="btn_nav_coverage" href="?page=view_coverage&BATCH_ID=<?= $row['BATCH_ID'] ?>&AGENT_ID=<?= $row['AGENT'] ?>&DELIVERY_DATE=<?= $row['DATE_TO_DELIVER'] ?>">
+  <a class="btn_nav_coverage" href="?page=view_coverage&BATCH_ID=<?= $row['BATCH_ID'] ?>&AGENT_ID=<?= $DA_ID  ?>&DELIVERY_DATE=<?= $row['DATE_TO_DELIVER'] ?>">
     <div class="card">
     <div class="card-header">
       <div class="beat-info">
         <h3><i class="fas fa-store"></i><?= $row['VEHICLE_ID'] ?></h3>  
-        <span><?= $row['AGENT'] ?></span>      
+        <span><?= $DA_ID  ?></span>      
         <div class="status online"><i class="fas fa-circle"></i> Online</div>
       </div>
       <div class="visit-info">
@@ -339,7 +340,7 @@ foreach($result as $row){
         <div><strong><i class="fas fa-map-marker-alt"></i> Market</strong><span>0.0 km</span></div>
       </div>
       <div class="section">
-        <div><strong><i class="far fa-clock"></i> WH Entry/Depart/Rerun</strong><span> <?= 
+        <div><strong><i class="far fa-clock"></i> WH Entry/Depart/Return</strong><span> <?= 
     ($row['WH_ENTRY'] ? date("g:i A", strtotime($row['WH_ENTRY'])) : '-') . 
     " / " . 
     ($row['WH_DEPARTURE'] ? date("g:i A", strtotime($row['WH_DEPARTURE'])) : '-') . 

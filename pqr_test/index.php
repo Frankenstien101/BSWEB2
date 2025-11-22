@@ -346,9 +346,19 @@ $condition = ($role != 'Admin') ? " AND USER_ID=$user_id" : "";
             }
 
             .filter-controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
+        display: none;
+        width: 100%;
+        margin-top: 10px;
+        flex-direction: column;
+        gap: 10px;
+        background: #fff;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .filter-controls.show {
+        display: flex !important;
+    }
         }
 
         @media (max-width: 576px) {
@@ -587,11 +597,15 @@ $condition = ($role != 'Admin') ? " AND USER_ID=$user_id" : "";
                 </h5>
             </div>
 
+            <button class="btn btn-outline-dark d-md-none filter-toggle-btn" type="button">
+                <i class="bi bi-sliders"></i> Filter
+            </button>
+
             <div class="filter-controls">
                 <input type="date" id="date" value="<?= $_GET['date'] ?? date('Y-m-d') ?>"
                     class="form-control form-control-sm" style="width: 140px; display: none;">
 
-                <select class="form-select SEL" id="sel_comp" style="width: 160px;">
+                <select class="form-select SEL" id="sel_comp" >
                     <option value="">Select Company</option>
                     <?php
                     if ($role == "Admin") {
@@ -607,7 +621,7 @@ $condition = ($role != 'Admin') ? " AND USER_ID=$user_id" : "";
                     ?>
                 </select>
 
-                <select class="form-select SEL sel-site" id="SELECT_SITE" style="width: 150px;"
+                <select class="form-select SEL sel-site" id="SELECT_SITE"
                     <?= empty($selected_site) ? 'disabled' : '' ?>>
                     <option value="">Select Site</option>
                     <?php
@@ -662,6 +676,20 @@ $condition = ($role != 'Admin') ? " AND USER_ID=$user_id" : "";
                 minimumResultsForSearch: 6,
                 width: '100%'
             });
+$(".filter-toggle-btn").on("click", function () {
+    $(".filter-controls").toggleClass("show");
+});
+
+
+$("#SELECT_SITE").change(function(){
+   $(".filter-controls").removeClass("show");
+});
+// Hide on scroll
+$(window).on("scroll", function () {
+    $(".filter-controls").removeClass("show");
+});
+
+
 
             // Sidebar toggle functionality
             $('.menu-toggle, .sidebar-overlay').click(function() {
