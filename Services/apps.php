@@ -314,5 +314,6 @@
             © <?php echo date("Y"); ?> BLUESYS. All rights reserved.
         </footer>
     </div>
+
 </body>
 </html>
