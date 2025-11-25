@@ -101,6 +101,36 @@
         cursor: pointer;
         transition: 0.2s;
     }
+/* ================================
+   FLOATING TIME BUBBLE UNDER SLIDER
+================================ */
+.slider-bubble {
+    position: absolute;
+    top: 100px;               /* BELOW the slider */
+    background: var(--primary-color);
+    color: white;
+    padding: 6px 12px;
+    font-size: 13px;
+    border-radius: 8px;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    pointer-events: none;
+    display: none;
+}
+
+.slider-bubble::after {
+    content: "";
+    position: absolute;
+    top: -6px; /* arrow points UP now */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid var(--primary-color);
+}
+
 
     .progress-container {
         width: 100%;
@@ -296,12 +326,12 @@ $BATCH_ID = $_GET['BATCH_ID'] ?? '';
         <div class="slider-overlay">
             <div class="time-indicator">
                 <span id="startTime">--:--</span>
-                <span class="current-time" id="currentTime">--:--</span>
+                <!-- <span class="current-time" id="currentTime">--:--</span> -->
                 <span id="endTime">--:--</span>
             </div>
-
+              <div class="slider-bubble" id="sliderBubble">--:--</div>
             <input type="range" class="time-slider" id="get_slide" min="0" max="100" value="0">
-
+             
             <div class="progress-container">
                 <div class="progress-bar" id="progressBar"></div>
             </div>
@@ -434,8 +464,6 @@ function addPanelIcon(map, coords) {
         title: "Final Destination"
     });
 }
-
-// 🎚️ Slider control
 function setupSlider(coords){
     let minT = toMin(coords[0].time);
     let maxT = toMin(coords.at(-1).time);
@@ -445,6 +473,9 @@ function setupSlider(coords){
     $("#endTime").text(coords.at(-1).time);
     $("#txt_time").text(coords[0].time);
     $("#currentTime").text(coords[0].time);
+
+    const slider = document.getElementById("get_slide");
+    const bubble = document.getElementById("sliderBubble");
 
     $("#get_slide").on("input", function(){
         let currentValue = parseInt($(this).val());
@@ -456,11 +487,29 @@ function setupSlider(coords){
         $("#txt_time").text(t);
         $("#progressBar").css("width", ((currentValue-minT)/(maxT-minT))*100 + "%");
 
+        // =======================
+        // FLOATING BUBBLE BELOW
+        // =======================
+        bubble.style.display = "block";
+
+        const sliderRect = slider.getBoundingClientRect();
+        const sliderWidth = sliderRect.width;
+        const min = parseInt(slider.min);
+        const max = parseInt(slider.max);
+
+        const percent = (currentValue - min) / (max - min);
+        const bubbleX = percent * sliderWidth;
+
+        bubble.style.left = bubbleX + "px";
+        bubble.textContent = t;
+
+        // ==========================
+        // MOVE VEHICLE MARKER
+        // ==========================
         if(filtered.length > 0){
             const last = filtered.at(-1);
             map.setCenter(last);
 
-            // 🚚 Move panel icon dynamically
             if (panelMarker) panelMarker.setMap(null);
             panelMarker = new google.maps.Marker({
                 position: last,
@@ -469,12 +518,13 @@ function setupSlider(coords){
                     url: "https://img.icons8.com/plasticine/50/truck--v1.png",
                     scaledSize: new google.maps.Size(40, 40),
                     anchor: new google.maps.Point(20, 40)
-                },
-                title: "Current Vehicle Position"
+                }
             });
         }
     });
 }
+
+
 
 // Utility functions
 function toMin(t){ let [h,m] = t.split(":").map(Number); return h*60+m; }

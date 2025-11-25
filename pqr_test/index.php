@@ -683,6 +683,7 @@ $(".filter-toggle-btn").on("click", function () {
 
 $("#SELECT_SITE").change(function(){
    $(".filter-controls").removeClass("show");
+
 });
 // Hide on scroll
 $(window).on("scroll", function () {
@@ -731,6 +732,7 @@ $(window).on("scroll", function () {
                         site: siteId
                     }, function(data) {
                         $(".sel-pqrid").html(data).prop('disabled', false);
+                        window.location.reload();
                     }).fail(function() {
                         $(".sel-pqrid").html('<option value="">Error loading guidelines</option>');
                     });

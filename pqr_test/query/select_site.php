@@ -23,4 +23,5 @@ if(isset($_SESSION['comp_id'])) {
         echo '<option value="' . htmlspecialchars($row['GUIDELINES_ID']) . '" ' . $selected . '>' . htmlspecialchars($row['GUIDELINES_ID']."|".$row['DESCRIPTION']) . '</option>';
     }
 }
+
  ?>
