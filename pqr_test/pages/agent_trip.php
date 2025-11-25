@@ -448,10 +448,18 @@ function showCustomerModal(customer) {
     modal.show();
 
     $('.btn-navigate').off('click').on('click', function() {
-        const lat = customer.LATITUDE;
-        const lng = customer.LONGITUDE;
-        const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+         const lat = customer.LATITUDE;
+    const lng = customer.LONGITUDE;
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+    
+    if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+        // Mobile: open Maps app or URL in same tab
         window.location.href = url;
+    } else {
+        // Desktop: open in new tab
+        const win = window.open(url, '_blank');
+        win.focus();
+    }
     });
 }
 
