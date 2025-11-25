@@ -346,7 +346,7 @@ else{
 foreach($result as $row){   
  $DA_ID =  ($row['LG_ID'] == NULL)? $row['AGENT']: $row['LG_ID'] ;
  $is_online_stat = get_last_location_time($DA_ID,$conn);
-
+//local
 ?>
  <div class="col-md-6 col-sm-12 col-lg-4 mb-2">
   <a class="btn_nav_coverage" href="?page=view_coverage&BATCH_ID=<?= $row['BATCH_ID'] ?>&AGENT_ID=<?= $DA_ID  ?>&DELIVERY_DATE=<?= $row['DATE_TO_DELIVER'] ?>">
