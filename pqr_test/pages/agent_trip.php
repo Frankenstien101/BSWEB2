@@ -303,7 +303,7 @@ $BATCH_ID = $_GET['BATCH_ID'] ?? '';
                 </div>
 
                 <div class="mt-4">
-                    <button type="button" class="btn btn-primary px-4 rounded-pill" data-bs-dismiss="modal">
+                    <button type="button" class="btn btn-primary px-4 rounded-pill mb-2" data-bs-dismiss="modal">
                         <i class="fas fa-times me-2"></i>Close
                     </button>
                     <button type="button" class="btn btn-secondary px-4 rounded-pill btn-navigate" >
@@ -451,7 +451,7 @@ function showCustomerModal(customer) {
         const lat = customer.LATITUDE;
         const lng = customer.LONGITUDE;
         const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
-        window.open(url, '_blank');
+        window.location.href = url;
     });
 }
 
