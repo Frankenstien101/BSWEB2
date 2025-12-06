@@ -1,4 +1,5 @@
 <?php 
+date_default_timezone_set("Asia/Manila");
 
 try {
     $conn = new PDO("sqlsrv:server = tcp:bspidbservernew.database.windows.net,1433; Database = BSPIDBNEW", "sqladmin", "{b\$p1.@dm1n}");

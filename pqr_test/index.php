@@ -488,7 +488,7 @@ $condition = ($role != 'Admin') ? " AND USER_ID=$user_id" : "";
                     <span class="menu-text">Dashboard</span>
                 </a>
             </li>
-            <?php if ($role == "Admin") {
+            <?php if ($role == "Admin" || $role == "GSM"|| $role == "OM" || $role == "DSS" ) {
             ?>
                 <li id="PREVIEW_PQR" class="<?= ($_GET['page'] ?? '') === 'PREVIEW_PQR' ? 'active' : '' ?>">
                     <a href="index.php?page=PREVIEW_PQR">
@@ -496,7 +496,7 @@ $condition = ($role != 'Admin') ? " AND USER_ID=$user_id" : "";
                         <span class="menu-text">PQR View</span>
                     </a>
                 </li>
-                                <li id="agent_dash" class="<?= ($_GET['page'] ?? '') === 'agent_dash' || ($_GET['page'] ?? '') === 'view_coverage' ? 'active' : '' ?>">
+                <li id="agent_dash" class="<?= ($_GET['page'] ?? '') === 'agent_dash' || ($_GET['page'] ?? '') === 'view_coverage' ? 'active' : '' ?>">
                     <a href="index.php?page=agent_dash">
                         <i class='fas fa-map'></i>
                         <span class="menu-text">Agent Trip</span>
@@ -683,6 +683,7 @@ $(".filter-toggle-btn").on("click", function () {
 
 $("#SELECT_SITE").change(function(){
    $(".filter-controls").removeClass("show");
+
 });
 // Hide on scroll
 $(window).on("scroll", function () {
@@ -731,6 +732,7 @@ $(window).on("scroll", function () {
                         site: siteId
                     }, function(data) {
                         $(".sel-pqrid").html(data).prop('disabled', false);
+                        window.location.reload();
                     }).fail(function() {
                         $(".sel-pqrid").html('<option value="">Error loading guidelines</option>');
                     });

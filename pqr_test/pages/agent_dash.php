@@ -299,6 +299,32 @@ $stmt->bindParam(':site2', $site_id);
 $stmt->execute();
 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+
+
+function get_last_location_time($AGENT_ID,$conn){
+$date  = date("Y-m-d");
+$get_last_loc = $conn->query("
+    SELECT TOP(1) TIME_STAMP 
+    FROM Dash_Agent_Time_Stamp
+    WHERE agent_id = '$AGENT_ID' 
+      AND delivery_date = '$date'
+    ORDER BY TIME_STAMP DESC
+")->fetch(PDO::FETCH_ASSOC);
+
+$time_stamp = isset($get_last_loc['TIME_STAMP']) ? $get_last_loc['TIME_STAMP'] : "$date 00:00:00";
+
+$last = strtotime($time_stamp);
+$now  = time();
+
+$diff = $now - $last;  // ✔ CORRECT
+
+
+if($diff < 300){
+    return "online";
+}
+else{
+    return "offline";
+}}
 ?>
 
 <div class="container-fluid">
@@ -318,7 +344,9 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <?php
 foreach($result as $row){   
- $DA_ID =  ($row['LG_ID'] == NULL)? $row['AGENT']: $row['LG_ID'] 
+ $DA_ID =  ($row['LG_ID'] == NULL)? $row['AGENT']: $row['LG_ID'] ;
+ $is_online_stat = get_last_location_time($DA_ID,$conn);
+//local
 ?>
  <div class="col-md-6 col-sm-12 col-lg-4 mb-2">
   <a class="btn_nav_coverage" href="?page=view_coverage&BATCH_ID=<?= $row['BATCH_ID'] ?>&AGENT_ID=<?= $DA_ID  ?>&DELIVERY_DATE=<?= $row['DATE_TO_DELIVER'] ?>">
@@ -327,7 +355,7 @@ foreach($result as $row){
       <div class="beat-info">
         <h3><i class="fas fa-store"></i><?= $row['VEHICLE_ID'] ?></h3>  
         <span><?= $DA_ID  ?></span>      
-        <div class="status online"><i class="fas fa-circle"></i> Online</div>
+        <div class="status <?= $is_online_stat ?>"><i class="fas fa-circle"></i> <?=  $is_online_stat ?></div>
       </div>
       <div class="visit-info">
         <span><?= $row['TOTAL_STORE']." / ".$row['VISITED'] ?> </span>
