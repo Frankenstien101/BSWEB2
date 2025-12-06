@@ -8,19 +8,30 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" />
 
   <style>
-    .card { margin:3px; font-size:11px; }
+    .card { margin:5px; font-size:11px; }
     .card-header, .card-body { padding:4px; }
     .form-control-sm { font-size:10px; padding:2px 4px; }
     .btn-sm { font-size:10px; padding:2px 6px; }
     .container-fluid { padding:0; margin:0; }
     .row-no-margin { margin:0; }
     
-.card-body-scroll {
-    overflow-y: auto;
-    max-height: 75vh; /* Adjustable for your design */
-}
-
-
+    .card-body-scroll {
+        overflow-y: auto;
+        max-height: 76vh; /* Adjustable for your design */
+    }
+    
+    /* For two-column layout */
+    .report-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 5px;
+        width: %;
+    }
+    
+    .report-card {
+        width: 95%;
+        min-width: 0; /* Prevents overflow */
+    }
 
   </style>
 </head>
@@ -51,13 +62,11 @@
     <div class="col-md-5 mt-1" style="width:30%">
         
     <div class="container-fluid p-0 m-0">
-    <!-- === FIRST ROW === -->
-     
-    <div class="d-flex flex-row flex-wrap justify-content-start m-0 p-0 row-no-margin">
+    <!-- === TWO COLUMN GRID === -->
+    <div class="report-grid">
       <!-- DELIVERY PLAN -->
-      <div class="card text-bg-light" style="width: 240px;">
+      <div class="card text-bg-light report-card">
         <div class="card-header d-flex align-items-center p-2">
-            
           <span>DELIVERY PLAN</span>
           <div class="ml-auto d-flex align-items-center">
             <input type="checkbox" id="deliveryPlanAllSites" class="m-0" />
@@ -78,7 +87,7 @@
       </div>
 
       <!-- ORDER PREPARATION -->
-      <div class="card text-bg-light" style="width: 240px;">
+      <div class="card text-bg-light report-card">
         <div class="card-header d-flex align-items-center p-2">
           <span>ORDER PREPARATION</span>
           <div class="ml-auto d-flex align-items-center">
@@ -98,12 +107,9 @@
           <button class="btn btn-success btn-sm" onclick="orderpreparation()">GENERATE</button>
         </div>
       </div>
-    </div>
 
-    <!-- === SECOND ROW === -->
-    <div class="d-flex flex-row flex-wrap justify-content-start m-0 p-0 mt-2 row-no-margin">
       <!-- SO REPORT -->
-      <div class="card text-bg-light" style="width: 240px;">
+      <div class="card text-bg-light report-card">
         <div class="card-header d-flex align-items-center p-2">
           <span>SO REPORT</span>
           <div class="ml-auto d-flex align-items-center">
@@ -125,7 +131,7 @@
       </div>
 
       <!-- DELIVERY RESULT -->
-      <div class="card text-bg-light" style="width: 240px;">
+      <div class="card text-bg-light report-card">
         <div class="card-header d-flex align-items-center p-2">
           <span>DELIVERY RESULT</span>
           <div class="ml-auto d-flex align-items-center">
@@ -145,86 +151,80 @@
           <button class="btn btn-success btn-sm" onclick="deliveryresult()">GENERATE</button>
         </div>
       </div>
-    </div>
 
-    <!-- === THIRD ROW === -->
-    <div class="d-flex flex-row flex-wrap justify-content-start m-0 p-0 mt-2 row-no-margin">
       <!-- DELIVERY PERFORMANCE -->
-      <div class="card text-bg-light" style="width: 240px;">
+      <div class="card text-bg-light report-card">
         <div class="card-header d-flex align-items-center p-2">
           <span>DELIVERY PERFORMANCE</span>
           <div class="ml-auto d-flex align-items-center">
-            <input type="checkbox" id="deliveryPerformanceAllSites" class="m-0" />
-            <label for="deliveryPerformanceAllSites" class="m-0 ml-2" style="font-size:10px;">ALL SITES</label>
+            <input type="checkbox" id="deliveryperformanceallsites" class="m-0" />
+            <label for="deliveryperformanceallsites" class="m-0 ml-2" style="font-size:10px;">ALL SITES</label>
           </div>
         </div>
         <div class="card-body p-2">
           <div class="d-flex flex-wrap align-items-center">
             <label class="mb-1 mr-1">Date From:</label>
-            <input type="date" id="delperformancedtfrom" class="mb-1 form-control form-control-sm" value="<?php echo date('Y-m-d'); ?>"/>
+            <input type="date" id="deliveryperformancedtfrom" class="mb-1 form-control form-control-sm" value="<?php echo date('Y-m-d'); ?>"/>
             <label class="mb-1 ml-1 mr-1">To</label>
-            <input type="date" id="delperformancedtto" class="mb-1 form-control form-control-sm" value="<?php echo date('Y-m-d'); ?>"/>
+            <input type="date" id="deliveryperformancedtto" class="mb-1 form-control form-control-sm" value="<?php echo date('Y-m-d'); ?>"/>
           </div>
         </div>
         <div class="d-flex justify-content-end mb-1 mr-2">
-          <button class="btn btn-success btn-sm" onclick="exportMultiSheet()">GENERATE</button>
+          <button class="btn btn-success btn-sm" onclick="deliveryperformance()">GENERATE</button>
         </div>
       </div>
 
       <!-- PERFORMANCE DETAILED -->
-      <div class="card text-bg-light" style="width: 240px;">
+      <div class="card text-bg-light report-card">
         <div class="card-header d-flex align-items-center p-2">
           <span>PERFORMANCE DETAILED</span>
           <div class="ml-auto d-flex align-items-center">
-            <input type="checkbox" id="crossdockReportAllSites" class="m-0" />
-            <label for="crossdockReportAllSites" class="m-0 ml-2" style="font-size:10px;">ALL SITES</label>
+            <input type="checkbox" id="performanceDetailedAllSites" class="m-0" />
+            <label for="performanceDetailedAllSites" class="m-0 ml-2" style="font-size:10px;">ALL SITES</label>
           </div>
         </div>
         <div class="card-body p-2">
           <div class="d-flex flex-wrap align-items-center">
             <label class="mb-1 mr-1">Date From:</label>
-            <input type="date" id="perffrom" class="mb-1 form-control form-control-sm" value="<?php echo date('Y-m-d'); ?>"/>
+            <input type="date" id="deliveryperformancedetailedfrom" class="mb-1 form-control form-control-sm" value="<?php echo date('Y-m-d'); ?>"/>
             <label class="mb-1 ml-1 mr-1">To</label>
-            <input type="date" id="perfto" class="mb-1 form-control form-control-sm" value="<?php echo date('Y-m-d'); ?>"/>
+            <input type="date" id="deliveryperformancedetailedto" class="mb-1 form-control form-control-sm" value="<?php echo date('Y-m-d'); ?>"/>
           </div>
         </div>
         <div class="d-flex justify-content-end mb-1 mr-2">
-          <button class="btn btn-success btn-sm" onclick="exportMultiSheetdetailed()">GENERATE</button>
+          <button class="btn btn-success btn-sm" onclick="deliveryperformancedetailed()">GENERATE</button>
         </div>
       </div>
-    </div>
 
-    <!-- === FOURTH ROW === -->
-    <div class="d-flex justify-content-start flex-wrap m-0 p-0 mt-2 row-no-margin">
       <!-- FREIGHT REPORT -->
-      <div class="card text-bg-light" style="width: 240px;">
+      <div class="card text-bg-light report-card">
         <div class="card-header d-flex align-items-center p-2">
           <span>FREIGHT REPORT</span>
           <div class="ml-auto d-flex align-items-center">
-            <input type="checkbox" id="freightReportAllSites" class="m-0" />
-            <label for="freightReportAllSites" class="m-0 ml-2" style="font-size:10px;">ALL SITES</label>
+            <input type="checkbox" id="freightAllSites" class="m-0" />
+            <label for="freightAllSites" class="m-0 ml-2" style="font-size:10px;">ALL SITES</label>
           </div>
         </div>
         <div class="card-body p-2">
           <div class="d-flex flex-wrap align-items-center">
             <label class="mb-1 mr-1">Date From:</label>
-            <input type="date" id="freight_datefrom" class="mb-1 form-control form-control-sm" value="<?php echo date('Y-m-d'); ?>"/>
+            <input type="date" id="freightfrom" class="mb-1 form-control form-control-sm" value="<?php echo date('Y-m-d'); ?>"/>
             <label class="mb-1 ml-1 mr-1">To</label>
-            <input type="date" id="freight_dateto" class="mb-1 form-control form-control-sm" value="<?php echo date('Y-m-d'); ?>"/>
+            <input type="date" id="freightto" class="mb-1 form-control form-control-sm" value="<?php echo date('Y-m-d'); ?>"/>
           </div>
         </div>
         <div class="d-flex justify-content-end mb-1 mr-2">
-          <button class="btn btn-success btn-sm" onclick="freightreport()">GENERATE</button>
+          <button class="btn btn-success btn-sm" onclick="freightReport()">GENERATE</button>
         </div>
       </div>
 
       <!-- CROSSDOCK REPORT -->
-      <div class="card text-bg-light" style="width: 240px;">
+      <div class="card text-bg-light report-card">
         <div class="card-header d-flex align-items-center p-2">
           <span>CROSSDOCK REPORT</span>
           <div class="ml-auto d-flex align-items-center">
-            <input type="checkbox" id="crossdockAllSites" class="m-0" />
-            <label for="crossdockAllSites" class="m-0 ml-2" style="font-size:10px;">ALL SITES</label>
+            <input type="checkbox" id="cdockallsites" class="m-0" />
+            <label for="cdockallsites" class="m-0 ml-2" style="font-size:10px;">ALL SITES</label>
           </div>
         </div>
         <div class="card-body p-2">
@@ -249,33 +249,28 @@
 
         <div class="alert alert-info" role="alert">
           Select a report from the left panel and click "GENERATE" to create and download the report.   
-
-
-      </div>
-<div class="card mb-3" style="width:100%;">
-    <div class="card-body card-body-scroll">
-        <table id="itemsTable" class="table table-striped table-hover table-bordered table-sm" style="font-size: 9px;">
-            <thead>
+        </div>
+        
+        <div class="card mb-3" style="width:100%;">
+          <div class="card-body card-body-scroll">
+            <table id="itemsTable" class="table table-striped table-hover table-bordered table-sm" style="font-size: 9px;">
+              <thead>
                 <tr>
-                    <th>REQUEST ID</th>
-                    <th>REPORT</th>
-                    <th>DATE TIME REQUESTED</th>
-                    <th>STATUS</th>
-                    <th>ACTION</th>
+                  <th>REQUEST ID</th>
+                  <th>REPORT</th>
+                  <th>DATE REQUESTED</th>
+                  <th>STATUS</th>
+                  <th>ACTION</th>
                 </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-</div>
-
-
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
-
-
-  
 
   <!-- Bootstrap JS and jQuery -->
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -324,7 +319,7 @@ function deliveryplan() {
     const pad = (num) => num.toString().padStart(2, '0');
     const requestId = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
 
-    console.log("Column Query:", columnQuery);
+   // console.log("Column Query:", columnQuery);
     console.log("Request ID:", requestId);
 
     // Send as parameter to PHP
@@ -379,7 +374,7 @@ function deliveryplan() {
     const pad = (num) => num.toString().padStart(2, '0');
     const requestId = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
 
-    console.log("Column Query:", columnQuery);
+   // console.log("Column Query:", columnQuery);
     console.log("Request ID:", requestId);
 
     // Send as parameter to PHP
@@ -437,7 +432,7 @@ function orderpreparation() {
     const pad = (num) => num.toString().padStart(2, '0');
     const requestId = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
 
-    console.log("Column Query:", columnQuery);
+   // console.log("Column Query:", columnQuery);
     console.log("Request ID:", requestId);
 
     // Send as parameter to PHP
@@ -500,7 +495,7 @@ function soreport() {
     const pad = (num) => num.toString().padStart(2, '0');
     const requestId = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
 
-    console.log("Column Query:", columnQuery);
+   // console.log("Column Query:", columnQuery);
     console.log("Request ID:", requestId);
 
     // Send as parameter to PHP
@@ -1297,6 +1292,434 @@ where  rn=1
         .catch(err => console.error('Error:', err));
 }
 
+
+//PERFORMANCE SUMMARY
+
+function deliveryperformance() {
+
+    const companyId = "<?php echo $_SESSION['Company_ID'] ?? ''; ?>";
+    const datefrom = document.getElementById('deliveryperformancedtfrom').value;
+    const dateto = document.getElementById('deliveryperformancedtto').value;
+    const allsites = document.getElementById('deliveryperformanceallsites').checked ? 1 : 0;
+    const userid = "<?php echo $_SESSION['UserID'] ?? ''; ?>";
+
+    // Your column-specific SQL query as a string
+    const columnQuery = `
+                     WITH CTE AS ( SELECT
+            COUNT(INVOICE_NUMBER) AS TOTAL_INVOICE,
+            SUM(TOTAL_AMOUNT) AS SUM_TOTAL_AMOUNT,
+            [DATE_TO_DELIVER],
+            [AGENT_DELIVERED]
+        FROM [dbo].[Dash_Plan_Batch_Details]
+        GROUP BY [DATE_TO_DELIVER], [AGENT_DELIVERED]
+    )
+    SELECT 
+    s.COMPANY_ID,
+    s.SITE_ID,
+    a.USERNAME AS LEG_1,
+    a.NAME_OF_USER AS LEG_2,
+     a.SUB_DA AS AGENT_DELIVERED,
+    s.DELIVERY_DATE,
+    s.WH_ENTRY,
+    s.WH_DEPARTURE,
+    s.TIME_ENTRY,
+    s.TIME_EXIT,
+    s.STATUS,
+    s.LOGIN_ID,
+    s.TIME_SPENT,
+    CASE 
+        WHEN a.AGENT_TYPE = 'MAIN' THEN 'LEG1'
+        WHEN a.AGENT_TYPE = 'SUB'  THEN 'LEG2'
+        ELSE 'INB'
+    END AS AGENT_TYPE,
+    ISNULL(MAX(CTE.TOTAL_INVOICE), 0) AS NUM_OF_DOORS,
+    ISNULL(SUM(CTE.SUM_TOTAL_AMOUNT), 0) AS AMOUNT
+FROM Dash_Agent_Performance_Summary s
+LEFT JOIN Dash_Agents a 
+    ON s.COMPANY_ID = a.COMPANY_ID 
+   AND s.SITE_ID = a.SITE_ID 
+   AND s.LOGIN_ID = a.SUB_DA
+
+    LEFT JOIN CTE ON CTE.DATE_TO_DELIVER = s.DELIVERY_DATE AND CTE.AGENT_DELIVERED = a.SUB_DA
+
+  
+    WHERE s.COMPANY_ID = '${companyId}'
+    AND s.DELIVERY_DATE BETWEEN  '${datefrom}' AND '${dateto}'
+  
+
+GROUP BY 
+
+    s.COMPANY_ID,
+    s.SITE_ID,
+    a.USERNAME,
+    a.NAME_OF_USER,
+    a.SUB_DA,
+    s.DELIVERY_DATE,
+    s.TIME_ENTRY,
+    s.TIME_EXIT,
+       s.WH_ENTRY,
+    s.WH_DEPARTURE,
+    s.STATUS,
+    s.LOGIN_ID,
+    s.TIME_SPENT,
+    a.AGENT_TYPE ORDER BY  s.DELIVERY_DATE DESC
+    `;
+
+    // Numeric-only request ID
+    const now = new Date();
+    const pad = (num) => num.toString().padStart(2, '0');
+    const requestId = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+
+   // console.log("Column Query:", columnQuery);
+    console.log("Request ID:", requestId);
+
+    // Send as parameter to PHP
+    fetch(`/Dash/datafetcher/reports_getdata2.php?action=sendreport&title=Delivery Performance&filename=DeliveryPerformance&sheet1name=Details&sheet2name=sheet2&sheet3name=sheet3&sheet4name=sheet4&sheet5name=sheet5&requestid=${encodeURIComponent(requestId)}&columnQuery=${encodeURIComponent(columnQuery)}&allsites=${encodeURIComponent(allsites)}&UserID=${encodeURIComponent(userid)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log("Request inserted successfully:", data);
+                loaditems();
+            } else {
+                console.warn("Insert failed:", data.error || "Unknown error");
+            }
+        })
+        .catch(err => console.error('Error:', err));
+}
+
+
+// perfoamnce detailed
+
+function deliveryperformancedetailed() {
+
+    const companyId = "<?php echo $_SESSION['Company_ID'] ?? ''; ?>";
+    const datefrom = document.getElementById('deliveryperformancedetailedfrom').value;
+    const dateto = document.getElementById('deliveryperformancedetailedto').value;
+    const allsites = document.getElementById('performanceDetailedAllSites').checked ? 1 : 0;
+    const userid = "<?php echo $_SESSION['UserID'] ?? ''; ?>";
+
+    // Your column-specific SQL query as a string
+    const columnQuery = `
+                                 WITH CTAE AS (SELECT 
+      [SELLER_NAME]
+      ,[DOCUMENT_NUMBER]
+    FROM [dbo].[PRFR_Invoice_Detailed] GROUP BY SELLER_NAME , DOCUMENT_NUMBER) 
+
+    SELECT 
+    COMPANY_ID, 
+    SITE_ID,     
+    SITE_NAME, 
+    ORDER_DATE,
+    DATE_TO_DELIVER AS DATE_DELIVERED, 
+    SELLER_NAME,
+    AGENT AS LEG_1, 
+    LEG2,
+    AGENT_DELIVERED,   
+    STORE_ENTRY, 
+    STORE_EXIT, 
+    STORE_TIME_SPENT, 
+    PERFORMANCE_STATUS,
+    CUSTOMER_ID, 
+    CUSTOMER_NAME, 
+    PHONE, 
+    ADDRESS, 
+    CITY,   
+    PROVINCE,
+    IMAGE1, 
+      IMG1 AS POD1,
+        IMG2 AS POD2,
+    LATITUDE, 
+    LONGITUDE, 
+    STATUS,
+    SUB_BATCH,
+    IS_RECEIVED,
+    VEHICLE_IDS,
+    IS_DROP_STATUS
+
+FROM ( 
+    SELECT 
+        b.COMPANY_ID, 
+        a.SITE_ID,                              
+        Dash_Sites.SITE_NAME, 
+        a.ORDER_DATE,
+        b.DATE_TO_DELIVER, 
+        CTAE.SELLER_NAME,
+        a.AGENT,
+       (case when b.SUB_DA = '' then a.AGENT else  b.SUB_DA end)  as  LEG2,
+        ISNULL(d.AGENT_DELIVERED,d.BATCH_ID) AS  AGENT_DELIVERED,
+        d.STORE_ENTRY, 
+        d.STORE_EXIT, 
+        d.STORE_TIME_SPENT, 
+        d.STATUS AS PERFORMANCE_STATUS,
+        b.CUSTOMER_ID, 
+        b.CUSTOMER_NAME, 
+        c.PHONE, 
+        c.ADDRESS,
+        c.CITY,
+        c.PROVINCE,
+        c.IMAGE1,
+        pod.IMG1,
+        pod.IMG2 ,
+        c.LATITUDE, 
+        c.LONGITUDE, 
+        b.STATUS, 
+        b.SUB_BATCH,
+        b.IS_RECEIVED,
+        b.VEHICLE_IDS,
+        b.IS_DROP_STATUS,
+        ROW_NUMBER() OVER (
+            PARTITION BY b.CUSTOMER_ID, b.COMPANY_ID 
+            ORDER BY d.STORE_EXIT DESC
+        ) AS rn 
+    FROM 
+        Dash_Plan_Batch_Transaction a 
+    JOIN 
+        Dash_Plan_Batch_Details b 
+        ON a.BATCH_ID = b.BATCH AND a.COMPANY_ID = b.COMPANY_ID
+    LEFT JOIN 
+        Dash_Customer_Master c 
+        ON c.CODE = b.CUSTOMER_ID AND c.COMPANY_ID = b.COMPANY_ID  
+        LEFT JOIN CTAE ON CTAE.DOCUMENT_NUMBER = b.INVOICE_NUMBER 
+    LEFT JOIN 
+        Dash_Agent_Performance_Detailed d 
+        ON b.CUSTOMER_ID = d.STORE_CODE 
+        AND b.DATE_TO_DELIVER = d.DELIVERY_DATE 
+       AND b.COMPANY_ID = d.COMPANY_ID  AND d.BATCH_ID =
+       CASE 
+           WHEN b.AGENT_DELIVERED IS NOT NULL THEN b.AGENT_DELIVERED
+           ELSE b.AGENT_ID
+       END left join
+        Dash_Sites 
+        ON Dash_Sites.SITE_ID = a.SITE_ID   
+   LEFT JOIN Dash_PaymentPOD pod ON CTAE.DOCUMENT_NUMBER = pod.INV_ID
+    WHERE 
+        b.DATE_TO_DELIVER BETWEEN '${datefrom}' AND '${dateto}'
+        AND a.STATUS = 'PROCESSED' 
+        AND b.COMPANY_ID = '${companyId}' 
+) AS subquery 
+where  rn=1
+    `;
+
+    // Numeric-only request ID
+    const now = new Date();
+    const pad = (num) => num.toString().padStart(2, '0');
+    const requestId = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+
+   // console.log("Column Query:", columnQuery);
+    console.log("Request ID:", requestId);
+
+    // Send as parameter to PHP
+    fetch(`/Dash/datafetcher/reports_getdata2.php?action=sendreport&title=Delivery Performance Detailed&filename=DeliveryPerformanceDetailed&sheet1name=Details&sheet2name=sheet2&sheet3name=sheet3&sheet4name=sheet4&sheet5name=sheet5&requestid=${encodeURIComponent(requestId)}&columnQuery=${encodeURIComponent(columnQuery)}&allsites=${encodeURIComponent(allsites)}&UserID=${encodeURIComponent(userid)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log("Request inserted successfully:", data);
+                loaditems();
+            } else {
+                console.warn("Insert failed:", data.error || "Unknown error");
+            }
+        })
+        .catch(err => console.error('Error:', err));
+}
+
+
+
+//freight report
+
+function freightReport() {
+
+    const companyId = "<?php echo $_SESSION['Company_ID'] ?? ''; ?>";
+    const datefrom = document.getElementById('freightfrom').value;
+    const dateto = document.getElementById('freightto').value;
+    const allsites = document.getElementById('freightAllSites').checked ? 1 : 0;
+    const userid = "<?php echo $_SESSION['UserID'] ?? ''; ?>";
+
+    // Your column-specific SQL query as a string
+    const columnQuery = `
+        SELECT 
+        S.SITE_NAME,
+        D.SITE_ID,
+        AVG(D.DailyTruckCount) AS Average_Trucks_Used_Per_Day,
+        AVG(D.AverageInvoiceDrops) AS Average_Invoice_Drops_Per_Day,
+        CONVERT(VARCHAR(8), DATEADD(SECOND, AVG(DATEDIFF(SECOND, 0, TRY_CONVERT(time, A.TIME_ENTRY))), 0), 108) AS Average_Market_Entry_Time,
+        CONVERT(VARCHAR(8), DATEADD(SECOND, AVG(DATEDIFF(SECOND, 0, TRY_CONVERT(time, A.TIME_EXIT))), 0), 108) AS Average_Market_Exit_Time
+    FROM (
+        SELECT 
+            SITE_ID,
+            CAST([ORDER_DATE] AS DATE) AS DeliveryDate,
+            COUNT(DISTINCT VEHICLE_ID) AS DailyTruckCount,
+            SUM(NUM_OF_INVOICES) AS AverageInvoiceDrops,
+            COMPANY_ID
+        FROM [dbo].[Dash_Plan_Batch_Transaction]
+        WHERE ORDER_DATE BETWEEN '${datefrom}' AND '${dateto}'
+          AND VEHICLE_ID IS NOT NULL
+          AND STATUS = 'PROCESSED'
+        GROUP BY SITE_ID, CAST([ORDER_DATE] AS DATE), COMPANY_ID
+    ) AS D
+    JOIN [dbo].[Dash_Sites] AS S ON D.SITE_ID = S.SITE_ID
+    LEFT JOIN [dbo].[Dash_Agent_Performance_Summary] AS A 
+        ON D.SITE_ID = A.SITE_ID AND D.DeliveryDate = A.DELIVERY_DATE
+    WHERE 
+        TRY_CONVERT(time, A.TIME_ENTRY) IS NOT NULL
+        AND TRY_CONVERT(time, A.TIME_EXIT) IS NOT NULL
+        AND D.COMPANY_ID = '${companyId}'
+    GROUP BY D.SITE_ID, S.SITE_NAME
+    ORDER BY S.SITE_NAME;
+    `;
+
+    const columnQuery2 = `
+       SELECT 
+                        S.SITE_NAME,
+                        D.SITE_ID,
+                        D.DeliveryDate,
+                        D.DailyTruckCount AS Trucks_Used_On_Day,
+                        D.AverageInvoiceDrops AS Invoice_Drops_On_Day,
+                        CONVERT(VARCHAR(8), DATEADD(SECOND, AVG(DATEDIFF(SECOND, 0, TRY_CONVERT(time, A.TIME_ENTRY))), 0), 108) AS Average_Market_Entry_Time,
+                        CONVERT(VARCHAR(8), DATEADD(SECOND, AVG(DATEDIFF(SECOND, 0, TRY_CONVERT(time, A.TIME_EXIT))), 0), 108) AS Average_Market_Exit_Time
+                    FROM (
+                        SELECT 
+                            SITE_ID,
+                            CAST([ORDER_DATE] AS DATE) AS DeliveryDate,
+                            COUNT(DISTINCT VEHICLE_ID) AS DailyTruckCount,
+                            SUM(NUM_OF_INVOICES) AS AverageInvoiceDrops,
+                            COMPANY_ID
+                        FROM [dbo].[Dash_Plan_Batch_Transaction]
+                        WHERE ORDER_DATE BETWEEN '${datefrom}' AND '${dateto}'
+                          AND VEHICLE_ID IS NOT NULL
+                          AND STATUS = 'PROCESSED'
+                        GROUP BY SITE_ID, CAST([ORDER_DATE] AS DATE), COMPANY_ID
+                    ) AS D
+                    JOIN [dbo].[Dash_Sites] AS S ON D.SITE_ID = S.SITE_ID
+                    LEFT JOIN [dbo].[Dash_Agent_Performance_Summary] AS A 
+                        ON D.SITE_ID = A.SITE_ID AND D.DeliveryDate = A.DELIVERY_DATE
+                    WHERE 
+                        TRY_CONVERT(time, A.TIME_ENTRY) IS NOT NULL
+                        AND TRY_CONVERT(time, A.TIME_EXIT) IS NOT NULL
+                        AND D.COMPANY_ID = '${companyId}'
+                    GROUP BY 
+                        D.SITE_ID, 
+                        S.SITE_NAME,
+                        D.DeliveryDate,
+                        D.DailyTruckCount,
+                        D.AverageInvoiceDrops
+                    ORDER BY 
+                      
+                        D.DeliveryDate;
+    `;
+
+const columnQuery3 = `
+SELECT 
+      t.[COMPANY_ID],
+      t.[SITE_ID],
+      t.[BATCH_ID],
+      t.[DROP_COUNT],
+      t.[NUM_OF_INVOICES],
+      t.[TOTAL_VALUE],
+      t.[TOTAL_VOLUME],
+      t.[WEIGHT],
+      t.[STATUS],
+      t.[VEHICLE_ID],
+      t.[AGENT],
+      a.[SUB_DA],
+      t.[DATE_TO_DELIVER],
+      t.[ORDER_DATE],
+      t.[IS_SENT]
+FROM [dbo].[Dash_Plan_Batch_Transaction] t
+LEFT JOIN [dbo].[Dash_Agents] a
+       ON a.COMPANY_ID = t.COMPANY_ID
+      AND a.SITE_ID = t.SITE_ID
+      AND a.NAME_OF_USER = t.AGENT
+WHERE t.DATE_TO_DELIVER BETWEEN '${datefrom}' AND '${dateto}'
+  AND t.STATUS = 'PROCESSED'
+  AND t.COMPANY_ID = '${companyId}'
+    `;
+
+
+    // Numeric-only request ID
+    const now = new Date();
+    const pad = (num) => num.toString().padStart(2, '0');
+    const requestId = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+
+   // console.log("Column Query:", columnQuery);
+    console.log("Request ID:", requestId);
+
+    // Send as parameter to PHP
+    fetch(`/Dash/datafetcher/reports_getdata2.php?action=sendreport&title=Freight Report&filename=FreightReport&sheet1name=Summary&sheet2name=Details&sheet3name=TrucksUsed&sheet4name=sheet4&sheet5name=sheet5&requestid=${encodeURIComponent(requestId)}&columnQuery=${encodeURIComponent(columnQuery)}&columnQuery2=${encodeURIComponent(columnQuery2)}&columnQuery3=${encodeURIComponent(columnQuery3)}&allsites=${encodeURIComponent(allsites)}&UserID=${encodeURIComponent(userid)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log("Request inserted successfully:", data);
+                loaditems();
+            } else {
+                console.warn("Insert failed:", data.error || "Unknown error");
+            }
+        })
+        .catch(err => console.error('Error:', err));
+}
+
+// crossdock report
+function crossdock() {
+
+    const companyId = "<?php echo $_SESSION['Company_ID'] ?? ''; ?>";
+    const datefrom = document.getElementById('cdockfrom').value;
+    const dateto = document.getElementById('cdockto').value;
+    const allsites = document.getElementById('cdockallsites').checked ? 1 : 0;
+    const userid = "<?php echo $_SESSION['UserID'] ?? ''; ?>";
+
+    // Your column-specific SQL query as a string
+    const columnQuery = `SELECT 
+    xd.COMPANY_ID,
+    xd.SITE_ID,
+    xd.BATCH,
+    xd.DELIVERY_AMOUNT,
+    xd.AGENT,
+    xd.VEHICLE,
+    xd.TRANSACTION_DATE,
+
+    CONVERT(varchar(8), xd.WH_ENTRY, 108) AS WAREHOUSE_ENTRY,
+    CONVERT(varchar(8), xd.DEPARTURE_TIME, 108) AS DEPARTURE_TIME,
+    CONVERT(varchar(8), xd.ARRIVAL_TIME, 108) AS CROSS_DOCK_ARRIVAL_TIME,
+    CONVERT(varchar(8), xd.XD_EXIT, 108) AS CROSS_DOCK_EXIT,
+    CONVERT(varchar(8), xd.WH_RETURN, 108) AS WAREHOUSE_RETURN_TIME,
+
+    ad.TotalDistanceKm AS DISTANCE_TRAVELLED_IN_KM,
+    ROUND(ad.TotalDistanceKm * ISNULL(v.CONSUMPTION_PER_100_METERS,0)/100,2)
+        AS FUEL_CONSUMED_IN_LITER
+
+FROM Dash_XDock_Status xd
+LEFT JOIN dbo.Agent_Daily_Distance ad
+    ON ad.AGENT_ID = xd.AGENT
+   AND ad.DELIVERY_DATE = xd.TRANSACTION_DATE
+LEFT JOIN Dash_Vehicles v
+    ON v.PLATE_NUM = xd.VEHICLE
+WHERE xd.TRANSACTION_DATE BETWEEN '${datefrom}' AND '${dateto}'
+  AND xd.COMPANY_ID = '${companyId}'
+ORDER BY xd.AGENT, xd.TRANSACTION_DATE;
+
+
+    `;
+
+    // Numeric-only request ID
+    const now = new Date();
+    const pad = (num) => num.toString().padStart(2, '0');
+    const requestId = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+
+   // console.log("Column Query:", columnQuery);
+    console.log("Request ID:", requestId);
+
+    // Send as parameter to PHP
+    fetch(`/Dash/datafetcher/reports_getdata2.php?action=sendreport&title=Cross Dock&filename=CrossDock&sheet1name=Details&sheet2name=sheet2&sheet3name=sheet3&sheet4name=sheet4&sheet5name=sheet5&requestid=${encodeURIComponent(requestId)}&columnQuery=${encodeURIComponent(columnQuery)}&allsites=${encodeURIComponent(allsites)}&UserID=${encodeURIComponent(userid)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log("Request inserted successfully:", data);
+                loaditems();
+            } else {
+                console.warn("Insert failed:", data.error || "Unknown error");
+            }
+        })
+        .catch(err => console.error('Error:', err));
+}
 
 
 
