@@ -309,12 +309,12 @@
 
      <!-- Card 8 -->
            <div class="app-card">
-                      <img src="\Services\img\FA.png" alt="ERP Logo" class="app-logo" style = "height: 150px; width: 80px;">
-                      <h2 class="app-name">FRONT-A </h2>
+                      <img src="\MainImg\dolibarr.png" alt="ERP Logo" class="app-logo">
+                      <h2 class="app-name">DOLIBARR </h2>
                       <p class="app-description">   
                           An open-source accounting solution tailored for small and medium-sized businesses, offering comprehensive financial management tools.
                     </p>
-                      <a href="http://bspiaccounting.ct.ws/" class="app-button">Visit Site</a>
+                      <a href="http://bspierp.ct.ws/" class="app-button">Visit Site</a>
                   </div>
 
             </div>
