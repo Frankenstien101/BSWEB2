@@ -519,7 +519,399 @@ function soreport() {
 
 // delivery result
 
+
 function deliveryresult() {
+    const companyId = "<?php echo $_SESSION['Company_ID'] ?? ''; ?>";
+    const datefrom = document.getElementById('resultdtfrom').value;
+    const dateto = document.getElementById('resultdtto').value;
+    const allsites = document.getElementById('resultallsites').checked ? 1 : 0;
+    const userid = "<?php echo $_SESSION['UserID'] ?? ''; ?>";
+
+    // Your queries here (columnQuery ... columnQuery5)
+    const columnQuery = ` [COMPANY_ID]
+                    ,[SITE_ID]
+                    ,[UPLOAD_BY_USER_ID]
+                    ,[DIST_NAME]
+                    ,[BRANCH_NAME]
+                    ,[SELLER_TYPE]
+                    ,[SELLER_NAME]
+                    ,[CUSTOMER_NAME]
+                    ,[STORE_CODE]
+                    ,[CHANNEL_NAME]
+                    ,[SUB_CHANNEL_NAME]
+                    ,[ORDER_DATE]
+                    ,[ORDER_ID]
+                    ,[PRD_SKU_CODE]
+                    ,[PRD_SKU_NAME]
+                    ,[BARCODE]
+                    ,[CS_QTY]
+                    ,[QTY_PIECE]
+                    ,[PRICE_PIECE]
+                    ,[SCHEME_CODE]
+                    ,[SCHEME_DESC]
+                    ,[ORDER_VALUE_WITHOUTSCHEME]
+                    ,[SCHEME_VALUE]
+                    ,[ORDER_VALUE]
+                    ,[ORDER_SOURCE]
+                    ,[IS_PLAN]
+                FROM [dbo].[PRFR_SO_UPLOAD] WHERE COMPANY_ID = '${companyId}' AND ORDER_DATE BETWEEN '${datefrom}' AND '${dateto}'`;  // keep your query definitions
+    const columnQuery2 = `  SELECT    PRFR_Invoice_Detailed.[DISTRIBUTOR_CODE],
+                    PRFR_Invoice_Detailed.[BRANCH_CODE],
+                    PRFR_Invoice_Detailed.[BRANCH],
+                    Dash_Plan_Batch_Details.ORDER_DATE,
+                    PRFR_Invoice_Detailed.[DATE] AS INVOICE_DATE,
+                    Dash_Plan_Batch_Details.DATE_TO_DELIVER AS DATE_DELIVERED,
+                  
+                    PRFR_Invoice_Detailed.[SALES_REP],
+                    PRFR_Invoice_Detailed.[SELLER_NAME],
+                        Dash_Plan_Batch_Transaction.AGENT AS LEG_1,
+                       CASE WHEN Dash_Plan_Batch_Details.SUB_DA IS NULL OR Dash_Plan_Batch_Details.SUB_DA = '' 
+         THEN Dash_Plan_Batch_Details.AGENT_ID 
+         ELSE Dash_Plan_Batch_Details.SUB_DA 
+              END AS LEG_2,
+                   isnull(Dash_Plan_Batch_Details.AGENT_DELIVERED,Dash_Agent_Performance_Detailed.BATCH_ID) as AGENT_DELIVERED,
+                    Dash_Plan_Batch_Details.SUB_BATCH,
+                    Dash_Plan_Batch_Details.SUB_DA,
+                    Dash_Plan_Batch_Details.STATUS,                    
+                    CASE 
+                        WHEN SUM(ISNULL(Dash_Returns.[RETURN_AMOUNT], 0)) = 0 THEN 'NO' 
+                        ELSE 'YES' 
+                    END AS HAS_RETURN,
+                
+                    PRFR_Invoice_Detailed.CUSTOMER_ID,
+                    PRFR_Invoice_Detailed.CUSTOMER_NAME,
+                   
+                    -- Added from Customer Master
+                    Dash_Customer_Master.ADDRESS,
+                    Dash_Customer_Master.CITY,
+                    Dash_Customer_Master.PROVINCE,
+                                
+                	 PRFR_Invoice_Detailed.[DOCUMENT_NUMBER],
+                	 
+                    -- Added SKU count
+                    COUNT(DISTINCT PRFR_Invoice_Detailed.IT_BARCODE) AS SKU_COUNT,
+                
+                    SUM(PRFR_Invoice_Detailed.[SALES_AMOUNT]) AS TOTAL,
+                    PRFR_Invoice_Detailed.PG_LOCAL_SUBSEGMENT,
+                
+                    MIN(Dash_Agent_Performance_Detailed.STORE_ENTRY) AS STORE_ENTRY,
+                    MAX(Dash_Agent_Performance_Detailed.STORE_EXIT) AS STORE_EXIT,
+                    MAX(Dash_Agent_Performance_Detailed.STORE_TIME_SPENT) AS STORE_TIME_SPENT
+                
+                FROM [dbo].[PRFR_Invoice_Detailed]
+                
+                LEFT JOIN Dash_Plan_Batch_Details 
+                    ON Dash_Plan_Batch_Details.INVOICE_NUMBER = PRFR_Invoice_Detailed.DOCUMENT_NUMBER 
+                    AND PRFR_Invoice_Detailed.DISTRIBUTOR_CODE = Dash_Plan_Batch_Details.COMPANY_ID                            
+                 left join Dash_Plan_Batch_Transaction on Dash_Plan_Batch_Details.BATCH = Dash_Plan_Batch_Transaction.BATCH_ID
+                -- JOIN customer master (new)
+
+                LEFT JOIN Dash_Returns 
+                    ON Dash_Returns.INVOICE_NUMBER = PRFR_Invoice_Detailed.DOCUMENT_NUMBER 
+                    AND PRFR_Invoice_Detailed.DISTRIBUTOR_CODE = Dash_Returns.COMPANY_ID 
+                    AND Dash_Returns.IT_BARCODE = PRFR_Invoice_Detailed.IT_BARCODE
+                    
+                LEFT JOIN Dash_Agent_Performance_Detailed
+                    ON Dash_Agent_Performance_Detailed.DELIVERY_DATE = Dash_Plan_Batch_Details.DATE_TO_DELIVER
+                    AND Dash_Agent_Performance_Detailed.STORE_CODE = PRFR_Invoice_Detailed.CUSTOMER_ID
+                    AND Dash_Agent_Performance_Detailed.COMPANY_ID = PRFR_Invoice_Detailed.DISTRIBUTOR_CODE  
+                     AND Dash_Agent_Performance_Detailed.BATCH_ID =
+        CASE 
+            WHEN Dash_Plan_Batch_Details.AGENT_DELIVERED IS NULL THEN Dash_Plan_Batch_Details.AGENT_DELIVERED
+            ELSE Dash_Plan_Batch_Details.AGENT_ID
+        END
+               
+                LEFT JOIN Dash_Customer_Master
+                    ON Dash_Customer_Master.COMPANY_ID = PRFR_Invoice_Detailed.DISTRIBUTOR_CODE
+                    AND Dash_Customer_Master.CODE = PRFR_Invoice_Detailed.CUSTOMER_ID
+                
+                    WHERE Dash_Plan_Batch_Details.COMPANY_ID = '${companyId}'
+                                        AND Dash_Plan_Batch_Details.DATE_TO_DELIVER BETWEEN '${datefrom}' AND '${dateto}'
+                GROUP BY 
+                    PRFR_Invoice_Detailed.[DISTRIBUTOR_CODE],
+                    PRFR_Invoice_Detailed.[BRANCH_CODE],
+                    PRFR_Invoice_Detailed.[BRANCH],
+                    Dash_Plan_Batch_Details.ORDER_DATE,
+                    PRFR_Invoice_Detailed.[DATE],
+                    Dash_Plan_Batch_Details.DATE_TO_DELIVER,
+                    PRFR_Invoice_Detailed.[SALES_REP],
+                    PRFR_Invoice_Detailed.[SELLER_NAME],
+                    Dash_Plan_Batch_Details.AGENT_ID,
+                    Dash_Plan_Batch_Details.SUB_DA,
+                    Dash_Plan_Batch_Details.AGENT_DELIVERED,
+                    Dash_Plan_Batch_Details.BATCH,
+                    Dash_Plan_Batch_Details.SUB_BATCH,
+                    Dash_Plan_Batch_Details.SUB_DA,
+                    Dash_Plan_Batch_Details.STATUS,
+                    PRFR_Invoice_Detailed.CUSTOMER_ID,
+                    PRFR_Invoice_Detailed.CUSTOMER_NAME,
+                    PRFR_Invoice_Detailed.[DOCUMENT_NUMBER],
+                    PRFR_Invoice_Detailed.PG_LOCAL_SUBSEGMENT,
+                    Dash_Customer_Master.ADDRESS,
+                    Dash_Customer_Master.CITY,
+                    Dash_Customer_Master.PROVINCE,
+                     Dash_Plan_Batch_Transaction.AGENT,Dash_Plan_Batch_Details.AGENT_DELIVERED,Dash_Agent_Performance_Detailed.BATCH_ID
+    `;
+    const columnQuery3 = ` SELECT [DISTRIBUTOR_CODE]
+                         ,[BRANCH_CODE]
+                         ,[BRANCH]
+                    	  ,Dash_Plan_Batch_Details.ORDER_DATE
+                         ,[DATE] AS INVOICE_DATE
+                    	  ,Dash_Plan_Batch_Details.DATE_TO_DELIVER AS DATE_DELIVERED
+                         ,[SALES_REP]
+                         ,[SELLER_NAME]
+                    	  ,Dash_Plan_Batch_Transaction.AGENT AS LEG_1
+                          , CASE WHEN Dash_Plan_Batch_Details.SUB_DA IS NULL OR Dash_Plan_Batch_Details.SUB_DA = '' 
+         THEN Dash_Plan_Batch_Details.AGENT_ID 
+         ELSE Dash_Plan_Batch_Details.SUB_DA 
+              END AS LEG_2,AGENT_DELIVERED
+                          ,DATETIME_PROCESSED 
+                    	  ,BATCH
+                    	  ,Dash_Plan_Batch_Details.STATUS
+						  , CASE WHEN ISNULL([RETURN_AMOUNT], 0) = 0 THEN 'NO' ELSE 'YES' END AS HAS_RETURN
+                         ,PRFR_Invoice_Detailed.CUSTOMER_ID
+                         ,PRFR_Invoice_Detailed.CUSTOMER_NAME
+                         ,[NAME] AS ITEM_ID
+                         ,[SCHEME_CODE]
+                         ,[SCHEME_SLAB_DESCRIPTION]
+                         ,[SCHEME_GROUP_NAME]
+                         ,PRFR_Invoice_Detailed.IT_BARCODE
+                         ,[SW_BARCODE]
+                         ,[DESCRIPTION]
+                         ,[BRAND]
+                         ,[ITEM_CATEGORY]
+                         ,[BRANDFORM]
+                         ,[TRADE_CHANNEL]
+                         ,[DOCUMENT_NUMBER]
+                         ,[CS]
+                         ,[AMOUNT]
+                         ,[DISCOUNT_VALUE]
+                         ,[SCHEME_VALUE]
+                         ,[SALES_EX_VAT]
+                         ,[VAT_AMOUNT]
+                         ,[SALES_AMOUNT],
+                    	  ISNULL([QTY_RETURN], 0) AS QTY_RETURN,
+                          ISNULL([RETURN_AMOUNT], 0) AS RETURN_AMOUNT
+                        ,[MONTHLY_TRANSACTION]
+                         ,[PG_LOCAL_SUBSEGMENT]
+                         ,[SALES_SUPERVISOR]
+                         ,[ITEM_QTY]
+                         ,[GIV]
+                         ,[NIV]
+                         ,[ITEM_QTY_CS]
+                         ,[ITEM_QTY_SW]
+                         ,[ITEM_QTY_IT]
+                    	  
+                     FROM [dbo].[PRFR_Invoice_Detailed]
+                     LEFT JOIN Dash_Plan_Batch_Details ON Dash_Plan_Batch_Details.INVOICE_NUMBER = PRFR_Invoice_Detailed.DOCUMENT_NUMBER AND PRFR_Invoice_Detailed.DISTRIBUTOR_CODE = Dash_Plan_Batch_Details.COMPANY_ID
+                     JOIN [dbo].[Dash_Plan_Batch_Transaction] ON Dash_Plan_Batch_Transaction.BATCH_ID = Dash_Plan_Batch_Details.BATCH                    
+                     LEFT JOIN Dash_Returns ON Dash_Returns.INVOICE_NUMBER = PRFR_Invoice_Detailed.DOCUMENT_NUMBER AND PRFR_Invoice_Detailed.DISTRIBUTOR_CODE = Dash_Returns.COMPANY_ID AND Dash_Returns.IT_BARCODE = PRFR_Invoice_Detailed.IT_BARCODE
+                     WHERE  Dash_Plan_Batch_Details.COMPANY_ID = '${companyId}' AND Dash_Plan_Batch_Details.DATE_TO_DELIVER BETWEEN '${datefrom}' AND '${dateto}' AND Dash_Plan_Batch_Details.STATUS NOT IN ('READY', 'DRAFT') 
+    `;
+    const columnQuery4 = ` WITH CTE AS ( SELECT
+            COUNT(INVOICE_NUMBER) AS TOTAL_INVOICE,
+            SUM(TOTAL_AMOUNT) AS SUM_TOTAL_AMOUNT,
+            [DATE_TO_DELIVER],
+            [AGENT_DELIVERED]
+        FROM [dbo].[Dash_Plan_Batch_Details]
+        GROUP BY [DATE_TO_DELIVER], [AGENT_DELIVERED]
+    )
+    SELECT 
+    s.COMPANY_ID,
+    s.SITE_ID,
+    a.USERNAME AS LEG_1,
+    a.NAME_OF_USER AS LEG_2,
+     a.SUB_DA AS AGENT_DELIVERED,
+    s.DELIVERY_DATE,
+    s.WH_ENTRY,
+    s.WH_DEPARTURE,
+    s.TIME_ENTRY,
+    s.TIME_EXIT,
+    s.STATUS,
+    s.LOGIN_ID,
+    s.TIME_SPENT,
+    CASE 
+        WHEN a.AGENT_TYPE = 'MAIN' THEN 'LEG1'
+        WHEN a.AGENT_TYPE = 'SUB'  THEN 'LEG2'
+        ELSE 'INB'
+    END AS AGENT_TYPE,
+    ISNULL(MAX(CTE.TOTAL_INVOICE), 0) AS NUM_OF_DOORS,
+    ISNULL(SUM(CTE.SUM_TOTAL_AMOUNT), 0) AS AMOUNT
+FROM Dash_Agent_Performance_Summary s
+LEFT JOIN Dash_Agents a 
+    ON s.COMPANY_ID = a.COMPANY_ID 
+   AND s.SITE_ID = a.SITE_ID 
+   AND s.LOGIN_ID = a.SUB_DA
+
+    LEFT JOIN CTE ON CTE.DATE_TO_DELIVER = s.DELIVERY_DATE AND CTE.AGENT_DELIVERED = a.SUB_DA
+
+  
+    WHERE s.COMPANY_ID = '${companyId}'
+    AND s.DELIVERY_DATE BETWEEN  '${datefrom}' AND '${dateto}'
+  
+
+GROUP BY 
+
+    s.COMPANY_ID,
+    s.SITE_ID,
+    a.USERNAME,
+    a.NAME_OF_USER,
+    a.SUB_DA,
+    s.DELIVERY_DATE,
+    s.TIME_ENTRY,
+    s.TIME_EXIT,
+       s.WH_ENTRY,
+    s.WH_DEPARTURE,
+    s.STATUS,
+    s.LOGIN_ID,
+    s.TIME_SPENT,
+    a.AGENT_TYPE ORDER BY  s.DELIVERY_DATE DESC`;
+    const columnQuery5 = `                           WITH CTAE AS (SELECT 
+      [SELLER_NAME]
+      ,[DOCUMENT_NUMBER]
+    FROM [dbo].[PRFR_Invoice_Detailed] GROUP BY SELLER_NAME , DOCUMENT_NUMBER) 
+
+    SELECT 
+    COMPANY_ID, 
+    SITE_ID,     
+    SITE_NAME, 
+    ORDER_DATE,
+    DATE_TO_DELIVER AS DATE_DELIVERED, 
+    SELLER_NAME,
+    AGENT AS LEG_1, 
+    LEG2,
+    AGENT_DELIVERED,   
+    STORE_ENTRY, 
+    STORE_EXIT, 
+    STORE_TIME_SPENT, 
+    PERFORMANCE_STATUS,
+    CUSTOMER_ID, 
+    CUSTOMER_NAME, 
+    PHONE, 
+    ADDRESS, 
+    CITY,   
+    PROVINCE,
+    IMAGE1, 
+      IMG1 AS POD1,
+        IMG2 AS POD2,
+    LATITUDE, 
+    LONGITUDE, 
+    STATUS,
+    SUB_BATCH,
+    IS_RECEIVED,
+    VEHICLE_IDS,
+    IS_DROP_STATUS
+
+FROM ( 
+    SELECT 
+        b.COMPANY_ID, 
+        a.SITE_ID,                              
+        Dash_Sites.SITE_NAME, 
+        a.ORDER_DATE,
+        b.DATE_TO_DELIVER, 
+        CTAE.SELLER_NAME,
+        a.AGENT,
+       (case when b.SUB_DA = '' then a.AGENT else  b.SUB_DA end)  as  LEG2,
+        ISNULL(d.AGENT_DELIVERED,d.BATCH_ID) AS  AGENT_DELIVERED,
+        d.STORE_ENTRY, 
+        d.STORE_EXIT, 
+        d.STORE_TIME_SPENT, 
+        d.STATUS AS PERFORMANCE_STATUS,
+        b.CUSTOMER_ID, 
+        b.CUSTOMER_NAME, 
+        c.PHONE, 
+        c.ADDRESS,
+        c.CITY,
+        c.PROVINCE,
+        c.IMAGE1,
+        pod.IMG1,
+        pod.IMG2 ,
+        c.LATITUDE, 
+        c.LONGITUDE, 
+        b.STATUS, 
+        b.SUB_BATCH,
+        b.IS_RECEIVED,
+        b.VEHICLE_IDS,
+        b.IS_DROP_STATUS,
+        ROW_NUMBER() OVER (
+            PARTITION BY b.CUSTOMER_ID, b.COMPANY_ID 
+            ORDER BY d.STORE_EXIT DESC
+        ) AS rn 
+    FROM 
+        Dash_Plan_Batch_Transaction a 
+    JOIN 
+        Dash_Plan_Batch_Details b 
+        ON a.BATCH_ID = b.BATCH AND a.COMPANY_ID = b.COMPANY_ID
+    LEFT JOIN 
+        Dash_Customer_Master c 
+        ON c.CODE = b.CUSTOMER_ID AND c.COMPANY_ID = b.COMPANY_ID  
+        LEFT JOIN CTAE ON CTAE.DOCUMENT_NUMBER = b.INVOICE_NUMBER 
+    LEFT JOIN 
+        Dash_Agent_Performance_Detailed d 
+        ON b.CUSTOMER_ID = d.STORE_CODE 
+        AND b.DATE_TO_DELIVER = d.DELIVERY_DATE 
+       AND b.COMPANY_ID = d.COMPANY_ID  AND d.BATCH_ID =
+       CASE 
+           WHEN b.AGENT_DELIVERED IS NOT NULL THEN b.AGENT_DELIVERED
+           ELSE b.AGENT_ID
+       END left join
+        Dash_Sites 
+        ON Dash_Sites.SITE_ID = a.SITE_ID   
+   LEFT JOIN Dash_PaymentPOD pod ON CTAE.DOCUMENT_NUMBER = pod.INV_ID
+    WHERE 
+        b.DATE_TO_DELIVER BETWEEN '${datefrom}' AND '${dateto}'
+        AND a.STATUS = 'PROCESSED' 
+        AND b.COMPANY_ID = '${companyId}' 
+) AS subquery 
+where  rn=1`;
+
+    const now = new Date();
+    const pad = (num) => num.toString().padStart(2, '0');
+    const requestId = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+
+    // POST body
+    const postData = {
+        action: 'sendreportpost',
+        title: 'Delivery Result',
+        filename: 'DeliveryResult',
+        sheet1name: 'SO Report',
+        sheet2name: 'DeliveryResultSummary',
+        sheet3name: 'DeliveryResultDetailed',
+        sheet4name: 'DeliveryPerformanceSummary',
+        sheet5name: 'DeliveryPerformanceDetailed',
+        requestid: requestId,
+        columnQuery,
+        columnQuery2,
+        columnQuery3,
+        columnQuery4,
+        columnQuery5,
+        allsites,
+        UserID: userid
+    };
+
+    fetch('/Dash/datafetcher/reports_getdata2.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(postData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log("Request inserted successfully:", data);
+            loaditems();
+        } else {
+            console.warn("Insert failed:", data.error || "Unknown error");
+        }
+    })
+    .catch(err => console.error('Error:', err));
+}
+
+
+
+
+function deliveryresult1() {
 
     const companyId = "<?php echo $_SESSION['Company_ID'] ?? ''; ?>";
     const datefrom = document.getElementById('resultdtfrom').value;

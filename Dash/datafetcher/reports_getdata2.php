@@ -131,3 +131,74 @@ $stmt->execute();
     exit();
 }
 
+
+try {
+    // Read POST JSON
+    $input = json_decode(file_get_contents('php://input'), true);
+    if (!$input) throw new Exception("No input received or invalid JSON");
+
+    $action       = $input['action'] ?? '';
+    $requestId    = $input['requestid'] ?? '';
+    $TITLE        = $input['title'] ?? '';
+    $filename     = $input['filename'] ?? 'report';
+    $sheet1name   = $input['sheet1name'] ?? 'sheet1';
+    $sheet2name   = $input['sheet2name'] ?? 'sheet2';
+    $sheet3name   = $input['sheet3name'] ?? 'sheet3';
+    $sheet4name   = $input['sheet4name'] ?? 'sheet4';
+    $sheet5name   = $input['sheet5name'] ?? 'sheet5';
+    $columnQuery  = $input['columnQuery'] ?? '';
+    $columnQuery2 = $input['columnQuery2'] ?? '';
+    $columnQuery3 = $input['columnQuery3'] ?? '';
+    $columnQuery4 = $input['columnQuery4'] ?? '';
+    $columnQuery5 = $input['columnQuery5'] ?? '';
+    $userId       = $input['UserID'] ?? '';
+
+    if ($action === 'sendreportpost') {
+        // Insert the request into tracking table
+        $sql = "INSERT INTO All_Report_Server 
+                (REQUEST_ID, TITLE, FILENAME, DATE_CREATED, 
+                 QUERY1, QUERY1_SHEETNAME, 
+                 QUERY2, QUERY2_SHEETNAME, 
+                 QUERY3, QUERY3_SHEETNAME, 
+                 QUERY4, QUERY4_SHEETNAME, 
+                 QUERY5, QUERY5_SHEETNAME, 
+                 STATUS, PROCESS_BY)
+                VALUES
+                (:requestId, :title, :filename, GETDATE(),
+                 :columnQuery, :sheet1,
+                 :columnQuery2, :sheet2,
+                 :columnQuery3, :sheet3,
+                 :columnQuery4, :sheet4,
+                 :columnQuery5, :sheet5,
+                 'PENDING', :userId)";
+        
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':requestId', $requestId);
+        $stmt->bindParam(':title', $TITLE);
+        $stmt->bindParam(':filename', $filename);
+        $stmt->bindParam(':columnQuery', $columnQuery);
+        $stmt->bindParam(':columnQuery2', $columnQuery2);
+        $stmt->bindParam(':columnQuery3', $columnQuery3);
+        $stmt->bindParam(':columnQuery4', $columnQuery4);
+        $stmt->bindParam(':columnQuery5', $columnQuery5);
+        $stmt->bindParam(':sheet1', $sheet1name);
+        $stmt->bindParam(':sheet2', $sheet2name);
+        $stmt->bindParam(':sheet3', $sheet3name);
+        $stmt->bindParam(':sheet4', $sheet4name);
+        $stmt->bindParam(':sheet5', $sheet5name);
+        $stmt->bindParam(':userId', $userId);
+
+        $stmt->execute();
+
+        echo json_encode(['success' => true, 'requestId' => $requestId]);
+        exit();
+    }
+
+    // Other actions (like loadlist) can also be adapted to POST or keep GET if they are short
+    echo json_encode(['success' => false, 'error' => 'Invalid action']);
+
+} catch (PDOException $e) {
+    echo json_encode(['success' => false, 'error' => 'Database error', 'message' => $e->getMessage()]);
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'error' => 'Application error', 'message' => $e->getMessage()]);
+}
