@@ -60,6 +60,30 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
 
   <title>TBC</title>
 
+   <style>
+    /* Ensure table scrolls within card-body */
+    .table-scroll {
+      max-height: 50vh;
+      overflow-y: auto;
+      overflow-x: auto;
+    }
+
+    /* Optional: fix header background while scrolling */
+  
+
+    /* Reduce modal padding */
+    .modal-body {
+      padding: 0.5rem 1rem;
+      font-size: 10px;
+    }
+
+    .card-body {
+      padding: 0.5rem;
+    }
+  </style>
+  
+
+
 </head>
 <body class="hold-transition sidebar-mini">
 
@@ -327,6 +351,90 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
   </div>
 </div>
 
+<!-- NEW CALL MODAL -->
+<div class="modal fade" id="newCallModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Select Details</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="row">
+
+          <!-- PRINCIPAL (LEFT – SMALL) -->
+          <div class="col-md-3">
+            <div class="card h-100 border-gray">
+              <div class="card-header font-weight-bold" style="height: 55px;">PRINCIPAL</div>
+              <div class="card-body table-scroll">
+                <table id="principalTable" class="table table-striped table-hover table-bordered table-sm mb-0">
+                  <thead>
+                    <tr>
+                      <th>Principal</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                   
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- SELLERS (RIGHT – 70%+) -->
+       <div class="col-md-9">
+  <div class="card h-100">
+   <div class="card-header d-flex justify-content-between align-items-center font-weight-bold">
+  <span>STORES</span>
+
+  <div class="d-flex align-items-center ml-auto" style="gap: 0.5rem;">
+
+  <button id="balloonBtn" class="btn btn-primary btn-sm" 
+            data-toggle="tooltip" data-placement="left" title="Click to open menu">
+      Walk-in
+    </button>
+
+    <!-- Search Box -->
+    <div style="width: 200px;">
+      <div class="input-group input-group-sm">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fas fa-search"></i></span>
+        </div>
+        <input type="text" class="form-control form-control-sm" placeholder="Search stores" id="storeSearch">
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="card-body table-scroll" style="max-height:450px; overflow-y:auto;">
+      <table id="sellerTable" class="table table-striped table-hover table-bordered table-sm mb-0">
+        <thead>
+          <tr>
+            <th>Seller ID</th>
+            <th>Name</th>
+            <th>Customer ID</th>
+            <th>Customer Name</th>
+            <th>Address</th>
+            <th>Phone Number</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Sample rows -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
 <!-- JS Scripts -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -344,6 +452,254 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
     $("#site_name").text(site_id);
     alert(site_id);
   });
+
+
+function createCall(sellerId, customerId, customerName, phoneNumber, sellerName, siteId) {
+    // Logic to create a new call    // For demonstration, just alerting the details
+   // alert(`Seller ID: ${sellerIdOnly}\nCustomer ID: ${customerId}\nCustomer Name: ${customerName}\nPhone Number: ${phoneNumber}\nSeller Name: ${sellerName}\nSite ID: ${siteId}`);
+
+     document.getElementById('customeridtxt').value = customerId;
+     document.getElementById('vantxt').value = sellerId;
+     document.getElementById('sellertxt').value = sellerName;
+     document.getElementById('customerNametxt').value = customerName;
+     document.getElementById('phoneNumbertxt').value = phoneNumber;
+
+
+   // alert('New call created!');
+    $('#newCallModal').modal('hide');
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    // Load principals when modal is shown
+    $('#newCallModal').on('shown.bs.modal', function () {
+      loadPrincipals();
+    });
+  });
+
+loadPrincipals = () => {
+    fetch('/TBC/datafetcher/transaction/callcreation_data.php?action=getprincipals&site=<?= $_SESSION['SITE_ID'] ?>&company=<?= $_SESSION['Company_ID'] ?>')
+      .then(response => response.json())
+      .then(data => {
+        const principalTableBody = document.querySelector('#principalTable tbody');
+        principalTableBody.innerHTML = '';
+
+        data.forEach(principal => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${principal.PRINCIPAL}</td>
+            <td>
+              <button class="btn btn-primary btn-sm select-principal-btn" data-id="${principal.PRINCIPAL}">
+                Select
+              </button>
+            </td>
+          `;
+          principalTableBody.appendChild(tr);
+        });
+
+        // Add event listeners to select buttons
+        document.querySelectorAll('.select-principal-btn').forEach(button => {
+          button.addEventListener('click', function () {
+            const principalId = this.getAttribute('data-id');
+            loadSellers(principalId);
+            walkinloadSellers(principalId);
+          });
+        });
+      })
+      .catch(error => console.error('Error loading principals:', error));
+  };
+
+function loadSellers(principalId) {
+const principalIdtxt = principalId;
+
+    fetch(`/TBC/datafetcher/transaction/callcreation_data.php?action=getsellers&principal=${encodeURIComponent(principalIdtxt)}&site=<?= $_SESSION['SITE_ID'] ?>`)
+      .then(response => response.json())
+      .then(data => {
+        const sellerTableBody = document.querySelector('#sellerTable tbody');
+        sellerTableBody.innerHTML = '';
+
+        data.forEach(seller => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${seller.SELLER_ID}</td>
+            <td>${seller.SELLER_NAME}</td>
+            <td>${seller.CUSTOMER_ID}</td>
+            <td>${seller.CUSTOMER_NAME}</td>
+            <td>${seller.ADDRESS}</td>
+            <td>${seller.PHONE_NUMBER}</td>
+            <td>
+              <button class="btn btn-success btn-sm create-call-btn" data-id="${seller.SELLER_ID},${seller.CUSTOMER_ID},${seller.CUSTOMER_NAME},${seller.PHONE_NUMBER},${seller.SELLER_NAME},<?= $_SESSION['SITE_ID'] ?>">
+                Create Call
+              </button>
+            </td>
+          `;
+          sellerTableBody.appendChild(tr);
+        });
+
+        // Add event listeners to create call buttons
+        document.querySelectorAll('.create-call-btn').forEach(button => {
+          button.addEventListener('click', function () {
+            const sellerDetails = this.getAttribute('data-id').split(',');
+            const sellerIdOnly = sellerDetails[0];  
+            const customerId = sellerDetails[1];
+            const customerName = sellerDetails[2];
+            const phoneNumber = sellerDetails[3];
+            const sellerName = sellerDetails[4];
+            const siteId = sellerDetails[5];
+            createCall(sellerIdOnly, customerId, customerName, phoneNumber, sellerName, siteId);
+          });
+        });
+      })
+      .catch(error => console.error('Error loading sellers:', error));
+  }
+
+
+// Search filter for Stores table
+document.getElementById('storeSearch').addEventListener('keyup', function() {
+    const searchValue = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#sellerTable tbody tr');
+
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        let match = false;
+        cells.forEach(cell => {
+            if (cell.textContent.toLowerCase().includes(searchValue)) {
+                match = true;
+            }
+        });
+        row.style.display = match ? '' : 'none';
+    });
+});
+
+function addWalkIn() {
+   
+  const customerName = document.getElementById('walkinCustomerName').value;
+    const phoneNumber = document.getElementById('walkinPhoneNumber').value;
+    const sellerId = document.getElementById('selectseller').value;
+
+    if (!customerName) {
+        alert('Please enter a customer name.');
+        return;
+    }
+
+    if (!phoneNumber) {
+        alert('Please enter a phone number.');
+        return;
+    }
+
+    if (!sellerId) {
+        alert('Please select a seller.');
+        return;
+    }
+
+    // Logic to add walk-in customer
+   // alert(`Walk-in added:\nCustomer Name: ${customerName}\nPhone Number: ${phoneNumber}`);
+
+    document.getElementById('customeridtxt').value = 'WALK-IN';
+     document.getElementById('vantxt').value = selectseller.value;
+     document.getElementById('sellertxt').value = selectseller.value;
+     document.getElementById('customerNametxt').value = customerName;
+     document.getElementById('phoneNumbertxt').value = phoneNumber;
+
+    // Close modal
+    $('#leftModal').modal('hide');
+    $('#newCallModal').modal('hide');
+
+    // Clear input fields
+    document.getElementById('walkinCustomerName').value = '';
+    document.getElementById('walkinPhoneNumber').value = '';
+}
+
 </script>
+
+<!-- Balloon Button -->
+
+
+<!-- Left Slide Modal -->
+<div class="modal left fade" id="leftModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content" style="height: 100vh;">
+      <div class="modal-header">
+        <h5 class="modal-title">ADD WALK-IN</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>SELLER:</p>
+          <select id="selectseller" class="form-control form-control-sm mb-2" style="width: 200px;">
+    <option value="">Select Seller</option>
+  </select>
+        <p>CUSTOMER NAME:</p>
+        <input type="text" class="form-control form-control-sm mb-3 mt-1" id="walkinCustomerName">
+        <p>PHONE NUMBER:</p>
+        <input type="text" class="form-control form-control-sm mb-3 mt-1" id="walkinPhoneNumber">
+        <button class="btn btn-success btn-sm mt-3 " onclick="addWalkIn()" style="width: 100%; height: 40px;">ADD WALK-IN</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Slide-in from left */
+.modal.left .modal-dialog {
+  position: fixed;
+  margin: 0;
+  width: 300px;
+  height: 100%;
+  right: -300px;
+  transition: all 0.3s;
+}
+
+.modal.left.show .modal-dialog {
+  right: 0;
+}
+
+.modal.left .modal-content {
+  height: 100%;
+  border-radius: 0;
+}
+</style>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script>
+$(function () {
+  // Initialize tooltip
+  $('#balloonBtn').tooltip();
+
+  // Open left modal when balloon clicked
+  $('#balloonBtn').on('click', function () {
+    $('#leftModal').modal('show');
+  });
+});
+
+// Load sellers for walk-in when left modal is shown
+$('#leftModal').on('shown.bs.modal', function () {
+  walkinloadSellers(principalId);
+});
+
+function walkinloadSellers(principalId) {
+
+  const principalIdtxt = principalId;
+
+    fetch(`/TBC/datafetcher/transaction/callcreation_data.php?action=getsellerswalkin&site=<?= $_SESSION['SITE_ID'] ?>&principal=${encodeURIComponent(principalIdtxt)}`)
+      .then(response => response.json())
+      .then(data => {
+        const selectSeller = document.getElementById('selectseller');
+        selectSeller.innerHTML = '<option value="">Select Seller</option>'; // Clear existing options
+
+        data.forEach(seller => {
+          const option = document.createElement('option');
+          option.value = seller.SELLER_ID;
+          option.textContent = seller.SELLER_NAME;
+          selectSeller.appendChild(option);
+        });
+      })
+      .catch(error => console.error('Error loading sellers for walk-in:', error));
+  }
+
+</script>
+
+
 </body>
 </html>

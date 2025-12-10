@@ -226,9 +226,9 @@ if (isset($_GET['action']) && $_GET['action'] === 'POsavelist') {
         $serve_sw = (int)$_GET['swqty'];
         $serve_it = (int)$_GET['itqty'];
         $amount_served = (float)$_GET['totalamount'];
-        $actual_cs = 0;
-        $actual_sw = 0;
-        $actual_it = 0;
+        $actual_cs = (int)$_GET['csqty'];
+        $actual_sw = (int)$_GET['swqty'];
+        $actual_it = (int)$_GET['itqty'];
         $batch = 'BATCH';
         $status = 'DRAFT';
 
@@ -350,6 +350,9 @@ if (isset($_GET['action']) && $_GET['action'] === 'updatelineitem') {
                 SERVE_CS = :Scs, 
                 SERVE_SW = :Ssw, 
                 SERVE_IT = :Sit,  
+                ACTUAL_CS = :Scs, 
+                ACTUAL_SW = :Ssw, 
+                ACTUAL_IT = :Sit, 
                 AMOUNT = :newamount,
                 AMOUNT_SERVED = :Snewamount
             WHERE PO_NUMBER = :ponumber 
