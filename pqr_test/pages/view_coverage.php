@@ -6,7 +6,7 @@ $DELIVERY_DATE = isset($_GET['DELIVERY_DATE'])?$_GET['DELIVERY_DATE']:'';
 
 $query = "SELECT *   from [dbo].[Dash_Plan_Batch_Transaction] BT join Dash_Plan_Batch_Details BD on
 BT.BATCH_ID = BD.BATCH  LEFT JOIN [dbo].[Dash_Agent_Performance_Detailed] PD ON 
-BD.DATE_TO_DELIVER=PD.DELIVERY_DATE AND BD.CUSTOMER_ID=PD.STORE_CODE  WHERE BT.BATCH_ID=:batch_id order by PD.STORE_ENTRY ASC";
+BD.DATE_TO_DELIVER=PD.DELIVERY_DATE AND BD.CUSTOMER_ID=PD.STORE_CODE  AND PD.BATCH_ID='$AGENT_ID' WHERE BT.BATCH_ID=:batch_id order by PD.STORE_ENTRY ASC";
 $stmt = $conn->prepare($query); 
 $stmt->bindParam(':batch_id', $BATHC_ID);
 $stmt->execute();
