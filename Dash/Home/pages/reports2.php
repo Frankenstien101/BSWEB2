@@ -1737,9 +1737,6 @@ function loaditems() {
                 const rowId = "row_" + item.REQUEST_ID;
                 let row = document.getElementById(rowId);
 
-                // ===============================
-                // CREATE NEW ROW (put on TOP)
-                // ===============================
                 if (!row) {
                     row = document.createElement("tr");
                     row.id = rowId;
@@ -1752,19 +1749,11 @@ function loaditems() {
                         <td id="link_${item.REQUEST_ID}"></td>
                     `;
 
-                    // NEW rows always on top
                     tbody.prepend(row);
                 }
-
-                // ===============================
-                // UPDATE STATUS
-                // ===============================
                 const statusCell = document.getElementById("status_" + item.REQUEST_ID);
                 if (statusCell) statusCell.innerText = item.STATUS;
 
-                // ===============================
-                // UPDATE LINK
-                // ===============================
                 const linkCell = document.getElementById("link_" + item.REQUEST_ID);
 
                 if (item.LINK && item.LINK.trim() !== "") {
