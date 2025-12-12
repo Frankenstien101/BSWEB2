@@ -68,6 +68,7 @@ $selected_dateto = isset($_SESSION['ses_dateto']) ? $_SESSION['ses_dateto'] : da
   </div>
 </div>
 <div class="row">
+
 <div class="col-lg-4">
                 <div class="card upload-card">
                     <div class="card-header">
@@ -101,24 +102,20 @@ $selected_dateto = isset($_SESSION['ses_dateto']) ? $_SESSION['ses_dateto'] : da
           ?>
         </select>
       </div>
-        <!-- <div class="alert alert-success col-12" role="alert">
-        Sucessfully Generate!
-        </div> -->
+
                     </div>
                     <div class="card-footer text-muted text-center">
                         <p class="mb-0">Download Template</p>
                         <button class="btn btn-primary" id="btn_gen_pqrdet"  >
-                        <span class="spinner-border spinner-border-sm spinner visually-hidden " id="spin_det" aria-hidden="true"></span>
+                        <span class="spinner-border spinner-border-sm spinner visually-hidden" id="spin_pqr_det1" aria-hidden="true"></span>
                         <span id="btn_txt_det">Generate</span>
                       </button>
                       <button class="btn btn-show" data-id="tbl_pqr_det"><i class="bi bi-view-stacked"></i></button>
-<diV id="tbl_pqr_det" style="max-height: 30vh; overflow:auto; display:none">
-</diV>
+                    <diV id="tbl_pqr_det" style="max-height: 30vh; overflow:auto; display:none">
+                    </diV>
                          </div>
-
                 </div>        
-</div>
-
+                </div>
 
 
 <div class="col-lg-4">
@@ -156,7 +153,7 @@ $selected_dateto = isset($_SESSION['ses_dateto']) ? $_SESSION['ses_dateto'] : da
       </div>
                     </div>
                     <div class="card-footer text-muted text-center">        
-        <button class="btn btn-primary btn_dl" id="btn_gen_pqrdet" data-id="pqrcasdetails" >
+        <button class="btn btn-primary btn_dl"  data-id="pqrcasdetails" >
           <span class="spinner-border spinner-border-sm spinner visually-hidden " id="spin_det" aria-hidden="true"></span>
           <span id="btn_txt_det"><i class="bi bi-download fs-5"></i> Download</span>
         </button>
@@ -241,39 +238,83 @@ $("#"+TABLE).html(data)
 })
 }
 
-function generate(dt_from, dt_to, sites, query,_btn_generate,_spin) {   
+// ------------------------------
+// CLICK BUTTON
+// ------------------------------
+$("#btn_gen_pqrdet").click(function () {
 
-  var select_site = sites;
-  var dt_from = dt_from;
-  var dt_to =dt_to;
-  var btn_generate = btn_generate;
-  var spin = _spin;
+    var dt_from = $("#dt_from_det").val();
+    var dt_to   = $("#dt_to_det").val();
+    var sites   = $("#select_user").val();
 
-  $("#"+btn_generate).attr("disable",true)
-  $("#"+_spin).removeClass("visually-hidden")
-  $("#"+btn_generate).html("Generating..")
+    if (!sites || sites.length === 0) 
+        return alert("Select sites first!");
 
-  $.ajax({
-  url: 'query/download_pqrdetails.php',
-                    method: 'POST',
-                    data:{sites:select_site, dtfrom:dt_from, dtto:dt_to},
-                    success: function(response) {
-                        var data = JSON.parse(response);
-                        if (data.status === 'success') {
-     
-                        }
-                         else {
-                          alert(data.message)
-                        } 
-                        $("#spin_det").addClass("visually-hidden")
-                        $("#btn_txt_det").html("Generate")
-                        $("#btn_txt_det").attr("disable",false)
-                    },
-                    error: function() {
-                      alert(data.message);                       
-                    }  
-                });  
+//$("#spin_pqr_det1").removeClass("visually-hidden");
+generate(dt_from, dt_to, sites, $(this), $("#spin_pqr_det1"));
+});
+
+
+// ------------------------------
+// GENERATE FUNCTION
+// ------------------------------
+function generate(dt_from, dt_to, sites, btn_generate, spin) {
+    
+    spin.removeClass("visually-hidden");
+    btn_generate.prop("disabled", true).html("Generating...");
+
+    $.ajax({
+        url: 'query/download_pqrdetails.php',
+        method: 'POST',
+        data: { sites: sites, dtfrom: dt_from, dtto: dt_to },
+
+        success: function (request_id) {
+            // Poll download status every second
+            let interval = setInterval(function () {
+                get_download_stat(request_id, interval, btn_generate, spin);
+            }, 1000);
+        },
+        error: function (xhr) {
+            alert("Error: " + xhr.responseText);
+            btn_generate.prop("disabled", false).html("Generate");          
+        }
+    });
 }
+
+
+// ------------------------------
+// CHECK DOWNLOAD STATUS
+// ------------------------------
+function get_download_stat(request_id, interval, btn_generate, spin) {
+
+    $.ajax({
+        url: 'query/checking_dl_status.php',
+        method: 'POST',
+        data: { request_id: request_id },
+
+        success: function (response) {
+            var data = JSON.parse(response);
+            if (data.STATUS === 'COMPLETED') {
+              
+                clearInterval(interval);
+                spin.addClass("visually-hidden");
+                btn_generate.prop("disabled", false).html("Generate")
+                window.open(data.LINK, "_blank");    
+
+            }
+        },
+
+        error: function (xhr) {
+            alert("Error: " + xhr.responseText);
+            clearInterval(interval);
+         
+            btn_generate.prop("disabled", false).html("Generate");
+        }
+    });
+}
+
+
+
 
 $("#btn_gen_inv_det").click(function(){
   var select_site = $("#select_user_inv").val();
@@ -303,21 +344,6 @@ $("#btn_gen_inv_det").click(function(){
                     }  
                 });
 })
-
-$("#btn_gen_pqrdet").click(function () {
-  var form = $('<form>', {
-    action: 'query/download_pqrdetails.php',
-    method: 'POST',
-    target: '_blank'
-  });
-  var sites = $("#select_user").val();
-  if (!sites || sites.length === 0) return alert("Select sites first!");
-  sites.forEach(site => form.append($('<input>', {type: 'hidden', name: 'sites[]', value: site})));
-  form.append($('<input>', {type: 'hidden', name: 'dtfrom', value: $("#dt_from_det").val()}));
-  form.append($('<input>', {type: 'hidden', name: 'dtto', value: $("#dt_to_det").val()}));
-  $('body').append(form);
-  form.submit().remove();
-});
 
 
 $("#btn_pqr_result").click(function(){
@@ -397,6 +423,5 @@ $(".btn_dl").click(function(){
                      _btn.prop('disabled', false);
         }
     });  
-
   }
 </script>
