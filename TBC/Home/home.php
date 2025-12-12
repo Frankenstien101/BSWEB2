@@ -426,7 +426,6 @@ if (isset($_GET['site']) && isset($_GET['company']) && isset($_GET['siteid'])) {
           </tr>
         </thead>
         <tbody>
-          <!-- Sample rows -->
         </tbody>
       </table>
     </div>
