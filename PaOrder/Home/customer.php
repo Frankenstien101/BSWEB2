@@ -141,7 +141,7 @@
                             <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Profile</a></li>
                             <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Settings</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="#"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                            <li><a class="dropdown-item text-danger" href="verify.php"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -154,11 +154,10 @@
 
         <!-- Home Page -->
         <div id="home" class="page-section active text-center">
-            <h1 class="display-4">Welcome to PaOrder Tracker</h1>
+            <h1 class="display-4">Welcome to Order Ko Tracker</h1>
             <p class="lead">Track your deliveries with ease.</p>
             <hr class="my-4">
             <p>Click on <strong>My Orders</strong> to view current delivery status or <strong>History</strong> to see past orders.</p>
-            <img src="\PaOrder\Home\img\paordernew.png" alt="PaOrder Welcome" class="img-fluid mt-4" style="max-width: 400px;">
         </div>
 
    <!-- My Orders Page (with Status Tabs) -->
