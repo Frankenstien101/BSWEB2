@@ -271,7 +271,7 @@
 
                 // Function to send OTP
                 function sendOtp($phone, $otp) {
-                    $otp_message = "Your BSPI signup OTP is: $otp. Valid for 5 minutes. Do not share this code.";
+                    $otp_message = "Your ORDER KO signup OTP is: $otp. Valid for 5 minutes. Do not share this code.";
                     $message_text = str_replace(["\r\n", "\n", "\r"], "\n", $otp_message);
 
                     $payload = json_encode([
