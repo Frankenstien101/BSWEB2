@@ -366,7 +366,12 @@ if (isset($_POST['login'])) {
             <label for="remember">Remember this device</label>
           </div>
 
+            Create an account? <a href="/PaOrder/Home/register.php" style=" text-decoration: none;">Register here</a>
+
+
           <button type="submit" name="login">Sign In</button>
+
+
         </form>
       </div>
     </div>

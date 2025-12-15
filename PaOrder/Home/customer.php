@@ -1,9 +1,19 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['Name_of_user']) || empty($_SESSION['Name_of_user'])) {
+    header("Location: /PaOrder/Home/verify.php");
+    exit;
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PaOrder Tracker</title>
+    <title>Order Ko</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome for icons -->
@@ -135,7 +145,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center text-white" href="#" role="button" data-bs-toggle="dropdown">
                             <i class="fas fa-user-circle fa-2x me-2"></i>
-                            <span>John Doe</span>
+                            <span><?php echo $_SESSION['Name_of_user']; ?></span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Profile</a></li>
