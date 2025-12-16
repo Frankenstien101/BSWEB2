@@ -219,8 +219,13 @@
                         submitBtn.disabled = true;
                     } else if (data.status === 'available') {
                         messageDiv.innerHTML = '<div class="message success"><i class="fas fa-check-circle"></i> Store ID is valid and available for registration.</div>';
-                        storeInfoDiv.innerHTML = '<div class="store-info">' + data.message + '</div>';
+                      //  storeInfoDiv.innerHTML = '<div class="store-info">' + data.message + '</div>';
                         submitBtn.disabled = false;
+
+                        document.getElementById('store_name').value = '<?php echo isset($_SESSION['store_name']) ? addslashes($_SESSION['store_name']) : ''; ?>';
+                        document.getElementById('address').value = '<?php echo isset($_SESSION['store_address']) ? addslashes($_SESSION['store_address']) : ''; ?>';
+                        document.getElementById('phone').value = "+63" + '<?php echo isset($_SESSION['phone']) ? addslashes($_SESSION['phone']) : ''; ?>';
+                  
                     } else {
                         messageDiv.innerHTML = '<div class="message warning"><i class="fas fa-exclamation-triangle"></i> Could not validate Store ID. Please try again.</div>';
                         storeInfoDiv.innerHTML = '';
@@ -418,7 +423,7 @@
                                             $lineid = $conn->lastInsertId();
 
                                                 // Only this message with "LOGIN" as clickable link
-                                                $loginText = 'Signup successful! You can now <a href="login.php" style="color: #1d4ed8; font-weight: 700; text-decoration: underline;">LOGIN</a> with your Store ID.';
+                                                $loginText = 'Signup successful! You can now <a href="/orderko.php" style="color: #1d4ed8; font-weight: 700; text-decoration: underline;">LOGIN</a> with your Store ID.';
 
                                                 $message = displayMessage('success', $loginText);
 
