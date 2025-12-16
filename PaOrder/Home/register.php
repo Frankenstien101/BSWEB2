@@ -217,15 +217,18 @@
                         messageDiv.innerHTML = '<div class="message error"><i class="fas fa-times-circle"></i> Store ID already registered. Please use a different Store ID.</div>';
                         storeInfoDiv.innerHTML = '';
                         submitBtn.disabled = true;
-                    } else if (data.status === 'available') {
-                        messageDiv.innerHTML = '<div class="message success"><i class="fas fa-check-circle"></i> Store ID is valid and available for registration.</div>';
-                      //  storeInfoDiv.innerHTML = '<div class="store-info">' + data.message + '</div>';
-                        submitBtn.disabled = false;
+                   } else if (data.status === 'available') {
 
-                        document.getElementById('store_name').value = '<?php echo isset($_SESSION['store_name']) ? addslashes($_SESSION['store_name']) : ''; ?>';
-                        document.getElementById('address').value = '<?php echo isset($_SESSION['store_address']) ? addslashes($_SESSION['store_address']) : ''; ?>';
-                        document.getElementById('phone').value = "+63" + '<?php echo isset($_SESSION['phone']) ? addslashes($_SESSION['phone']) : ''; ?>';
-                  
+                       messageDiv.innerHTML =
+                           '<div class="message success"><i class="fas fa-check-circle"></i> Store ID is valid.</div>';
+                                    
+                       submitBtn.disabled = false;
+                                    
+                       document.getElementById('store_name').value = data.store_name || '';
+                       document.getElementById('address').value = data.address || '';
+                       document.getElementById('phone').value = data.phone
+                           ? '+63' + data.phone.replace(/^0/, '')
+                           : '';
                     } else {
                         messageDiv.innerHTML = '<div class="message warning"><i class="fas fa-exclamation-triangle"></i> Could not validate Store ID. Please try again.</div>';
                         storeInfoDiv.innerHTML = '';
