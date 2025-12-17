@@ -25,12 +25,14 @@ if (isset($_GET['store_id']) && !empty($_GET['store_id'])) {
         } else {
       echo json_encode([
     'status' => 'available',
+    'store_id' => $customerData['CODE'],
     'store_name' => $customerData['NAME'],
     'address' => $customerData['ADDRESS'] . ', ' . $customerData['CITY'] . ', ' . $customerData['PROVINCE'],
     'phone' => $customerData['PHONE'],
     'company' => $customerData['COMPANY_ID'],
     'branch' => $customerData['BRANCH']
 ]);
+
         }
     } else {
         echo json_encode(['exists' => false, 'message' => 'Store ID not found in customer master', 'status' => 'not_found']);

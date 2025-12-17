@@ -12,7 +12,7 @@ if (isset($_POST['login'])) {
     try {
         // Prepare and execute query
         $stmt = $conn->prepare("
-            SELECT USERNAME,PASSWORD,ROLE,NAME,COMPANY, PRINCIPAL, SITE_ID
+            SELECT LINEID,USERNAME,PASSWORD,ROLE,NAME,COMPANY, PRINCIPAL, SITE_ID
              FROM OK_Users
              WHERE STATUS = 'ACTIVE' AND USERNAME = :username
         ");
@@ -28,10 +28,12 @@ if (isset($_POST['login'])) {
                 $_SESSION['username'] = $username;
                 $_SESSION['Name_of_user'] = $user['NAME'];
                 $_SESSION['Company_Name'] = $user['COMPANY'];
-                $_SESSION['UserID'] = $user['PRINCIPAL'];
+                $_SESSION['UserID'] = $user['LINEID'];
                 $_SESSION['Company_ID'] = $user['COMPANY'];
                 $_SESSION['Role'] = $user['ROLE'];
                 $_SESSION['SITE_ID'] = $user['SITE_ID'];
+                $_SESSION['store_id'] = $user['USERNAME'];
+                $_SESSION['principal'] = $user['PRINCIPAL'];
 
                 // Redirect to homepage
 
