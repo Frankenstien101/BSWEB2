@@ -23,9 +23,29 @@ if (!isset($_SESSION['Name_of_user']) || empty($_SESSION['Name_of_user'])) {
     .page-section.active { display: block; }
     .logo-img { height: 60px; width: auto; }
     .card:hover { cursor: pointer; transform: scale(1.01); transition: 0.2s; }
+
+    /* Loading Overlay */
+    #loadingOverlay {
+        z-index: 9999;
+        transition: opacity 0.5s ease-out;
+    }
+    #loadingOverlay.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
 </style>
 </head>
 <body>
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="position-fixed top-0 start-0 w-100 h-100 bg-light bg-opacity-75 d-flex align-items-center justify-content-center">
+    <div class="text-center">
+        <div class="spinner-border text-primary mb-3" role="status" style="width: 4rem; height: 4rem;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <h4 class="text-muted">Loading your orders...</h4>
+    </div>
+</div>
 
 <!-- Fixed Navigation Header -->
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
@@ -140,164 +160,237 @@ if (!isset($_SESSION['Name_of_user']) || empty($_SESSION['Name_of_user'])) {
 <!-- Bootstrap & Custom JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize modal once
-    window.orderModal = new bootstrap.Modal(document.getElementById('orderModal'));
+const orderModal = new bootstrap.Modal(document.getElementById('orderModal'));
+const loadingOverlay = document.getElementById('loadingOverlay');
 
-    // Show home page initially
-    showPage('home');
-});
+/* =========================
+   PAGE NAV
+========================= */
+function showPage(id, e){
+    if (e) e.preventDefault();
 
-// Show a page and handle active nav-link
-function showPage(pageId, e) {
-    document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
-    document.getElementById(pageId).classList.add('active');
+    document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
 
-    if (e) {
-        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-        e.currentTarget.classList.add('active');
+    if(id === 'myorders'){
+        // Show loading overlay
+        loadingOverlay.classList.remove('hidden');
 
-        // Collapse navbar if open (mobile)
-        const navbarCollapse = document.getElementById('navbarContent');
-        if (navbarCollapse.classList.contains('show')) {
-            const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse) || new bootstrap.Collapse(navbarCollapse);
-            bsCollapse.hide();
-        }
-    }
-
-    if (pageId === 'myorders') loadMyOrders();
-}
-
-// Load orders via fetch
-function loadMyOrders() {
-    const companytxt = "<?php echo $_SESSION['principal']; ?>";
-    const storeid = "<?php echo $_SESSION['store_id']; ?>";
-
-    fetch(`/PaOrder/datafetcher/customers_data.php?action=viewmyorders&companyid=${encodeURIComponent(companytxt)}&storeid=${encodeURIComponent(storeid)}`)
-    .then(res => res.json())
-    .then(data => {
-        if (!data.success) return console.warn(data.error || "No data");
-
-        const pendingEl = document.getElementById('pendingOrders');
-        const deliveryEl = document.getElementById('forDeliveryOrders');
-        const completedEl = document.getElementById('completedOrders');
-
-        pendingEl.innerHTML = '';
-        deliveryEl.innerHTML = '';
-        completedEl.innerHTML = '';
-
-        data.data.forEach(order => {
-            let status = order.STATUS;
-            let statusText = status === '' ? 'Pending' : status === '0' ? 'Pending' : status === '1' ? 'Prepared' : status === '2' ? 'Ready for Delivery' : status === '3' ? 'For Delivery' : status === '4' ? 'Completed' : 'Unknown';
-
-            let card = document.createElement('div');
-            card.className = 'card mb-3 shadow-sm';
-            card.innerHTML = `
-                <div class="card-header ${getHeaderColor(status)} text-white">
-                    <strong>Order #${order.order_no}</strong>
-                    <span class="badge bg-dark float-end">${statusText}</span>
-                </div>
-                <div class="card-body">
-                    <p><strong>Date:</strong> ${order.order_date}</p>
-                    <p><strong>Total Amount:</strong> ₱${parseFloat(order.TOTAL_AMOUNT).toLocaleString('en-PH', {minimumFractionDigits:2})}</p>
-                    <p><strong>Date to Deliver:</strong> ${order.DATE_TO_DELIVER ?? 'N/A'}</p>
-                </div>
-            `;
-
-            card.addEventListener('click', () => showOrderModal(order.order_no));
-
-            if (['0','1','2'].includes(status)) pendingEl.appendChild(card);
-            else if (status === '3') deliveryEl.appendChild(card);
-            else if (['4','5'].includes(status)) completedEl.appendChild(card);
+        // Load all tabs in parallel
+        Promise.all([
+            loadPendingOrders(),
+            loadForDeliveryOrders(),
+            loadCompletedOrders()
+        ]).then(() => {
+            // Hide loading after all data is loaded
+            setTimeout(() => {
+                loadingOverlay.classList.add('hidden');
+            }, 300);
+        }).catch(() => {
+            // Hide even if error
+            loadingOverlay.classList.add('hidden');
         });
-
-        if (!pendingEl.hasChildNodes()) pendingEl.innerHTML = '<p class="text-center text-muted">No pending orders.</p>';
-        if (!deliveryEl.hasChildNodes()) deliveryEl.innerHTML = '<p class="text-center text-muted">No orders for delivery.</p>';
-        if (!completedEl.hasChildNodes()) completedEl.innerHTML = '<p class="text-center text-muted">No completed orders.</p>';
-    })
-    .catch(err => console.error("Fetch error:", err));
-}
-
-function getHeaderColor(status) {
-    switch(status) {
-        case '1': return 'bg-warning text-dark';
-        case '2': return 'bg-info text-dark';
-        case '3': return 'bg-primary text-white';
-        case '4': return 'bg-success text-white';
-        case '5': return 'bg-danger text-white';
-        default: return 'bg-secondary text-white';
+    } else {
+        loadingOverlay.classList.add('hidden');
     }
 }
 
-function showOrderModal(order_id) {
-    const modalTitle = document.getElementById('modalOrderTitle');
-    const modalBody = document.getElementById('modalOrderBody');
+/* =========================
+   LOADERS
+========================= */
 
-    modalTitle.textContent = `Order #${order_id} Details`;
-    modalBody.innerHTML = 'Loading...';
+function loadPendingOrders(){
+    return fetchOrders(
+        'viewmyorders',
+        document.getElementById('pendingOrders'),
+        createPendingCard
+    );
+}
 
-    fetch(`/PaOrder/datafetcher/customers_data.php?action=getOrderDetails&order_no=${encodeURIComponent(order_id)}`)
+function loadForDeliveryOrders(){
+    return fetchOrders(
+        'viewForDeliveryOrders',
+        document.getElementById('forDeliveryOrders'),
+        createForDeliveryCard
+    );
+}
+
+function loadCompletedOrders(){
+    return fetchOrders(
+        'viewCompletedOrders',
+        document.getElementById('completedOrders'),
+        createCompletedCard
+    );
+}
+
+function fetchOrders(action, container, cardBuilder){
+    const company = "<?= $_SESSION['principal']; ?>";
+    const store   = "<?= $_SESSION['store_id']; ?>";
+
+    container.innerHTML = '<p class="text-center text-muted">Loading...</p>';
+
+    return fetch(`/PaOrder/datafetcher/customers_data.php?action=${action}&companyid=${company}&storeid=${store}`)
     .then(res => res.json())
-    .then(data => {
-        if (!data.success) {
-            modalBody.innerHTML = `<p class="text-danger">Error fetching order details.</p>`;
+    .then(res => {
+        container.innerHTML = '';
+        if(!res.success || res.data.length === 0){
+            container.innerHTML = '<p class="text-center text-muted">No orders found.</p>';
             return;
         }
-
-        const orderItems = data.data.filter(d => d.ORDER_ID === order_id);
-
-        if (orderItems.length === 0) {
-            modalBody.innerHTML = `<p class="text-center text-muted">No items found for this order.</p>`;
-            return;
-        }
-
-        const itemsTableRows = orderItems.map(i => `
-            <tr>
-                <td>${i.PRD_SKU_NAME}</td>
-                <td class="text-center">${i.QTY_PIECE}</td>
-                <td class="text-end">₱${parseFloat(i.PRICE_PIECE).toLocaleString('en-PH', {minimumFractionDigits:2})}</td>
-                <td class="text-end">₱${(i.ORDER_VALUE_WITHOUTSCHEME).toLocaleString('en-PH', {minimumFractionDigits:2})}</td>
-            </tr>
-        `).join('');
-
-     // Calculate totals dynamically
-const totalAmount = orderItems.reduce((sum, i) => sum + parseFloat(i.ORDER_VALUE || 0), 0);
-const schemeAmount = orderItems.reduce((sum, i) => sum + parseFloat(i.SCHEME_VALUE || 0), 0);
-const netAmount = orderItems.reduce((sum, i) => sum + parseFloat(i.ORDER_VALUE_WITHOUTSCHEME || 0), 0);
-
-modalBody.innerHTML = `
-    <p><strong>Date:</strong> ${orderItems[0].ORDER_DATE}</p>
-    <p><strong>Total Amount:</strong> ₱${totalAmount.toLocaleString('en-PH', {minimumFractionDigits:2})}</p>
-    <p><strong>Scheme Amount:</strong> ₱${schemeAmount.toLocaleString('en-PH', {minimumFractionDigits:2})}</p>
-    <p><strong>Net Amount:</strong> ₱${netAmount.toLocaleString('en-PH', {minimumFractionDigits:2})}</p>
-    <p><strong>Status:</strong> ${orderItems[0].STATUS || 'Pending'}</p>
-    <hr>
-    <div class="table-responsive">
-        <table class="table table-bordered table-sm">
-            <thead class="table-light">
-                <tr>
-                    <th>Item Name</th>
-                    <th class="text-center">Quantity</th>
-                    <th class="text-end">Price</th>
-                    <th class="text-end">Subtotal</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${itemsTableRows}
-            </tbody>
-        </table>
-    </div>
-`;
-
-
-        const orderModalEl = document.getElementById('orderModal');
-        const orderModal = new bootstrap.Modal(orderModalEl);
-        orderModal.show();
-
-    }).catch(err => {
-        modalBody.innerHTML = `<p class="text-danger">Fetch error: ${err}</p>`;
+        res.data.forEach(o => container.appendChild(cardBuilder(o)));
+    })
+    .catch(err => {
+        console.error(err);
+        container.innerHTML = '<p class="text-danger text-center">Load failed.</p>';
     });
 }
+
+/* =========================
+   CARD BUILDERS
+========================= */
+
+function createPendingCard(o){
+    return createCard(o, getStatusText(o.STATUS), getHeaderColor(o.STATUS),
+        () => showOrderModalPending(o.order_no));
+}
+
+function createForDeliveryCard(o){
+    return createCard(o, 'For Delivery', 'bg-warning',
+        () => showOrderModalForDelivery(o.order_no));
+}
+
+function createCompletedCard(o){
+    return createCard(o, 'Completed', 'bg-success',
+        () => showOrderModalCompleted(o.order_no));
+}
+
+function createCard(o, statusText, headerClass, onClick){
+    const card = document.createElement('div');
+    card.className = 'card mb-3 shadow-sm';
+    card.innerHTML = `
+        <div class="card-header ${headerClass} text-white">
+            <strong>${o.order_no}</strong>
+            <span class="badge bg-dark float-end">${statusText}</span>
+        </div>
+        <div class="card-body">
+            <p><strong>Date:</strong> ${o.order_date}</p>
+            <p><strong>Total Amount:</strong> ₱${Number(o.TOTAL_AMOUNT).toLocaleString('en-PH',{minimumFractionDigits:2})}</p>
+            <p><strong>Date to Deliver:</strong> ${o.DATE_TO_DELIVER ?? 'N/A'}</p>
+        </div>
+    `;
+    card.onclick = onClick;
+    return card;
+}
+
+/* =========================
+   HELPERS
+========================= */
+
+function getStatusText(s){
+    return s==='1'?'Prepared':s==='2'?'Ready':'Pending';
+}
+
+function getHeaderColor(s){
+    return s==='1'?'bg-warning text-dark':s==='2'?'bg-info text-dark':'bg-secondary' ;
+}
+
+/* =========================
+   MODALS
+========================= */
+
+function showOrderModalPending(orderNo){
+    loadModal(
+        `${orderNo}`,
+        `getOrderDetails&order_no=${orderNo}`,
+        buildItemsTable
+    );
+}
+
+function showOrderModalForDelivery(orderNo){
+    loadModal(
+        `${orderNo}`,
+        `getDeliveryDetails&order_no=${orderNo}`,
+        buildDeliveryView
+
+    );
+}
+
+function showOrderModalCompleted(orderNo){
+    loadModal(
+        `${orderNo}`,
+        `getCompletedOrderDetails&order_no=${orderNo}`,
+        buildCompletedView
+    );
+}
+
+/* =========================
+   MODAL CORE
+========================= */
+
+function loadModal(title, actionQuery, renderer){
+    document.getElementById('modalOrderTitle').innerText = title;
+    document.getElementById('modalOrderBody').innerHTML = 'Loading...';
+
+    fetch(`/PaOrder/datafetcher/customers_data.php?action=${actionQuery}`)
+    .then(r=>r.json())
+    .then(res=>{
+        document.getElementById('modalOrderBody').innerHTML = renderer(res.data);
+        orderModal.show();
+    })
+    .catch(() => {
+        document.getElementById('modalOrderBody').innerHTML = '<p class="text-danger">Failed to load details.</p>';
+        orderModal.show();
+    });
+}
+
+/* =========================
+   MODAL VIEWS
+========================= */
+
+function buildItemsTable(items){
+    const rows = items.map(i=>`
+        <tr>
+            <td>${i.PRD_SKU_NAME}</td>
+            <td class="text-center">${i.QTY_PIECE}</td>
+            <td class="text-end">₱${Number(i.PRICE_PIECE * 1.12).toLocaleString('en-PH',{minimumFractionDigits:2})}</td>
+            <td class="text-end">₱${Number(i.ORDER_VALUE).toLocaleString('en-PH',{minimumFractionDigits:2})}</td>
+        </tr>`).join('');
+
+    return `
+        <table class="table table-sm table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Item</th><th class="text-center">Qty</th>
+                    <th class="text-end">Price</th><th class="text-end">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+        </table>`;
+}
+
+function buildDeliveryView(data){
+    return `
+        <p><strong>Rider:</strong> ${data[0].RIDER_NAME || 'N/A'}</p>
+        <p><strong>Vehicle:</strong> ${data[0].VEHICLE || 'N/A'}</p>
+        <p><strong>ETA:</strong> ${data[0].ETA || 'N/A'}</p>
+    `;
+    
+}
+
+function buildCompletedView(data){
+    return `
+        <p><strong>Delivered On:</strong> ${data[0].DATE_TO_DELIVER || 'N/A'}</p>
+        <p><strong>Agent:</strong> ${data[0].AGENT_ID || 'N/A'}</p>
+        <p><strong>Proof of Delivery:</strong></p>
+        ${data[0].POD_IMAGE ? `<img src="${data[0].POD_IMAGE}" class="img-fluid rounded mt-2" alt="Proof of Delivery">` : '<p class="text-muted">No image available</p>'}
+    `;
+}
+
+// Hide loading overlay on initial load (Home page is default)
+document.addEventListener('DOMContentLoaded', () => {
+    loadingOverlay.classList.add('hidden');
+});
+
 </script>
 
 </body>
