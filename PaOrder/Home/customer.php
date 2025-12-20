@@ -170,7 +170,7 @@ const AZURE_MAPS_KEY = 'AQIIJuE89StPCOYSpGilq6BW0J31v3cRjUvKyqlpC3xjuhUk10Q7JQQJ
 
 const orderModal = new bootstrap.Modal(document.getElementById('orderModal'));
 const loadingOverlay = document.getElementById('loadingOverlay');
-let currentMap = null; // To dispose previous map instance
+let currentMap = null;
 
 /* =========================
    PAGE NAV
@@ -312,10 +312,11 @@ function showOrderModalPending(orderNo){
 }
 
 function showOrderModalForDelivery(orderNo){
+    // Pass orderNo to renderer so we can fetch items separately
     loadModal(
         `${orderNo}`,
         `getDeliveryDetails&order_no=${orderNo}`,
-        buildDeliveryView
+        (data) => buildDeliveryView(data, orderNo)
     );
 }
 
@@ -336,18 +337,17 @@ function loadModal(title, actionQuery, renderer){
     document.getElementById('modalOrderBody').innerHTML = 'Loading...';
 
     fetch(`/PaOrder/datafetcher/customers_data.php?action=${actionQuery}`)
-    .then(r=>r.json())
-    .then(res=>{
+    .then(r => r.json())
+    .then(res => {
         if (!res.success || !res.data || res.data.length === 0) {
             document.getElementById('modalOrderBody').innerHTML = '<p class="text-danger">No details available.</p>';
             orderModal.show();
             return;
         }
 
-        const html = renderer(res.data);
+        const html = typeof renderer === 'function' ? renderer(res.data) : renderer(res.data);
         document.getElementById('modalOrderBody').innerHTML = html;
 
-        // Special handling for For Delivery map
         if (actionQuery.includes('getDeliveryDetails') && document.getElementById('deliveryMap')) {
             setTimeout(() => initDeliveryMap(res.data), 150);
         }
@@ -361,42 +361,79 @@ function loadModal(title, actionQuery, renderer){
 }
 
 /* =========================
+   ITEMS TABLE FOR DELIVERY (separate fetch)
+========================= */
+
+function buildItemsTableForDelivery(items){
+    if (!items || items.length === 0) {
+        return '<p class="text-muted mt-4">No items found for this order.</p>';
+    }
+
+    const rows = items.map(i => `
+        <tr>
+            <td>${i.DESCRIPTION || 'Unknown Item'}</td>
+            <td class="text-center">${i.ITEM_QTY_IT || 0}</td>
+            <td class="text-end">₱${Number(i.SALES_AMOUNT || 0).toLocaleString('en-PH', {minimumFractionDigits: 2})}</td>
+        </tr>
+    `).join('');
+
+    return `
+        <h5 class="mt-5 mb-3">Purchased Items</h5>
+        <div class="table-responsive">
+            <table class="table table-sm table-bordered table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>Item</th>
+                        <th class="text-center">Qty</th>
+                        <th class="text-end">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+            </table>
+        </div>
+    `;
+}
+
+/* =========================
    MODAL VIEWS
 ========================= */
 
 function buildItemsTable(items){
-    const rows = items.map(i=>`
-        <tr>
-            <td>${i.PRD_SKU_NAME}</td>
-            <td class="text-center">${i.QTY_PIECE}</td>
-            <td class="text-end">₱${Number(i.PRICE_PIECE * 1.12).toLocaleString('en-PH',{minimumFractionDigits:2})}</td>
-            <td class="text-end">₱${Number(i.ORDER_VALUE).toLocaleString('en-PH',{minimumFractionDigits:2})}</td>
-        </tr>`).join('');
-
-    return `
-        <table class="table table-sm table-bordered">
-            <thead class="table-light">
-                <tr>
-                    <th>Item</th><th class="text-center">Qty</th>
-                    <th class="text-end">Price</th><th class="text-end">Subtotal</th>
-                </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-        </table>`;
+    return buildItemsTableForDelivery(items);
 }
 
-function buildDeliveryView(data){
-    const d = data[0];
+function buildDeliveryView(deliveryData, orderNo){
+    const d = deliveryData[0];
 
-    // Always show the map container
     const mapHtml = `<div id="deliveryMap" style="width:100%; height:420px; margin-top:20px; border:2px solid #0078d4; border-radius:8px;"></div>`;
+    const itemsPlaceholder = `<div id="itemsTableContainer"><p class="text-center text-muted mt-4">Loading purchased items...</p></div>`;
+
+    // Fetch items separately using a new action
+    fetch(`/PaOrder/datafetcher/customers_data.php?action=getOrderItems&order_no=${orderNo}`)
+        .then(r => r.json())
+        .then(res => {
+            let itemsHtml = '';
+            if (res.success && res.data && Array.isArray(res.data) && res.data.length > 0) {
+                itemsHtml = buildItemsTableForDelivery(res.data);
+            } else {
+                itemsHtml = '<p class="text-muted mt-4">No items found for this order.</p>';
+            }
+            const container = document.getElementById('itemsTableContainer');
+            if (container) container.outerHTML = itemsHtml;
+        })
+        .catch(err => {
+            console.error('Failed to load items:', err);
+            const container = document.getElementById('itemsTableContainer');
+            if (container) container.outerHTML = '<p class="text-danger mt-4">Failed to load items.</p>';
+        });
 
     return `
         <p><strong>Agent:</strong> ${d.MAIN_AGENT || d.RIDER_NAME || 'Not assigned yet'}</p>
         <p><strong>Vehicle:</strong> ${d.VEHICLE || 'N/A'}</p>
-        <h5 class="mt-4 mb-3">Delivery Tracking</h5>
-        <p class="text-muted small">Planned route from warehouse to store. Live agent position will appear when assigned and en route.</p>
+        <h5 class="mt-4 mb-3">Delivery Live Update</h5>
+        <p class="text-muted small">Planned route from warehouse to your store and live Delivery Agent location.</p>
         ${mapHtml}
+        ${itemsPlaceholder}
     `;
 }
 
@@ -422,11 +459,9 @@ function initDeliveryMap(data) {
 
     const d = data[0];
 
-    // Coordinates: [longitude, latitude]
     const warehousePos = [parseFloat(d.warehouse_lng), parseFloat(d.warehouse_lat)];
     const storePos = [parseFloat(d.STORE_LONG), parseFloat(d.STORE_LAT)];
 
-    // Rider handling: only if valid coordinates exist
     let riderPos = null;
     let hasRider = false;
     if (d.rider_lng && d.rider_lat && !isNaN(parseFloat(d.rider_lng)) && !isNaN(parseFloat(d.rider_lat))) {
@@ -450,23 +485,20 @@ function initDeliveryMap(data) {
         const datasource = new atlas.source.DataSource();
         map.sources.add(datasource);
 
-        // Always add Warehouse and Store
         datasource.add(new atlas.data.Feature(new atlas.data.Point(warehousePos), { type: 'warehouse', title: 'Warehouse' }));
         datasource.add(new atlas.data.Feature(new atlas.data.Point(storePos), { type: 'store', title: 'Store' }));
 
-        // Add Rider only if available
         if (hasRider) {
             datasource.add(new atlas.data.Feature(new atlas.data.Point(riderPos), { type: 'rider', title: 'Delivery Agent' }));
         }
 
-        // Built-in reliable colored markers (confirmed valid names)
         map.layers.add(new atlas.layer.SymbolLayer(datasource, null, {
             iconOptions: {
                 image: ['match', ['get', 'type'],
                     'warehouse', 'pin-darkblue',
                     'rider', 'marker-red',
                     'store', 'pin-round-red',
-                    'marker-black' // fallback
+                    'marker-black'
                 ],
                 anchor: 'center',
                 allowOverlap: true
@@ -481,7 +513,6 @@ function initDeliveryMap(data) {
             }
         }));
 
-        // Always draw route: Warehouse → Store (lat,lng format for query)
         const warehouseQuery = `${d.warehouse_lat},${d.warehouse_lng}`;
         const storeQuery = `${d.STORE_LAT},${d.STORE_LONG}`;
         const query = `${warehouseQuery}:${storeQuery}`;
@@ -504,13 +535,10 @@ function initDeliveryMap(data) {
                         strokeWidth: 6,
                         strokeOpacity: 0.9
                     }));
-                } else {
-                    console.warn('No route data returned', routeData);
                 }
             })
             .catch(err => console.error('Route API error:', err));
 
-        // Fit bounds to all points (include rider if present)
         let points = [warehousePos, storePos];
         if (hasRider) points.push(riderPos);
 
@@ -522,7 +550,7 @@ function initDeliveryMap(data) {
     });
 }
 
-// Clean up map when modal closed
+// Clean up map on modal close
 document.querySelectorAll('#orderModal .btn-close, #orderModal .btn-secondary').forEach(btn => {
     btn.addEventListener('click', () => {
         if (currentMap) {
@@ -532,7 +560,6 @@ document.querySelectorAll('#orderModal .btn-close, #orderModal .btn-secondary').
     });
 });
 
-// Hide loading overlay on initial load
 document.addEventListener('DOMContentLoaded', () => {
     loadingOverlay.classList.add('hidden');
 });
