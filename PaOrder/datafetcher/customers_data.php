@@ -19,21 +19,14 @@ if ($action === 'viewmyorders') {
     
  SELECT 
 
-      [CUSTOMER_NAME]
-      ,[STORE_CODE]
-      ,[ORDER_DATE] AS order_date
-      ,[ORDER_ID] as order_no
-      ,SUM(ORDER_VALUE) AS TOTAL_AMOUNT
+      [ORDER_DATE] AS order_date
+      ,[SO_NUMBER] as order_no
+      ,TOTAL_AMOUNT
       ,[IS_PLAN] AS STATUS
 
-  FROM [dbo].[PRFR_SO_UPLOAD] WHERE [STORE_CODE] = :storeid AND IS_PLAN IN ('1','0')
+  FROM [dbo].[Dash_SO_Plan_Batch_Details] WHERE [CUSTOMER_ID] = :storeid AND IS_PLAN IN ('1','0')
 
-  GROUP BY  [CUSTOMER_NAME]
-      ,[STORE_CODE]
-      ,[ORDER_DATE]
-      ,[ORDER_ID]
-      ,[IS_PLAN]
-
+    ORDER BY ORDER_DATE DESC
     ";
 
     $stmt = $conn->prepare($sql);
@@ -174,14 +167,65 @@ if ($action === 'viewmyorders') {
 
     // SQL with proper NULL/empty string handling
     $sql = "
-
-    SELECT 
-
-    NAME, DESCRIPTION  AS PRD_SKU_NAME, ITEM_QTY AS QTY_PIECE,SALES_AMOUNT AS ORDER_VALUE
-        FROM PRFR_Invoice_Detailed
+            WITH LastAgentLocation AS (
+            SELECT
+                ATS.AGENT_ID,
+                CAST(ATS.DELIVERY_DATE AS DATE) AS DELIVERY_DATE,
+                ATS.LAT_CAPTURED,
+                ATS.LONG_CAPTURED,
+                ROW_NUMBER() OVER (
+                    PARTITION BY ATS.AGENT_ID, CAST(ATS.DELIVERY_DATE AS DATE)
+                    ORDER BY ATS.TIME_STAMP DESC
+                ) AS RN
+            FROM Dash_Agent_Time_Stamp ATS
+        )
         
-        WHERE DOCUMENT_NUMBER = :orderno
-    ";
+        SELECT TOP 1
+              DPBD.SITE_ID,
+              DPBD.INVOICE_NUMBER,
+              DPBD.STATUS,
+              DPBD.DATE_TO_DELIVER,
+              DPBD.STORE_LAT,
+              DPBD.STORE_LONG,
+              DPBD.CUSTOMER_ID,
+              DPBD.CUSTOMER_NAME,
+                
+              DPBD.AGENT_ID                AS MAIN_AGENT,
+              DA.SUB_DA                    AS SUB_AGENT,
+              DA.AGENT_NAME                AS RIDER_NAME,
+        
+              DPBD.VEHICLE_IDS             AS VEHICLE,
+              DPBD.ORDER_DATE,
+              DPBD.AGENT_DELIVERED,
+              DPBD.DATETIME_PROCESSED,
+        
+              DS.WAREHOUSE_LAT             AS warehouse_lat,
+              DS.WAREHOUSE_LONG            AS warehouse_lng,
+        
+              -- LAST GPS FROM SUB_DA
+              LAL.LAT_CAPTURED             AS rider_lat,
+              LAL.LONG_CAPTURED            AS rider_lng
+        
+        FROM Dash_Plan_Batch_Details DPBD
+        
+        -- MAIN AGENT → AGENTS TABLE
+        LEFT JOIN Dash_Agents DA
+            ON DA.USERNAME = DPBD.AGENT_ID
+        
+        -- SITE
+        LEFT JOIN Dash_Sites DS
+            ON DS.SITE_ID = DPBD.SITE_ID
+        
+        -- GPS USING SUB_DA
+        LEFT JOIN LastAgentLocation LAL
+            ON LAL.AGENT_ID = DA.SUB_DA
+           AND LAL.DELIVERY_DATE = CAST(DPBD.DATE_TO_DELIVER AS DATE)
+           AND LAL.RN = 1
+        
+        WHERE DPBD.INVOICE_NUMBER = :orderno;
+        
+
+            ";
 
     $stmt = $conn->prepare($sql);
     $stmt->execute([

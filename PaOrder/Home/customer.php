@@ -16,6 +16,11 @@ if (!isset($_SESSION['Name_of_user']) || empty($_SESSION['Name_of_user'])) {
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <!-- Font Awesome for icons -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<!-- Azure Maps Web SDK -->
+<link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/3/atlas.min.css" type="text/css">
+<script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/3/atlas.min.js"></script>
+
 <style>
     body { background-color: #f8f9fa; padding-top: 100px; }
     .navbar { background-color: #343a40; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
@@ -160,8 +165,12 @@ if (!isset($_SESSION['Name_of_user']) || empty($_SESSION['Name_of_user'])) {
 <!-- Bootstrap & Custom JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+// === CONFIGURATION ===
+const AZURE_MAPS_KEY = 'AQIIJuE89StPCOYSpGilq6BW0J31v3cRjUvKyqlpC3xjuhUk10Q7JQQJ99BKACYeBjFGwMfqAAAgAZMP9MwY';
+
 const orderModal = new bootstrap.Modal(document.getElementById('orderModal'));
 const loadingOverlay = document.getElementById('loadingOverlay');
+let currentMap = null; // To dispose previous map instance
 
 /* =========================
    PAGE NAV
@@ -173,21 +182,17 @@ function showPage(id, e){
     document.getElementById(id).classList.add('active');
 
     if(id === 'myorders'){
-        // Show loading overlay
         loadingOverlay.classList.remove('hidden');
 
-        // Load all tabs in parallel
         Promise.all([
             loadPendingOrders(),
             loadForDeliveryOrders(),
             loadCompletedOrders()
         ]).then(() => {
-            // Hide loading after all data is loaded
             setTimeout(() => {
                 loadingOverlay.classList.add('hidden');
             }, 300);
         }).catch(() => {
-            // Hide even if error
             loadingOverlay.classList.add('hidden');
         });
     } else {
@@ -255,7 +260,7 @@ function createPendingCard(o){
 }
 
 function createForDeliveryCard(o){
-    return createCard(o, 'For Delivery', 'bg-warning',
+    return createCard(o, 'For Delivery', 'bg-primary',
         () => showOrderModalForDelivery(o.order_no));
 }
 
@@ -311,7 +316,6 @@ function showOrderModalForDelivery(orderNo){
         `${orderNo}`,
         `getDeliveryDetails&order_no=${orderNo}`,
         buildDeliveryView
-
     );
 }
 
@@ -334,7 +338,20 @@ function loadModal(title, actionQuery, renderer){
     fetch(`/PaOrder/datafetcher/customers_data.php?action=${actionQuery}`)
     .then(r=>r.json())
     .then(res=>{
-        document.getElementById('modalOrderBody').innerHTML = renderer(res.data);
+        if (!res.success || !res.data || res.data.length === 0) {
+            document.getElementById('modalOrderBody').innerHTML = '<p class="text-danger">No details available.</p>';
+            orderModal.show();
+            return;
+        }
+
+        const html = renderer(res.data);
+        document.getElementById('modalOrderBody').innerHTML = html;
+
+        // Special handling for For Delivery map
+        if (actionQuery.includes('getDeliveryDetails') && document.getElementById('deliveryMap')) {
+            setTimeout(() => initDeliveryMap(res.data), 150);
+        }
+
         orderModal.show();
     })
     .catch(() => {
@@ -369,24 +386,153 @@ function buildItemsTable(items){
 }
 
 function buildDeliveryView(data){
+    const d = data[0];
+
+    // Always show the map container
+    const mapHtml = `<div id="deliveryMap" style="width:100%; height:420px; margin-top:20px; border:2px solid #0078d4; border-radius:8px;"></div>`;
+
     return `
-        <p><strong>Rider:</strong> ${data[0].RIDER_NAME || 'N/A'}</p>
-        <p><strong>Vehicle:</strong> ${data[0].VEHICLE || 'N/A'}</p>
-        <p><strong>ETA:</strong> ${data[0].ETA || 'N/A'}</p>
+        <p><strong>Agent:</strong> ${d.MAIN_AGENT || d.RIDER_NAME || 'Not assigned yet'}</p>
+        <p><strong>Vehicle:</strong> ${d.VEHICLE || 'N/A'}</p>
+        <h5 class="mt-4 mb-3">Delivery Tracking</h5>
+        <p class="text-muted small">Planned route from warehouse to store. Live agent position will appear when assigned and en route.</p>
+        ${mapHtml}
     `;
-    
 }
 
 function buildCompletedView(data){
+    const d = data[0];
     return `
-        <p><strong>Delivered On:</strong> ${data[0].DATE_TO_DELIVER || 'N/A'}</p>
-        <p><strong>Agent:</strong> ${data[0].AGENT_ID || 'N/A'}</p>
+        <p><strong>Delivered On:</strong> ${d.DATE_TO_DELIVER || 'N/A'}</p>
+        <p><strong>Agent:</strong> ${d.AGENT_ID || 'N/A'}</p>
         <p><strong>Proof of Delivery:</strong></p>
-        ${data[0].POD_IMAGE ? `<img src="${data[0].POD_IMAGE}" class="img-fluid rounded mt-2" alt="Proof of Delivery">` : '<p class="text-muted">No image available</p>'}
+        ${d.POD_IMAGE ? `<img src="${d.POD_IMAGE}" class="img-fluid rounded mt-2" alt="Proof of Delivery">` : '<p class="text-muted">No image available</p>'}
     `;
 }
 
-// Hide loading overlay on initial load (Home page is default)
+/* =========================
+   AZURE MAP INITIALIZATION
+========================= */
+
+function initDeliveryMap(data) {
+    if (currentMap) {
+        currentMap.dispose();
+        currentMap = null;
+    }
+
+    const d = data[0];
+
+    // Coordinates: [longitude, latitude]
+    const warehousePos = [parseFloat(d.warehouse_lng), parseFloat(d.warehouse_lat)];
+    const storePos = [parseFloat(d.STORE_LONG), parseFloat(d.STORE_LAT)];
+
+    // Rider handling: only if valid coordinates exist
+    let riderPos = null;
+    let hasRider = false;
+    if (d.rider_lng && d.rider_lat && !isNaN(parseFloat(d.rider_lng)) && !isNaN(parseFloat(d.rider_lat))) {
+        riderPos = [parseFloat(d.rider_lng), parseFloat(d.rider_lat)];
+        hasRider = true;
+    }
+
+    const map = new atlas.Map('deliveryMap', {
+        center: hasRider ? riderPos : warehousePos,
+        zoom: 12,
+        view: 'Auto',
+        authOptions: {
+            authType: 'subscriptionKey',
+            subscriptionKey: AZURE_MAPS_KEY
+        }
+    });
+
+    currentMap = map;
+
+    map.events.add('ready', () => {
+        const datasource = new atlas.source.DataSource();
+        map.sources.add(datasource);
+
+        // Always add Warehouse and Store
+        datasource.add(new atlas.data.Feature(new atlas.data.Point(warehousePos), { type: 'warehouse', title: 'Warehouse' }));
+        datasource.add(new atlas.data.Feature(new atlas.data.Point(storePos), { type: 'store', title: 'Store' }));
+
+        // Add Rider only if available
+        if (hasRider) {
+            datasource.add(new atlas.data.Feature(new atlas.data.Point(riderPos), { type: 'rider', title: 'Delivery Agent' }));
+        }
+
+        // Built-in reliable colored markers (confirmed valid names)
+        map.layers.add(new atlas.layer.SymbolLayer(datasource, null, {
+            iconOptions: {
+                image: ['match', ['get', 'type'],
+                    'warehouse', 'pin-darkblue',
+                    'rider', 'marker-red',
+                    'store', 'pin-round-red',
+                    'marker-black' // fallback
+                ],
+                anchor: 'center',
+                allowOverlap: true
+            },
+            textOptions: {
+                textField: ['get', 'title'],
+                offset: [0, 2.2],
+                color: '#FFFFFF',
+                haloColor: '#000000',
+                haloWidth: 2,
+                size: 12
+            }
+        }));
+
+        // Always draw route: Warehouse → Store (lat,lng format for query)
+        const warehouseQuery = `${d.warehouse_lat},${d.warehouse_lng}`;
+        const storeQuery = `${d.STORE_LAT},${d.STORE_LONG}`;
+        const query = `${warehouseQuery}:${storeQuery}`;
+
+        const routeURL = `https://atlas.microsoft.com/route/directions/json?api-version=1.0&subscription-key=${AZURE_MAPS_KEY}&query=${query}`;
+
+        fetch(routeURL)
+            .then(r => r.json())
+            .then(routeData => {
+                if (routeData.routes && routeData.routes.length > 0) {
+                    const legs = routeData.routes[0].legs;
+                    legs.forEach(leg => {
+                        const coords = leg.points.map(p => [p.longitude, p.latitude]);
+                        datasource.add(new atlas.data.Feature(new atlas.data.LineString(coords), {}));
+                    });
+
+                    map.layers.add(new atlas.layer.LineLayer(datasource, null, {
+                        filter: ['==', ['geometry-type'], 'LineString'],
+                        strokeColor: '#0078d4',
+                        strokeWidth: 6,
+                        strokeOpacity: 0.9
+                    }));
+                } else {
+                    console.warn('No route data returned', routeData);
+                }
+            })
+            .catch(err => console.error('Route API error:', err));
+
+        // Fit bounds to all points (include rider if present)
+        let points = [warehousePos, storePos];
+        if (hasRider) points.push(riderPos);
+
+        const bounds = atlas.data.BoundingBox.fromPoints(points);
+        map.setCamera({
+            bounds: bounds,
+            padding: 80
+        });
+    });
+}
+
+// Clean up map when modal closed
+document.querySelectorAll('#orderModal .btn-close, #orderModal .btn-secondary').forEach(btn => {
+    btn.addEventListener('click', () => {
+        if (currentMap) {
+            currentMap.dispose();
+            currentMap = null;
+        }
+    });
+});
+
+// Hide loading overlay on initial load
 document.addEventListener('DOMContentLoaded', () => {
     loadingOverlay.classList.add('hidden');
 });
