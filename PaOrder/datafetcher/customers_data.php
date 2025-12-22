@@ -243,10 +243,40 @@ if ($action === 'viewmyorders') {
     ]);
     exit;
 
-
     // for delivery skus
 
 } else if ($action === 'getOrderItems') {
+    $orderno = $_GET['order_no'] ?? '';
+
+    // SQL with proper NULL/empty string handling
+    $sql = "
+            SELECT DESCRIPTION,ITEM_QTY_IT, SALES_AMOUNT
+        
+            FROM PRFR_Invoice_Detailed WHERE DOCUMENT_NUMBER = :orderno
+
+            ";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([
+        ':orderno' => $orderno
+    ]);
+
+    $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Optional: ensure UTF-8 encoding to prevent JSON issues
+ 
+
+    echo json_encode([
+        'success' => true,
+        'data' => $orders
+    ]);
+    exit;
+
+
+
+    /// completed skus 
+
+    } else if ($action === 'getOrderItemsCompleted') {
     $orderno = $_GET['order_no'] ?? '';
 
     // SQL with proper NULL/empty string handling

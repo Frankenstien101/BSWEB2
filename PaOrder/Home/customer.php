@@ -307,12 +307,11 @@ function showOrderModalPending(orderNo){
     loadModal(
         `${orderNo}`,
         `getOrderDetails&order_no=${orderNo}`,
-        buildItemsTable
+        buildItemsTableOrder
     );
 }
 
 function showOrderModalForDelivery(orderNo){
-    // Pass orderNo to renderer so we can fetch items separately
     loadModal(
         `${orderNo}`,
         `getDeliveryDetails&order_no=${orderNo}`,
@@ -324,7 +323,7 @@ function showOrderModalCompleted(orderNo){
     loadModal(
         `${orderNo}`,
         `getCompletedOrderDetails&order_no=${orderNo}`,
-        buildCompletedView
+        (data) => buildCompletedView(data, orderNo)
     );
 }
 
@@ -361,8 +360,39 @@ function loadModal(title, actionQuery, renderer){
 }
 
 /* =========================
-   ITEMS TABLE FOR DELIVERY (separate fetch)
+   ITEMS TABLE (shared for Delivery and Completed)
 ========================= */
+
+function buildItemsTableOrder(items){
+    if (!items || items.length === 0) {
+        return '<p class="text-muted mt-4">No items found for this order.</p>';
+    }
+
+    const rows = items.map(i => `
+        <tr>
+            <td>${i.PRD_SKU_NAME || 'Unknown Item1'}</td>
+            <td class="text-center">${i.QTY_PIECE || 0}</td>
+            <td class="text-end">₱${Number(i.ORDER_VALUE || 0).toLocaleString('en-PH', {minimumFractionDigits: 2})}</td>
+        </tr>
+    `).join('');
+
+    return `
+        <h5 class="mt-5 mb-3">Purchased Items</h5>
+        <div class="table-responsive">
+            <table class="table table-sm table-bordered table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>Item</th>
+                        <th class="text-center">Qty</th>
+                        <th class="text-end">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+            </table>
+        </div>
+    `;
+}
+
 
 function buildItemsTableForDelivery(items){
     if (!items || items.length === 0) {
@@ -371,7 +401,7 @@ function buildItemsTableForDelivery(items){
 
     const rows = items.map(i => `
         <tr>
-            <td>${i.DESCRIPTION || 'Unknown Item'}</td>
+            <td>${i.DESCRIPTION || 'Unknown Item1'}</td>
             <td class="text-center">${i.ITEM_QTY_IT || 0}</td>
             <td class="text-end">₱${Number(i.SALES_AMOUNT || 0).toLocaleString('en-PH', {minimumFractionDigits: 2})}</td>
         </tr>
@@ -408,7 +438,6 @@ function buildDeliveryView(deliveryData, orderNo){
     const mapHtml = `<div id="deliveryMap" style="width:100%; height:420px; margin-top:20px; border:2px solid #0078d4; border-radius:8px;"></div>`;
     const itemsPlaceholder = `<div id="itemsTableContainer"><p class="text-center text-muted mt-4">Loading purchased items...</p></div>`;
 
-    // Fetch items separately using a new action
     fetch(`/PaOrder/datafetcher/customers_data.php?action=getOrderItems&order_no=${orderNo}`)
         .then(r => r.json())
         .then(res => {
@@ -421,29 +450,52 @@ function buildDeliveryView(deliveryData, orderNo){
             const container = document.getElementById('itemsTableContainer');
             if (container) container.outerHTML = itemsHtml;
         })
-        .catch(err => {
-            console.error('Failed to load items:', err);
+        .catch(() => {
             const container = document.getElementById('itemsTableContainer');
             if (container) container.outerHTML = '<p class="text-danger mt-4">Failed to load items.</p>';
         });
 
     return `
         <p><strong>Agent:</strong> ${d.MAIN_AGENT || d.RIDER_NAME || 'Not assigned yet'}</p>
-        <p><strong>Vehicle:</strong> ${d.VEHICLE || 'N/A'}</p>
-        <h5 class="mt-4 mb-3">Delivery Live Update</h5>
         <p class="text-muted small">Planned route from warehouse to your store and live Delivery Agent location.</p>
         ${mapHtml}
         ${itemsPlaceholder}
     `;
 }
 
-function buildCompletedView(data){
-    const d = data[0];
+function buildCompletedView(completedData, orderNo){
+    const d = completedData[0];
+
+    const podHtml = d.POD_IMAGE 
+        ? `<img src="${d.POD_IMAGE}" class="img-fluid rounded mt-2 mb-4" alt="Proof of Delivery">`
+        : '<p class="text-muted mt-3 mb-4">No image available</p>';
+
+    const itemsPlaceholder = `<div id="completedItemsTableContainer"><p class="text-center text-muted mt-4">Loading purchased items...</p></div>`;
+
+    // Fetch items separately for completed orders
+    fetch(`/PaOrder/datafetcher/customers_data.php?action=getOrderItems&order_no=${orderNo}`)
+        .then(r => r.json())
+        .then(res => {
+            let itemsHtml = '';
+            if (res.success && res.data && Array.isArray(res.data) && res.data.length > 0) {
+                itemsHtml = buildItemsTableForDelivery(res.data);
+            } else {
+                itemsHtml = '<p class="text-muted mt-4">No items found for this order.</p>';
+            }
+            const container = document.getElementById('completedItemsTableContainer');
+            if (container) container.outerHTML = itemsHtml;
+        })
+        .catch(() => {
+            const container = document.getElementById('completedItemsTableContainer');
+            if (container) container.outerHTML = '<p class="text-danger mt-4">Failed to load items.</p>';
+        });
+
     return `
         <p><strong>Delivered On:</strong> ${d.DATE_TO_DELIVER || 'N/A'}</p>
         <p><strong>Agent:</strong> ${d.AGENT_ID || 'N/A'}</p>
-        <p><strong>Proof of Delivery:</strong></p>
-        ${d.POD_IMAGE ? `<img src="${d.POD_IMAGE}" class="img-fluid rounded mt-2" alt="Proof of Delivery">` : '<p class="text-muted">No image available</p>'}
+        ${itemsPlaceholder}
+    <h5 class="mt-1 mb-">Proof of Delivery</h5>
+          ${podHtml}
     `;
 }
 
