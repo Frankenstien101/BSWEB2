@@ -9,6 +9,7 @@ if (!isset($_SESSION['Name_of_user']) || empty($_SESSION['Name_of_user'])) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="icon" type="image/x-icon" href="Services/img/orderkoico.ico">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Order Ko</title>
@@ -355,20 +356,19 @@ async function confirmOrder() {
     confirmBtn.disabled = true;
     confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
 
-    const orderData = {
-    store_id: "<?= $_SESSION['store_id'] ?? '' ?>",
-    principal: "<?= $_SESSION['principal'] ?? '' ?>",
-    user_name: "<?= $_SESSION['Name_of_user'] ?? '' ?>",
+ const orderData = {
+    store_id: <?= json_encode($_SESSION['store_id'] ?? '') ?>,
+    principal: <?= json_encode($_SESSION['principal'] ?? '') ?>,
+    user_name: <?= json_encode($_SESSION['Name_of_user'] ?? '') ?>,
     items: cart.map(item => ({
         sku: item.sku,
-        barcode: item.barcode,        
+        barcode: item.barcode,
         description: item.description,
         price: item.price,
         qty: item.qty
     })),
     total_amount: total
-    };
-
+};
     try {
         const response = await fetch('/PaOrder/datafetcher/customers_data.php?action=submitBooking', {
             method: 'POST',

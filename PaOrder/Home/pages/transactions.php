@@ -71,14 +71,14 @@
       <div class="col-auto px-2 first-card">
         <a href="#" class="card-link">
           <div class="card-custom">
-            <img src="\Dash\Home\img\transactions\upload.png" class="card-icon" alt="Upload Orders Icon"/>
-            <div class="card-title">UPLOAD ORDERS</div>
-            <div class="card-text">Upload your orders quickly and easily.</div>
+            <img src="\PaOrder\Home\img\transactions\upload.png" class="card-icon" alt="Upload Orders Icon"/>
+            <div class="card-title">CREATE ORDER</div>
+            <div class="card-text">Create your orders quickly and easily.</div>
           </div>
         </a>
       </div>
       <div class="col-auto px-2">
-        <a href="#" class="card-link">
+        <a href="portal.php?page=orderview" class="card-link">
           <div class="card-custom">
             <img src="\Dash\Home\img\transactions\vieworders.jpg" class="card-icon" alt="Order View Icon"/>
             <div class="card-title">ORDER VIEW</div>
@@ -87,23 +87,15 @@
         </a>
       </div>
       <div class="col-auto px-2">
-        <a href="#" class="card-link">
+        <a href="" class="card-link">
           <div class="card-custom">
             <img src="\Dash\Home\img\transactions\orderpreps.jpg" class="card-icon" alt="Order Preparation Icon"/>
-            <div class="card-title">ORDER PREPARATION</div>
-            <div class="card-text">Prepare customer orders and create truck size configurations efficiently.</div>
+            <div class="card-title">ORDER FULFILLMENT</div>
+            <div class="card-text">Prepare customer orders and create truck size configuration.</div>
           </div>
         </a>
       </div>
-      <div class="col-auto px-2">
-        <a href="#" class="card-link">
-          <div class="card-custom">
-            <img src="\Dash\Home\img\transactions\retry.jpg" class="card-icon" alt="Delivery Retry Icon"/>
-            <div class="card-title">DELIVERY RETRY</div>
-            <div class="card-text">Attempt to redeliver the order after a failed delivery attempt.</div>
-          </div>
-        </a>
-      </div>
+      
     </div>
   </div>
 

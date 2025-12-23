@@ -12,7 +12,7 @@ if (isset($_POST['login'])) {
     try {
         // Prepare and execute query
         $stmt = $conn->prepare("
-            SELECT LINEID,USERNAME,PASSWORD,ROLE,NAME,COMPANY, PRINCIPAL, SITE_ID
+            SELECT LINEID,USERNAME,PASSWORD,ROLE,NAME,COMPANY, PRINCIPAL, SITE_ID , SITE_NAME, USER_LEVEL
              FROM OK_Users
              WHERE STATUS = 'ACTIVE' AND USERNAME = :username
         ");
@@ -34,6 +34,9 @@ if (isset($_POST['login'])) {
                 $_SESSION['SITE_ID'] = $user['SITE_ID'];
                 $_SESSION['store_id'] = $user['USERNAME'];
                 $_SESSION['principal'] = $user['PRINCIPAL'];
+                 $_SESSION['SITE_NAME'] = $user['SITE_NAME'];
+                  $_SESSION['USER_LEVEL'] = $user['USER_LEVEL'];
+
 
                 // Redirect to homepage
 
@@ -67,7 +70,7 @@ if (isset($_POST['login'])) {
 <!doctype html>
 <html lang="en">
   <head>
-    <link rel="icon" type="image/x-icon" href="Services/img/tbcICO.ico">
+    <link rel="icon" type="image/x-icon" href="Services/img/orderkoico.ico">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Login | Order Ko</title>

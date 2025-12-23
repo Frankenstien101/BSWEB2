@@ -201,8 +201,6 @@ try {
     echo json_encode(['success' => true, 'data' => $products]);
     exit;
 
-
-
 } else if ($action === 'submitBooking') {
     $input = json_decode(file_get_contents('php://input'), true);
 

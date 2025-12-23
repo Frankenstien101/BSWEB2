@@ -11,7 +11,7 @@ include '../../DB/dbcon.php';
 <!doctype html>
 <html lang="en">
 <head>
-         <link rel="icon" type="image/x-icon" href="\Services\img\dash.png">
+         <link rel="icon" type="image/x-icon" href="\Services\img\orderkoico.ico">
 
   <!-- Required meta tags -->
   <meta charset="utf-8">
@@ -26,14 +26,14 @@ include '../../DB/dbcon.php';
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-  <title>Delivery Dash</title>
+  <title>Order Ko</title>
 </head>
 <body class="hold-transition sidebar-mini">
 
 <div class="wrapper">
 
   <!-- Navbar -->
-  <nav class="main-header navbar navbar-expand navbar-dark bg-dark-orange">
+  <nav class="main-header navbar navbar-expand navbar-dark bg-dark">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
       <li class="nav-item">
@@ -42,7 +42,7 @@ include '../../DB/dbcon.php';
         </a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="home.php?page=dashboard" class="nav-link">Home</a>
+        <a href="portal.php?page=dashboard" class="nav-link">Home</a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
         <a href="#" class="nav-link">Contact</a>
@@ -67,7 +67,7 @@ include '../../DB/dbcon.php';
   <li class="nav-item dropdown">
     
     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-<?= $_SESSION['SITE_NAME'] ?? 'NO_SITE' ?> &nbsp;
+<?= $_SESSION['SITE_NAME'] ?? 'NO SITE' ?> &nbsp;
 
     <i class="far fa-bell"></i>
       <img src="/MainImg/icons8-user-50.png" alt="User Icon" style="width:20px; height:20px; margin-left:5px;">
@@ -96,13 +96,13 @@ include '../../DB/dbcon.php';
                 USER_ID,
                 SITE_ID,
                 SITE_NAME
-            FROM Dash_User_Site  
+            FROM OK_User_Site  
             WHERE USER_ID = '" . $_SESSION['UserID'] . "' 
             GROUP BY USER_ID, SITE_ID, SITE_NAME";
             $query_result = $conn->query($query);
 
             foreach ($query_result as $data) {
-                echo '<a class="dropdown-item" href="home.php?page=dashboard'
+                echo '<a class="dropdown-item" href="portal.php?page=dashboard'
                    . '&site=' . urlencode($data['SITE_NAME'])
                    . '&siteid=' . urlencode($data['SITE_ID']) . '">'
                    . htmlspecialchars($data['SITE_NAME']) . '</a>';
@@ -144,7 +144,7 @@ include '../../DB/dbcon.php';
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/x-icon" href="MainImg\bscr.ico">
+  <link rel="icon" type="image/x-icon" href="MainImg\paordernew.png">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
@@ -154,7 +154,7 @@ include '../../DB/dbcon.php';
   <style>
     /* Custom gradient for sidebar */
     .sidebar-dark-primary {
-      background: linear-gradient(135deg, #020146ff 0%, #3b05cfff 100%) !important;
+      background: linear-gradient(135deg, #050124ff 0%, #1b0066ff 100%) !important;
     }
     
     /* Improve text visibility on gradient */
@@ -177,8 +177,7 @@ include '../../DB/dbcon.php';
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="#" class="brand-link text-center">
-      <img src="/Services/img/dash.png" alt="Logo" style="width: 100px; height: 100px;">
-      <span class="brand-text font-weight-bold d-block">DELIVERY DASH</span>
+      <img src="/MainImg/paordernew.png" alt="Logo" style="width: 220px; height: 100px;">
     </a>
 
     <!-- Sidebar -->
@@ -194,25 +193,25 @@ include '../../DB/dbcon.php';
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
           <li class="nav-item">
-            <a href="home.php?page=dashboard" class="nav-link d-flex align-items-center">
+            <a href="portal.php?page=dashboard" class="nav-link d-flex align-items-center">
               <img src="\Dash\Home\img\analysis.png" style=" width: 30px; height: 30px; margin-right: 10px;">
               <p class="mb-0">Dashboard</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="home.php?page=transactions" class="nav-link d-flex align-items-center">
+            <a href="portal.php?page=transactions" class="nav-link d-flex align-items-center">
               <img src="\Dash\Home\img\transaction.png" style="width: 30px; height: 35px; margin-right: 10px;">
               <p class="mb-0">Transactions</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="home.php?page=reports2" class="nav-link d-flex align-items-center">
+            <a href="portal.php?page=reports2" class="nav-link d-flex align-items-center">
               <img src="\Dash\Home\img\documents.png" style="width: 30px; height: 30px; margin-right: 10px;">
               <p class="mb-0">Reports</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="home.php?page=settings" class="nav-link d-flex align-items-center">
+            <a href="portal.php?page=settings" class="nav-link d-flex align-items-center">
               <img src="\Dash\Home\img\settings.png" style="width: 30px; height: 30px; margin-right: 10px;">
               <p class="mb-0">Settings</p>
             </a>
@@ -226,12 +225,12 @@ include '../../DB/dbcon.php';
   <div class="content-wrapper p-4">
     <?php
     // Your PHP content logic remains unchanged
-    $role = $_SESSION['Role'] ?? '';
+    $role = $_SESSION['USER_LEVEL'] ?? '';
     
     if ($role === 'ADMIN') {
         // Admin pages logic
         $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
-        $allowedPages = ['dashboard', 'transactions', 'reports2' , 'settings'];
+        $allowedPages = ['dashboard', 'transactions', 'reports2' , 'settings' , 'orderview'];
         if (in_array($page, $allowedPages)) {
             include "pages/{$page}.php";
         } else {
