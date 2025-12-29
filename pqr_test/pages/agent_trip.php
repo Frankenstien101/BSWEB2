@@ -319,8 +319,9 @@ $BATCH_ID = $_GET['BATCH_ID'] ?? '';
 <div class="container-fluid">
     <div class="header-section">
         <button class="back-btn" onclick="history.back()">⬅ Back</button>
-        <div class="info-box" id="driverInfo">Loading...</div>
+        <div class="info-box" id="driverInfo">Loading...</div>         
         <div class="time-display" id="txt_time">Loading...</div>
+        
     </div>
 
     <div class="map-container">
