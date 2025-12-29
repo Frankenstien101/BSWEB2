@@ -6,43 +6,54 @@ include 'DB/dbcon.php';
 $error = "";
 
 if (isset($_POST['login'])) {
-    // ... [keep your existing PHP code unchanged] ...
-
-    $username = $_POST['username'] ?? '';
+    $username = trim($_POST['username'] ?? ''); // Trim whitespace
     $password = $_POST['password'] ?? '';
 
     try {
-        // Fetch user with matching username
-        $stmt = $conn->prepare("  
-                          SELECT Dash_Users.LINEID, [USERNAME]
-                    ,[PASSWORD]
-                    ,[NAME_OF_USER]
-                    ,[COMPANY]
-                    ,[STATUS]
-                    ,[ROLE]
-              	  ,COMPANY_NAME
-              	  ,ADDRESS
-                FROM [dbo].[Dash_Users]
-
-              LEFT JOIN Dash_Company
-
-              ON Dash_Company.COMPANY_ID = Dash_Users.COMPANY
-                 WHERE USERNAME = :username");
-        $stmt->bindParam(':username', $username);
+        // Prepare and execute query
+        $stmt = $conn->prepare("
+            SELECT LINEID,USERNAME,PASSWORD,ROLE,NAME,COMPANY, PRINCIPAL, SITE_ID , SITE_NAME, USER_LEVEL
+             FROM OK_Users
+             WHERE STATUS = 'ACTIVE' AND USERNAME = :username
+        ");
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR); // Bind username as a string
         $stmt->execute();
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user) {
-            if ($user['PASSWORD'] === $password) {
-                $_SESSION['USERNAME'] = $username;
-                $_SESSION['Name_of_user'] = $user['NAME_OF_USER'];
-                $_SESSION['Company_Name'] = $user['COMPANY_NAME'];
-                $_SESSION['UserID'] = $user['LINEID'];
-                $_SESSION['Company_ID'] = $user['COMPANY']; 
-                $_SESSION['Role'] = $user['ROLE']; 
 
-                header("Location: Dash/Home/home.php");
+            // Compare passwords (case-sensitive)
+            if ($user['PASSWORD'] === $password) {
+                // Password matches
+                $_SESSION['username'] = $username;
+                $_SESSION['Name_of_user'] = $user['NAME'];
+                $_SESSION['Company_Name'] = $user['COMPANY'];
+                $_SESSION['UserID'] = $user['LINEID'];
+                $_SESSION['Company_ID'] = $user['COMPANY'];
+                $_SESSION['Role'] = $user['ROLE'];
+                $_SESSION['SITE_ID'] = $user['SITE_ID'];
+                $_SESSION['store_id'] = $user['USERNAME'];
+                $_SESSION['principal'] = $user['PRINCIPAL'];
+                 $_SESSION['SITE_NAME'] = $user['SITE_NAME'];
+                  $_SESSION['USER_LEVEL'] = $user['USER_LEVEL'];
+
+
+                // Redirect to homepage
+
+                if ($user['ROLE'] === 'PORTAL') {
+                  
+                header("Location: PaOrder/Home/portal.php");
                 exit();
+
+                } else {
+                
+                       header("Location: PaOrder/Home/customer.php");
+                exit();
+
+                }
+
+
+
             } else {
                 $error = "Invalid password.";
             }
@@ -50,32 +61,30 @@ if (isset($_POST['login'])) {
             $error = "User not found.";
         }
     } catch (PDOException $e) {
-        $error = "Database error: " . $e->getMessage();
+        $error = "Database error: " . htmlspecialchars($e->getMessage());
     }
-
 }
+
 ?>
 
 <!doctype html>
 <html lang="en">
   <head>
-     <link rel="icon" type="image/x-icon" href="\Services\img\dash.png">
+    <link rel="icon" type="image/x-icon" href="Services/img/orderkoico.ico">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Login | DELIVERY DASH</title>
+    <title>Login | Order Ko</title>
     <style>
       :root {
-        --navy-blue: #0A1931;
-        --navy-blue-light: #13274F;
-        --navy-blue-dark: #07121F;
-        --deep-orange: #FF5F00;
-        --deep-orange-light: #FF7F33;
-        --deep-orange-dark: #CC4C00;
-        --text: #f8fafc;
+        --primary: #c96b00ff;         /* Indigo */
+        --primary-light: #706903ff;
+        --primary-dark: #fa8c25ff;
+        --accent: #13087aff;         /* Emerald */
+        --text: #f8fafc;           /* Light gray */
         --text-light: #e2e8f0;
         --text-muted: #94a3b8;
-        --bg-dark: #0f172a;
-        --card-bg: rgba(10, 25, 49, 0.9);
+        --bg-dark: #0f172a;       /* Dark slate */
+        --card-bg: rgba(15, 23, 42, 0.9);
         --error: #ef4444;
       }
 
@@ -91,7 +100,7 @@ if (isset($_POST['login'])) {
         min-height: 100vh;
         display: flex;
         flex-direction: column;
-        background-image: url('MainImg/DELIVERY.jpg');
+        background-image: url('/PaOrder/Home/img/bg.png');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -102,7 +111,7 @@ if (isset($_POST['login'])) {
         content: "";
         position: fixed;
         top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(10, 25, 49, 0.85);
+        background: rgba(2, 6, 23, 0.85);  /* Darker overlay */
         z-index: 0;
       }
 
@@ -133,19 +142,16 @@ if (isset($_POST['login'])) {
       }
 
       .logo img {
-        height: 120px;
-        margin-bottom: -1rem;
+        height: 48px;
+        filter: brightness(1.1);
       }
 
       .logo h1 {
-        font-size: 1.75rem;
-        font-weight: 700;
+        font-size: 1.5rem;
+        font-weight: 600;
         margin-top: 0.75rem;
         color: var(--text);
         letter-spacing: 0.5px;
-        background: linear-gradient(45deg, var(--text-light), var(--deep-orange-light));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
       }
 
       h2 {
@@ -171,7 +177,7 @@ if (isset($_POST['login'])) {
       input {
         width: 100%;
         padding: 0.875rem;
-        background: rgba(19, 39, 79, 0.6);
+        background: rgba(30, 41, 59, 0.6);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 8px;
         font-size: 0.9375rem;
@@ -185,15 +191,15 @@ if (isset($_POST['login'])) {
 
       input:focus {
         outline: none;
-        border-color: var(--deep-orange);
-        background: rgba(19, 39, 79, 0.8);
-        box-shadow: 0 0 0 2px rgba(255, 95, 0, 0.25);
+        border-color: var(--primary);
+        background: rgba(30, 41, 59, 0.8);
+        box-shadow: 0 0 0 2px rgba(12, 6, 122, 0.25);
       }
 
       button {
         width: 100%;
         padding: 0.875rem;
-        background-color: var(--deep-orange);
+        background-color: var(--primary);
         color: white;
         border: none;
         border-radius: 8px;
@@ -205,7 +211,7 @@ if (isset($_POST['login'])) {
       }
 
       button:hover {
-        background-color: var(--deep-orange-dark);
+        background-color: var(--primary-dark);
         transform: translateY(-1px);
       }
 
@@ -242,7 +248,7 @@ if (isset($_POST['login'])) {
       .checkbox-container input {
         width: auto;
         margin-right: 0.75rem;
-        accent-color: var(--deep-orange);
+        accent-color: var(--primary);
       }
 
       .checkbox-container label {
@@ -256,11 +262,11 @@ if (isset($_POST['login'])) {
         justify-content: space-between;
         align-items: center;
         padding: 1rem 2rem;
-        background-color: rgba(10, 25, 49, 0.9);
+        background-color: rgba(192, 88, 3, 0.8);
         backdrop-filter: blur(12px);
         position: relative;
         z-index: 1;
-        border-bottom: 1px solid rgba(255, 95, 0, 0.2);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       }
 
       .nav-logo {
@@ -290,13 +296,10 @@ if (isset($_POST['login'])) {
         font-size: 0.875rem;
         font-weight: 500;
         transition: color 0.2s ease;
-        padding: 0.5rem;
-        border-radius: 4px;
       }
 
       .nav-links a:hover {
-        color: var(--deep-orange);
-        background: rgba(255, 95, 0, 0.1);
+        color: var(--accent);
       }
 
       @media (max-width: 640px) {
@@ -320,7 +323,7 @@ if (isset($_POST['login'])) {
   <body>
     <nav class="nav">
       <div class="nav-logo">
-        <img src="MainImg/download-compresskaru.com.png" alt="Delivery Dash Logo">
+        <img src="MainImg/download-compresskaru.com.png" alt="Logo">
         <span>BLUESYS APPLICATIONS</span>
       </div>
       <div class="nav-links">
@@ -333,20 +336,19 @@ if (isset($_POST['login'])) {
     <div class="container">
       <div class="card">
         <div class="logo">
-          <img src="Services/img/dash.png" alt="DELIVERY DASH Logo">
-          <h1>DELIVERY DASH</h1>
+          <img src="\PaOrder\Home\img\paordernew.png" alt="BLUESYS Logo" Style = "height:150px; width:300px">
         </div>
 
         <?php if (!empty($error)): ?>
           <div class="error show"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
-        <form method="post" action="DeliveryDash.php">
+        <form method="post" action="orderko.php">
           <div class="form-group">
             <label for="username">Username</label>
             <input 
               type="text" 
-              id="username" 
+              id="username"
               name="username" 
               placeholder="Enter your username" 
               required 
@@ -360,9 +362,8 @@ if (isset($_POST['login'])) {
               type="password" 
               id="password" 
               name="password" 
-              placeholder="Enter your password" 
-              required
-            >
+              placeholder="Enter your password" 0
+              required>
           </div>
 
           <div class="checkbox-container">
@@ -370,13 +371,18 @@ if (isset($_POST['login'])) {
             <label for="remember">Remember this device</label>
           </div>
 
+            Create an account? <a href="/PaOrder/Home/register.php" style=" text-decoration: none;">Register here</a>
+
+
           <button type="submit" name="login">Sign In</button>
+
+
         </form>
       </div>
     </div>
 
     <div class="footer">
-      © <?= date('Y') ?> DELIVERY DASH. All rights reserved.
+      © <?= date('Y') ?> Order Ko. All rights reserved.
     </div>
   </body>
 </html>

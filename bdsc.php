@@ -1,178 +1,190 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-?>
+session_start();
 
-<?php
+// ==================== DATABASE CONFIG ====================
+define('DB_SERVER', 'bspidbservernew.database.windows.net');
+define('DB_USERNAME', 'sqladmin');
+define('DB_PASSWORD', 'b$p1.@dm1n');
+define('DB_NAME', 'BSPIDBNEW');
+define('DB_PORT', '1433');
 
-/**
- * ---------------------------------------------------------------------
- *
- * GLPI - Gestionnaire Libre de Parc Informatique
- *
- * http://glpi-project.org
- *
- * @copyright 2015-2025 Teclib' and contributors.
- * @copyright 2003-2014 by the INDEPNET Development Team.
- * @licence   https://www.gnu.org/licenses/gpl-3.0.html
- *
- * ---------------------------------------------------------------------
- *
- * LICENSE
- *
- * This file is part of GLPI.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- * ---------------------------------------------------------------------
- */
+// Try to connect and set status
+$status = 'OFFLINE';
+$statusColor = 'red';
+$pdo = null;
 
-// Check PHP version not to have trouble
-// Need to be the very first step before any include
-if (
-    version_compare(PHP_VERSION, '7.4.0', '<') ||
-    version_compare(PHP_VERSION, '8.4.0', '>=')
-) {
-    die('PHP 7.4.0 - 8.4.0 (exclusive) required');
+try {
+    $dsn = "sqlsrv:Server=" . DB_SERVER . "," . DB_PORT . ";Database=" . DB_NAME . ";Encrypt=true;TrustServerCertificate=false;";
+    $pdo = new PDO($dsn, DB_USERNAME, DB_PASSWORD);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    $status = 'ONLINE';
+    $statusColor = 'limegreen';
+} catch (PDOException $e) {
+    $status = 'OFFLINE';
+    $statusColor = 'red';
 }
 
-use Glpi\Application\View\TemplateRenderer;
-use Glpi\Plugin\Hooks;
-use Glpi\Toolbox\Sanitizer;
+// ==================== LOGIN PROCESS ====================
+$error = '';
 
-// Load BDSC constants
-define('BDSC_ROOT', __DIR__);
-include(BDSC_ROOT . "/inc/based_config.php");
-
-// If config_db doesn't exist -> start installation
-if (!file_exists(GLPI_CONFIG_DIR . "/config_db.php")) {
-    if (file_exists(BDSC_ROOT . '/install/install.php')) {
-        Html::redirect("/install/install.php");
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if ($status === 'OFFLINE') {
+        $error = "Please Check Your Internet Connection";
     } else {
-        // Init session (required by header display logic)
-        Session::setPath();
-        Session::start();
-        Session::loadLanguage('', false);
-        // Prevent inclusion of debug information in footer, as they are based on vars that are not initialized here.
-        $_SESSION['glpi_use_mode'] = Session::NORMAL_MODE;
+        $username = trim($_POST['username'] ?? '');
+        $password = trim($_POST['password'] ?? '');
 
-        // No translation
-        $title_text        = 'BDSC seems to not be configured properly.';
-        $missing_conf_text = sprintf('Database configuration file "%s" is missing.', GLPI_CONFIG_DIR . '/config_db.php');
-        $hint_text         = 'You have to either restart the install process or restore this file.';
+        if (empty($username) || empty($password)) {
+            $error = "Please enter username and password";
+        } else {
+            try {
+                $sql = "SELECT ID, Role, Name, CompanyID FROM Aquila_Users WHERE Username = ? AND Password = ?";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([$username, $password]);
+                $user = $stmt->fetch();
 
-        Html::nullHeader('Missing configuration');
-        echo '<div class="container-fluid mb-4">';
-        echo '<div class="row justify-content-center">';
-        echo '<div class="col-xl-6 col-lg-7 col-md-9 col-sm-12">';
-        echo '<h2>' . $title_text . '</h2>';
-        echo '<p class="mt-2 mb-n2 alert alert-warning">';
-        echo $missing_conf_text;
-        echo ' ';
-        echo $hint_text;
-        echo '</p>';
-        echo '</div>';
-        echo '</div>';
-        echo '</div>';
-        Html::nullFooter();
-    }
-    die();
-} else {
-    include(BDSC_ROOT . "/inc/includes.php");
-    $_SESSION["bdsc_cookietest"] = 'testcookie';
+                if ($user) {
+                    // Store user data in session
+                    $_SESSION['UserID']     = $user['ID'];
+                    $_SESSION['Role']       = $user['Role'];
+                    $_SESSION['Name']       = $user['Name'];
+                    $_SESSION['CompanyID']  = $user['CompanyID'];
 
-    // Try to detect BDSC agent calls
-    $rawdata = file_get_contents("php://input");
-    if (!empty($rawdata) && $_SERVER['REQUEST_METHOD'] == 'POST') {
-        include_once(BDSC_ROOT . '/front/inventory.php');
-        die();
-    }
+                    // Fetch company name and acronym
+                    $sql2 = "SELECT NAME, KEY_LETTER FROM Aquila_COMPANY WHERE ID = ?";
+                    $stmt2 = $pdo->prepare($sql2);
+                    $stmt2->execute([$user['CompanyID']]);
+                    $company = $stmt2->fetch();
 
-    // For compatibility reasons
-    if (isset($_GET["noCAS"])) {
-        $_GET["noAUTO"] = $_GET["noCAS"];
-    }
+                    if ($company) {
+                        $_SESSION['CompanyName']    = $company['NAME'];
+                        $_SESSION['AcronymLetter']  = $company['KEY_LETTER'];
+                    }
 
-    if (!isset($_GET["noAUTO"])) {
-        Auth::redirectIfAuthenticated();
-    }
-
-    $redirect = array_key_exists('redirect', $_GET) ? Sanitizer::unsanitize($_GET['redirect']) : '';
-
-    Auth::checkAlternateAuthSystems(true, $redirect);
-
-    $theme = $_SESSION['bdsc_palette'] ?? 'auror';
-
-    $errors = "";
-    if (isset($_GET['error']) && $redirect !== '') {
-        switch ($_GET['error']) {
-            case 1: // Cookie error
-                $errors .= __('You must accept cookies to reach this application');
-                break;
-
-            case 2: // GLPI_SESSION_DIR not writable
-                $errors .= __('Checking write permissions for session files');
-                break;
-
-            case 3:
-                $errors .= __('Invalid use of session ID');
-                break;
+                    // Redirect to your main page (create home.php or change this)
+                    header("Location: home.php");
+                    exit();
+                } else {
+                    $error = "INCORRECT USERNAME OR PASSWORD";
+                }
+            } catch (Exception $e) {
+                $error = "Login failed. Please try again.";
+            }
         }
     }
+}
+?>
 
-    // Redirect to ticket
-    if ($redirect !== '') {
-        Toolbox::manageRedirect($redirect);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLUESYS - Login</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(rgba(0, 20, 60, 0.85), rgba(0, 40, 120, 0.9)),
+                        url('background.jpg') center/cover no-repeat;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .login-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 100, 255, 0.4);
+            width: 380px;
+            text-align: center;
+        }
+        .logo { width: 220px; margin-bottom: 20px; }
+        h2 { margin-bottom: 30px; font-weight: 300; letter-spacing: 1px; }
+        input[type="text"], input[type="password"] {
+            width: 100%; padding: 12px 15px; margin: 10px 0;
+            background: transparent; border: none; border-bottom: 2px solid #fff;
+            color: white; font-size: 16px; outline: none;
+        }
+        input::placeholder { color: rgba(255,255,255,0.7); }
+        .password-wrapper { position: relative; }
+        .toggle-pass {
+            position: absolute; right: 10px; top: 50%;
+            transform: translateY(-50%); cursor: pointer; font-size: 20px;
+        }
+        .btn-login {
+            background: #007bff; color: white; padding: 12px 60px;
+            border: none; border-radius: 30px; font-size: 16px;
+            cursor: pointer; margin-top: 20px; transition: 0.3s;
+        }
+        .btn-login:hover { background: #0056b3; transform: scale(1.05); }
+        .error { color: #ff6b6b; margin-top: 15px; font-weight: bold; }
+        .status {
+            position: absolute; bottom: 20px; right: 20px;
+            background: rgba(0,0,0,0.6); padding: 10px 20px; border-radius: 30px;
+            font-weight: bold; font-size: 14px;
+        }
+        .version { margin-top: 30px; font-size: 12px; opacity: 0.8; }
+    </style>
+</head>
+<body>
+
+<div class="login-box">
+    <img src="bluesys-logo.png" alt="BLUESYS" class="logo">
+    <h2>LOGIN YOUR ACCOUNT</h2>
+
+    <form method="POST" action="">
+        <input type="text" name="username" placeholder="Enter Username"
+               value="<?= htmlspecialchars($_POST['username'] ?? '') ?>" required autofocus>
+
+        <div class="password-wrapper">
+            <input type="<?= isset($_POST['show_password']) ? 'text' : 'password' ?>"
+                   name="password" placeholder="Enter Password" required>
+            <span class="toggle-pass" onclick="togglePassword()">👁️</span>
+        </div>
+
+        <label style="display:block; margin:15px 0; color:rgba(255,255,255,0.8);">
+            <input type="checkbox" name="show_password"
+                   <?= isset($_POST['show_password']) ? 'checked' : '' ?>
+                   style="transform:scale(1.3); margin-right:8px;">
+            Show Password
+        </label>
+
+        <button type="submit" class="btn-login">Login</button>
+
+        <?php if ($error): ?>
+            <div class="error"><?= htmlspecialchars($error) ?></div>
+        <?php endif; ?>
+    </form>
+
+    <div class="version">
+        BLUESYS VERSION: 12082025.544<br>
+        OWNED BY BLUESUN PHIL INC.
+    </div>
+</div>
+
+<div class="status" style="color: <?= $statusColor ?>;">
+    <?= $status ?>
+</div>
+
+<script>
+function togglePassword() {
+    const pwd = document.querySelector('input[name="password"]');
+    const checkbox = document.querySelector('input[name="show_password"]');
+    if (pwd.type === "password") {
+        pwd.type = "text";
+        checkbox.checked = true;
+    } else {
+        pwd.type = "password";
+        checkbox.checked = false;
     }
-
-    // Random number for HTML id/label
-    $rand = mt_rand();
-
-    TemplateRenderer::getInstance()->display('pages/login.html.twig', [
-        'rand'                => $rand,
-        'card_bg_width'       => true,
-        'lang'                => $CFG_GLPI["languages"][$_SESSION['glpilanguage']][3],
-        'title'               => __('Authentication'),
-        'noAuto'              => $_GET["noAUTO"] ?? 0,
-        'redirect'            => $redirect,
-        'text_login'          => $CFG_GLPI['text_login'],
-        'namfield'            => ($_SESSION['namfield'] = uniqid('fielda')),
-        'pwdfield'            => ($_SESSION['pwdfield'] = uniqid('fieldb')),
-        'rmbfield'            => ($_SESSION['rmbfield'] = uniqid('fieldc')),
-        'show_lost_password'  => $CFG_GLPI["notifications_mailing"]
-                              && countElementsInTable('glpi_notifications', [
-                                  'itemtype'  => 'User',
-                                  'event'     => 'passwordforget',
-                                  'is_active' => 1
-                              ]),
-        'languages_dropdown'  => Dropdown::showLanguages('language', [
-            'display'             => false,
-            'rand'                => $rand,
-            'display_emptychoice' => true,
-            'emptylabel'          => __('Default (from user profile)'),
-            'width'               => '100%'
-        ]),
-        'right_panel'         => strlen($CFG_GLPI['text_login']) > 0
-                               || count($PLUGIN_HOOKS[Hooks::DISPLAY_LOGIN] ?? []) > 0
-                               || $CFG_GLPI["use_public_faq"],
-        'auth_dropdown_login' => Auth::dropdownLogin(false, $rand),
-        'copyright_message'   => Html::getCopyrightMessage(false),
-        'errors'              => $errors
-    ]);
 }
-// Call cron
-if (!GLPI_DEMO_MODE) {
-    CronTask::callCronForce();
-}
+</script>
 
-echo "</body></html>";
+</body>
+</html>

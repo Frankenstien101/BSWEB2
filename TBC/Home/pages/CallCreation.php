@@ -8,6 +8,28 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
 
   <style>
+
+
+  .card-group .card {
+    margin-right: 10px;
+    width: 50px;
+    height: 150px;
+  }
+
+  
+
+  .card-headertime {
+    font-size: 1.2rem;
+    text-align: center;
+    margin-top: 10px;
+    border-bottom: 1px solid #fff;
+  } 
+
+  .card-titletime {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+
     body {
       background:#f0f2f5;
       
@@ -67,6 +89,11 @@
 
     .btn-sm {
       font-size: 12px;
+    }
+
+    .card card-title {
+      font-size: 10px;
+      font-weight: bold;
     }
   </style>
 
@@ -132,7 +159,7 @@
               <div class="col-md-4 col-sm-6 col-12 mb-0">
                 <label class="form-label">PHONE NUMBER</label>
                 <div class="d-flex">
-                  <input type="text" maxlength="12" inputmode="numeric" style = "width: 60%; font-weight: bold;"
+                  <input type="number" maxlength="12" inputmode="numeric" style = "width: 60%; font-weight: bold;"
                          class="form-control form-control-sm mr-2" id="phoneNumbertxt">
                   <button class="btn btn-primary btn-sm" style = "width: 40%; margin-top: -1px;" onclick="updatePhoneNumber()">UPDATE</button>
                 </div>
@@ -147,14 +174,14 @@
               <!-- INVOICE -->
               <div class="col-md-4 col-sm-6 col-12 mb-0">
                 <label class="form-label">INVOICE NUMBER</label>
-                <input type="text" class="form-control form-control-sm" id="invoiceNumbertxt">
+                <input type="text" class="form-control form-control-sm" id="invoiceNumbertxt" inputmode="numeric">
               </div>
 
               <!-- AMOUNT + START CALL -->
               <div class="col-md-4 col-sm-6 col-12 mb-0">
                 <label class="form-label">AMOUNT</label>
                 <div class="d-flex">
-                  <input type="text" style ="width: 60%;" class="form-control form-control-sm mr-2" id="amounttxt">
+                  <input type="number" style ="width: 60%;" class="form-control form-control-sm mr-2" id="amounttxt">
                   <button class="btn btn-success btn-sm" onclick="startcall()" style = "width: 40%; font-weight: bold; height: 38px; margin-top: -5px;">START CALL</button>
                 </div>
               </div>
@@ -469,7 +496,7 @@ IF NOT MATCHED – put INCORRECT AMOUNT;
 
 
 <div class="text-center mt-3">
-<button class="btn btn-danger next-tab" id="endCallBtn">END CALL</button>
+<button class="btn btn-danger next-tab" onclick="endcall()">END CALL</button>
 </div>
 </div>
 
@@ -488,13 +515,72 @@ IF NOT MATCHED – put INCORRECT AMOUNT;
     <!-- RIGHT SIDE -->
     <div class="main-right">
       <h5 class="fw-bold">CALL RESULT</h5>
-      <p>This side is for results, call logs, notes, follow-up actions, etc.</p>
+
+
+<div class="card text-white bg-dark mb-3" style="max-width: 10rem; height: 110px;">
+  <div class="card-headertime">Call Duration</div>
+  <div class="card-body">
+    <h5 class="card-titletime" id="callTimer">00:00:00</h5>
+  </div>
+</div>
+
+
+
+<div class="card-group">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Store Name Right?</h5>
+      <input type="text" class="form-control form-control-sm" id="storeNameRight" style="border:none; background-color: ; text-align: center; font-size: 1rem;" value = "YES" readonly>
+    <p class="card-text"></p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Phone # Correct?</h5>
+      <input type="text" class="form-control form-control-sm" id="phoneNumberCorrect" style="border:none; background-color: ; text-align: center; font-size: 1rem;" value = "YES" readonly>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Is Store Visited?</h5>
+      <input type="text" class="form-control form-control-sm" id="storeVisited" style="border:none; background-color: ; text-align: center; font-size: 1rem;" value = "YES" readonly>
+    </div>
+  </div>
+</div>
+
+
+<div class="card-group mt-2">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Productive Call?</h5>
+      <input type="text" class="form-control form-control-sm" id="productiveCall" style="border:none; background-color: ; text-align: center; font-size: 1rem;" value = "YES" readonly>
+    <p class="card-text"></p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Amount Correct?</h5>
+      <input type="text" class="form-control form-control-sm" id="amountCorrect" style="border:none; background-color: ; text-align: center; font-size: 1rem;" value = "YES" readonly>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Amount Verified</h5>
+      <input type="text" class="form-control form-control-sm" id="amountVerified" style="border:none; background-color: ; text-align: center; font-size: 1rem;" value = "YES" readonly>
+    </div>
+  </div>
+</div>
+
+<div class="text-center mt-3">
+<button class="btn btn-success" id="submitcallbtn">SUBMIT CALL</button>
+</div>
+</div>
+
     </div>
 
   </div>
 
 </div>
-
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
@@ -515,7 +601,6 @@ IF NOT MATCHED – put INCORRECT AMOUNT;
   document.getElementById('resultCorrect').addEventListener('change', toggleIncorrectFields);
   document.getElementById('resultIncorrect').addEventListener('change', toggleIncorrectFields
 );
-
 
 
   function toggleamountIncorrectFields() {
@@ -616,15 +701,44 @@ if (!customerId) {
 
 activateFirstTab();
   //  alert('Call started for Customer ID: ' + customerId + '\nPhone Number: ' + phoneNumber + '\nAmount: ' + amount + '\nInvoice Number: ' + invoiceNumber);
+  
+ // startCallTimer();
 
+}
 
+  let callSeconds = 0;
+  let callInterval = null;
 
+  function startCallTimer() {
+    callInterval = setInterval(() => {
+      callSeconds++;
 
+      const hours = String(Math.floor(callSeconds / 3600)).padStart(2, '0');
+      const minutes = String(Math.floor((callSeconds % 3600) / 60)).padStart(2, '0');
+      const seconds = String(callSeconds % 60).padStart(2, '0');
+
+      document.getElementById('callTimer').textContent = 
+        `${hours}:${minutes}:${seconds}`;
+    }, 1000);
+  }
+
+  function stopCallTimer() {
+    clearInterval(callInterval);
+  }
+
+  // ✅ Auto-start when page loads
+  document.addEventListener("DOMContentLoaded", startCallTimer);
+
+  // ✅ Stop when END CALL button is clicked
+  document.getElementById("endCallBtn")?.addEventListener("click", stopCallTimer);
+
+function endcall() {
+    stopCallTimer();
+    alert('Call ended. Duration: ' + document.getElementById('callTimer').textContent);
   }
 
 
 </script>
-
 
 </body>
 </html>
