@@ -17,8 +17,7 @@ try {
                 WHEN STORE_TIME_SPENT = 0 THEN 'PASSED BY'
                 ELSE 'NOT VISITED'
             END AS VISIT_STATUS,
-            CASE
-                WHEN STORE_TIME_SPENT > 0 THEN 'pin_visited.png'
+            CASE  WHEN STORE_TIME_SPENT > 0 THEN 'pin_visited.png'
                 WHEN STORE_TIME_SPENT = 0 THEN 'pin_pass_by.png'
                 ELSE 'pin_not_visited.png'
             END AS ICON,

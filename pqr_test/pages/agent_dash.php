@@ -325,6 +325,46 @@ if($diff < 300){
 else{
     return "offline";
 }}
+
+function get_travel_distance($AGENT_ID,$conn,$dt) {
+
+    $get_distance = $conn->query("WITH OrderedPoints AS (
+    SELECT
+        TIME_STAMP,
+        geography::Point(LAT_CAPTURED, LONG_CAPTURED, 4326) AS GeoPoint,
+        LAG(geography::Point(LAT_CAPTURED, LONG_CAPTURED, 4326))
+            OVER (ORDER BY TIME_STAMP) AS PrevGeoPoint
+    FROM Dash_Agent_Time_Stamp
+    WHERE LAT_CAPTURED IS NOT NULL
+      AND LONG_CAPTURED IS NOT NULL AND AGENT_ID='$AGENT_ID' AND DELIVERY_DATE='$dt'
+)
+SELECT
+   CONCAT(ROUND(SUM(GeoPoint.STDistance(PrevGeoPoint)) / 1000.0,2),' KM') AS TotalDistanceKM
+FROM OrderedPoints
+WHERE PrevGeoPoint IS NOT NULL;")->fetch(PDO::FETCH_ASSOC);
+
+    return isset($get_distance['TotalDistanceKM']) ? $get_distance['TotalDistanceKM'] : 0;
+}
+
+function get_mkt_travel_distance($AGENT_ID,$conn,$dt,$t_start,$t_end) {
+
+    $get_distance = $conn->query("WITH OrderedPoints AS (
+    SELECT
+        TIME_STAMP,
+        geography::Point(LAT_CAPTURED, LONG_CAPTURED, 4326) AS GeoPoint,
+        LAG(geography::Point(LAT_CAPTURED, LONG_CAPTURED, 4326))
+            OVER (ORDER BY TIME_STAMP) AS PrevGeoPoint
+    FROM Dash_Agent_Time_Stamp
+    WHERE LAT_CAPTURED IS NOT NULL
+      AND LONG_CAPTURED IS NOT NULL AND AGENT_ID='$AGENT_ID' and TIME_MINUTES BETWEEN '$t_start' AND '$t_end' AND DELIVERY_DATE='$dt'
+)
+SELECT
+   CONCAT(ROUND(SUM(GeoPoint.STDistance(PrevGeoPoint)) / 1000.0,2),' KM') AS TotalDistanceKM
+FROM OrderedPoints
+WHERE PrevGeoPoint IS NOT NULL;")->fetch(PDO::FETCH_ASSOC);
+
+    return isset($get_distance['TotalDistanceKM']) ? $get_distance['TotalDistanceKM'] : 0;
+}
 ?>
 
 <div class="container-fluid">
@@ -346,6 +386,8 @@ else{
 foreach($result as $row){   
  $DA_ID =  ($row['LG_ID'] == NULL)? $row['AGENT']: $row['LG_ID'] ;
  $is_online_stat = get_last_location_time($DA_ID,$conn);
+ $travel_dist = get_travel_distance($DA_ID,$conn,$date_selected) ;
+ $travel_mkt_dist = get_mkt_travel_distance($DA_ID,$conn,$date_selected,$row['TIME_ENTRY'],$row['TIME_EXIT']) ;
 //local
 ?>
  <div class="col-md-6 col-sm-12 col-lg-4 mb-2">
@@ -363,10 +405,10 @@ foreach($result as $row){
       </div>
     </div>
     <div class="card-body">
-      <div class="section d-none">
-        <div><strong><i class="fas fa-route"></i> Distance</strong><span>0.0 km</span></div>
-        <div><strong><i class="fas fa-map-marker-alt"></i> Market</strong><span>0.0 km</span></div>
-      </div>
+      <div class="section ">
+        <div><strong><i class="fas fa-route"></i> Distance</strong><span><?=  $travel_dist ?></span></div>
+        <div><strong><i class="fas fa-map-marker-alt"></i> Market</strong><span><?=  $travel_mkt_dist ?></span></div>
+      </div>     
       <div class="section">
         <div><strong><i class="far fa-clock"></i> WH Entry/Depart/Return</strong><span> <?= 
     ($row['WH_ENTRY'] ? date("g:i A", strtotime($row['WH_ENTRY'])) : '-') . 
@@ -391,7 +433,7 @@ foreach($result as $row){
       </div>
     </div>
 
-    <div class="footer">
+    <div class="footer d-none">
       <div>
         <strong><i class="fas fa-chart-line"></i> Productivity</strong>
         <span>– / 11</span>
