@@ -263,7 +263,7 @@ foreach ($query_result as $data) {
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link d-flex align-items-center">
+            <a href="home.php?page=setup" class="nav-link d-flex align-items-center">
               <img src="/MainImg/file.png" style="width: 30px; height: 30px; margin-right: 10px;">
               <p class="mb-0">Setup</p>
             </a>
@@ -294,7 +294,7 @@ foreach ($query_result as $data) {
                ,'SalesReturnReport','StockViewReport','SOReport' , 'StockLedgerReport' , 'WarehouseMasterReport' , 'SchemeMasterReport'
               ,'allsitereports' , 'allsitesalesinvoicesummary','allsitesalesinvoicedetailed' , 'allsiteSOReport' , 'IntransitSummary'
             ,'intransitdetailedReport','PurchasereturnReport', 'VanAllocationReport' ,'allsiteVanAllocation' , 'VanStockReport'
-          ,'SFAMappingReport' , 'T_Vanloading' , 'T_VanLoadHistory','T_VanInventory'];
+          ,'SFAMappingReport' , 'T_Vanloading' , 'T_VanLoadHistory','T_VanInventory' , 'setup' , 'coveragesetup'];
                if (in_array($page, $allowedPages)) {
 
                    include "pages/{$page}.php";

@@ -8,8 +8,9 @@ if (!isset($_SESSION['Name_of_user']) || empty($_SESSION['Name_of_user'])) {
 
 <!DOCTYPE html>
 <html lang="en">
+    <link rel="icon" type="image/x-icon" href="Services/img/orderkoico.ico">
+
 <head>
-<link rel="icon" type="image/x-icon" href="Services/img/orderkoico.ico">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Order Ko</title>
