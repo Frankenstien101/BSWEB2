@@ -283,8 +283,7 @@ JOIN CTE ON BT.BATCH_ID = CTE.BATCH
 WHERE BT.STATUS <> 'READY'
   AND BT.DATE_TO_DELIVER = :date2
   AND BT.COMPANY_ID  = :company2
-  AND BT.SITE_ID     = :site2
-";
+  AND BT.SITE_ID     = :site2 ";
 
 $stmt = $conn->prepare($sql);
 

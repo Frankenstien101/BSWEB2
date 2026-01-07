@@ -496,12 +496,19 @@ $condition = ($role != 'Admin') ? " AND USER_ID=$user_id" : "";
                         <span class="menu-text">PQR View</span>
                     </a>
                 </li>
+                <li id="agent_dsr" class="<?= ($_GET['page'] ?? '') === 'agent_dsr' || ($_GET['page'] ?? '') === 'view_dsr' ? 'active' : '' ?>">
+                    <a href="index.php?page=agent_dsr">
+                        <i class='fas fa-map'></i>
+                        <span class="menu-text">Agent DSR</span>
+                    </a>
+                </li>
                 <li id="agent_dash" class="<?= ($_GET['page'] ?? '') === 'agent_dash' || ($_GET['page'] ?? '') === 'view_coverage' ? 'active' : '' ?>">
                     <a href="index.php?page=agent_dash">
                         <i class='fas fa-map'></i>
                         <span class="menu-text">Agent Trip</span>
                     </a>
                 </li>
+
             <?php
                
                
