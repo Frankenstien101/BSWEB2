@@ -112,46 +112,42 @@ try {
     } else if ($action === 'getDeliveryDetails') {
         $orderno = $_GET['order_no'] ?? '';
 
-        $sql = "WITH LastAgentLocation AS (
-                    SELECT
-                        ATS.AGENT_ID,
-                        CAST(ATS.DELIVERY_DATE AS DATE) AS DELIVERY_DATE,
-                        ATS.LAT_CAPTURED,
-                        ATS.LONG_CAPTURED,
-                        ROW_NUMBER() OVER (
-                            PARTITION BY ATS.AGENT_ID, CAST(ATS.DELIVERY_DATE AS DATE)
-                            ORDER BY ATS.TIME_STAMP DESC
-                        ) AS RN
-                    FROM Dash_Agent_Time_Stamp ATS
-                )
-                SELECT TOP 1
-                    DPBD.SITE_ID,
-                    DPBD.INVOICE_NUMBER,
-                    DPBD.STATUS,
-                    DPBD.DATE_TO_DELIVER,
-                    DPBD.STORE_LAT,
-                    DPBD.STORE_LONG,
-                    DPBD.CUSTOMER_ID,
-                    DPBD.CUSTOMER_NAME,
-                    DPBD.AGENT_ID AS MAIN_AGENT,
-                    DA.SUB_DA AS SUB_AGENT,
-                    DA.AGENT_NAME AS RIDER_NAME,
-                    DPBD.VEHICLE_IDS AS VEHICLE,
-                    DPBD.ORDER_DATE,
-                    DPBD.AGENT_DELIVERED,
-                    DPBD.DATETIME_PROCESSED,
-                    DS.WAREHOUSE_LAT AS warehouse_lat,
-                    DS.WAREHOUSE_LONG AS warehouse_lng,
-                    LAL.LAT_CAPTURED AS rider_lat,
-                    LAL.LONG_CAPTURED AS rider_lng
-                FROM Dash_Plan_Batch_Details DPBD
-                LEFT JOIN Dash_Agents DA ON DA.USERNAME = DPBD.AGENT_ID
-                LEFT JOIN Dash_Sites DS ON DS.SITE_ID = DPBD.SITE_ID
-                LEFT JOIN LastAgentLocation LAL 
-                    ON LAL.AGENT_ID = DA.SUB_DA 
-                   AND LAL.DELIVERY_DATE = CAST(DPBD.DATE_TO_DELIVER AS DATE)
-                   AND LAL.RN = 1
-                WHERE DPBD.INVOICE_NUMBER = :orderno";
+        $sql = "SELECT TOP 1
+    DPBD.SITE_ID,
+    DPBD.INVOICE_NUMBER,
+    DPBD.STATUS,
+    DPBD.DATE_TO_DELIVER,
+    DPBD.STORE_LAT,
+    DPBD.STORE_LONG,
+    DPBD.CUSTOMER_ID,
+    DPBD.CUSTOMER_NAME,
+    DPBD.AGENT_ID AS MAIN_AGENT,
+    DA.SUB_DA AS SUB_AGENT,
+    DA.AGENT_NAME AS RIDER_NAME,
+    DPBD.VEHICLE_IDS AS VEHICLE,
+    DPBD.ORDER_DATE,
+    DPBD.AGENT_DELIVERED,
+    DPBD.DATETIME_PROCESSED,
+    DS.WAREHOUSE_LAT AS warehouse_lat,
+    DS.WAREHOUSE_LONG AS warehouse_lng,
+    LAL.LAT_CAPTURED AS rider_lat,
+    LAL.LONG_CAPTURED AS rider_lng
+FROM Dash_Plan_Batch_Details DPBD
+LEFT JOIN Dash_Agents DA 
+    ON DA.USERNAME = DPBD.AGENT_ID
+LEFT JOIN Dash_Sites DS 
+    ON DS.SITE_ID = DPBD.SITE_ID
+-- Get only the latest location for the relevant sub-agent on the delivery date
+OUTER APPLY (
+    SELECT TOP 1 
+        ATS.LAT_CAPTURED,
+        ATS.LONG_CAPTURED
+    FROM Dash_Agent_Time_Stamp ATS
+    WHERE ATS.AGENT_ID = DA.SUB_DA
+      AND CAST(ATS.DELIVERY_DATE AS DATE) = CAST(DPBD.DATE_TO_DELIVER AS DATE)
+    ORDER BY ATS.TIME_STAMP DESC
+) LAL
+WHERE DPBD.INVOICE_NUMBER = :orderno;";
 
         $stmt = $conn->prepare($sql);
         $stmt->execute([':orderno' => $orderno]);

@@ -523,7 +523,7 @@ function deliveryresult() {
     const userid = "<?php echo $_SESSION['UserID'] ?? ''; ?>";
 
     // Your queries here (columnQuery ... columnQuery5)
-    const columnQuery = ` [COMPANY_ID]
+    const columnQuery = `SELECT [COMPANY_ID]
                     ,[SITE_ID]
                     ,[UPLOAD_BY_USER_ID]
                     ,[DIST_NAME]
@@ -550,6 +550,8 @@ function deliveryresult() {
                     ,[ORDER_SOURCE]
                     ,[IS_PLAN]
                 FROM [dbo].[PRFR_SO_UPLOAD] WHERE COMPANY_ID = '${companyId}' AND ORDER_DATE BETWEEN '${datefrom}' AND '${dateto}'`;  // keep your query definitions
+ 
+ 
     const columnQuery2 = `  SELECT    PRFR_Invoice_Detailed.[DISTRIBUTOR_CODE],
                     PRFR_Invoice_Detailed.[BRANCH_CODE],
                     PRFR_Invoice_Detailed.[BRANCH],
@@ -787,8 +789,8 @@ GROUP BY
     CITY,   
     PROVINCE,
     IMAGE1, 
-      IMG1 AS POD1,
-        IMG2 AS POD2,
+    IMG1 AS POD1,
+    IMG2 AS POD2,
     LATITUDE, 
     LONGITUDE, 
     STATUS,
