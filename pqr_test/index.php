@@ -14,6 +14,7 @@ $condition = ($role != 'Admin') ? " AND USER_ID=$user_id" : "";
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,7 +22,7 @@ $condition = ($role != 'Admin') ? " AND USER_ID=$user_id" : "";
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Chart.js Data Labels plugin -->
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
-    <!-- Icons & Fonts --> 
+    <!-- Icons & Fonts -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -346,19 +347,19 @@ $condition = ($role != 'Admin') ? " AND USER_ID=$user_id" : "";
             }
 
             .filter-controls {
-        display: none;
-        width: 100%;
-        margin-top: 10px;
-        flex-direction: column;
-        gap: 10px;
-        background: #fff;
-        padding: 10px;
-        border-radius: 10px;
-    }
+                display: none;
+                width: 100%;
+                margin-top: 10px;
+                flex-direction: column;
+                gap: 10px;
+                background: #fff;
+                padding: 10px;
+                border-radius: 10px;
+            }
 
-    .filter-controls.show {
-        display: flex !important;
-    }
+            .filter-controls.show {
+                display: flex !important;
+            }
         }
 
         @media (max-width: 576px) {
@@ -488,7 +489,7 @@ $condition = ($role != 'Admin') ? " AND USER_ID=$user_id" : "";
                     <span class="menu-text">Dashboard</span>
                 </a>
             </li>
-            <?php if ($role == "Admin" || $role == "GSM"|| $role == "OM" || $role == "DSS" ) {
+            <?php if ($role == "Admin" || $role == "GSM" || $role == "OM" || $role == "DSS") {
             ?>
                 <li id="PREVIEW_PQR" class="<?= ($_GET['page'] ?? '') === 'PREVIEW_PQR' ? 'active' : '' ?>">
                     <a href="index.php?page=PREVIEW_PQR">
@@ -496,7 +497,7 @@ $condition = ($role != 'Admin') ? " AND USER_ID=$user_id" : "";
                         <span class="menu-text">PQR View</span>
                     </a>
                 </li>
-                <li id="agent_dsr" class="<?= ($_GET['page'] ?? '') === 'agent_dsr' || ($_GET['page'] ?? '') === 'view_dsr' ? 'active' : '' ?>">
+                <li id="agent_dsr" class="<?= ($_GET['page'] ?? '') === 'agent_dsr' || ($_GET['page'] ?? '') === 'view_dsr' || ($_GET['page'] ?? '') === 'agent_dsr_det'  ? 'active' : '' ?>">
                     <a href="index.php?page=agent_dsr">
                         <i class='fas fa-map'></i>
                         <span class="menu-text">Agent DSR</span>
@@ -510,8 +511,8 @@ $condition = ($role != 'Admin') ? " AND USER_ID=$user_id" : "";
                 </li>
 
             <?php
-               
-               
+
+
             } ?>
 
             <li id="PQR_VALIDATOR" class="<?= ($_GET['page'] ?? '') === 'PQR_VALIDATOR' ? 'active' : '' ?>">
@@ -526,7 +527,7 @@ $condition = ($role != 'Admin') ? " AND USER_ID=$user_id" : "";
                     <span class="menu-text">PQR Validator ISKU</span>
                 </a>
             </li>
-            <?php if ($role == "Admin" || $role == "GSM"|| $role == "OM") {
+            <?php if ($role == "Admin" || $role == "GSM" || $role == "OM") {
             ?>
                 <li id="PQR_CAS_VALIDATOR" class="<?= ($_GET['page'] ?? '') === 'PQR_CAS_VALIDATOR' ? 'active' : '' ?>">
                     <a href="index.php?page=PQR_CAS_VALIDATOR">
@@ -612,7 +613,7 @@ $condition = ($role != 'Admin') ? " AND USER_ID=$user_id" : "";
                 <input type="date" id="date" value="<?= $_GET['date'] ?? date('Y-m-d') ?>"
                     class="form-control form-control-sm" style="width: 140px; display: none;">
 
-                <select class="form-select SEL" id="sel_comp" >
+                <select class="form-select SEL" id="sel_comp">
                     <option value="">Select Company</option>
                     <?php
                     if ($role == "Admin") {
@@ -683,19 +684,19 @@ $condition = ($role != 'Admin') ? " AND USER_ID=$user_id" : "";
                 minimumResultsForSearch: 6,
                 width: '100%'
             });
-$(".filter-toggle-btn").on("click", function () {
-    $(".filter-controls").toggleClass("show");
-});
+            $(".filter-toggle-btn").on("click", function() {
+                $(".filter-controls").toggleClass("show");
+            });
 
 
-$("#SELECT_SITE").change(function(){
-   $(".filter-controls").removeClass("show");
+            $("#SELECT_SITE").change(function() {
+                $(".filter-controls").removeClass("show");
 
-});
-// Hide on scroll
-$(window).on("scroll", function () {
-    $(".filter-controls").removeClass("show");
-});
+            });
+            // Hide on scroll
+            $(window).on("scroll", function() {
+                $(".filter-controls").removeClass("show");
+            });
 
 
 

@@ -11,15 +11,12 @@ $SITE_ID       = $_SESSION['ses_site'];
 /* ===============================
    MAIN DASHBOARD QUERY
 ================================ */
-$sql = "
-WITH CTE AS (
-    SELECT
-        BD.BATCH,
-        COUNT(BD.CUSTOMER_ID) AS TOTAL_STORE,
-        SUM(BD.TOTAL_AMOUNT) AS TOTAL_VALUE,
+$sql = "SELECT COUNT(BD.CUSTOMER_ID) AS TOTAL_STORE,
+        SUM(BD.TOTAL_AMOUNT) AS TOT_AMOUNT,
         ISNULL(SUM(DP.COLLECTED_AMOUNT),0) AS TOTAL_DELIVERED_AMOUNT,
         SUM(CASE WHEN PD.STORE_CODE IS NOT NULL THEN 1 ELSE 0 END) AS VISITED,
-        SUM(CASE WHEN BD.STATUS IN ('DELIVERED','VERIFIED') THEN 1 ELSE 0 END) AS DELIVERED,
+        COUNT(BD.CUSTOMER_ID)-SUM(CASE WHEN PD.STORE_CODE IS NOT NULL THEN 1 ELSE 0 END)  AS NOT_VISITED,
+        SUM(CASE WHEN BD.STATUS IN ('DELIVERED','VERIFIED') THEN 1 ELSE 0 END) AS TOTAL_DELIVERED,
         SUM(CASE WHEN BD.STATUS='FAILED' THEN 1 ELSE 0 END) AS FAILED,
         SUM(CASE WHEN BD.RCA='NO OWNER' THEN 1 ELSE 0 END) AS NO_OWNER,
         SUM(CASE WHEN BD.RCA='NO BUDGET' THEN 1 ELSE 0 END) AS NO_BUDGET,
@@ -30,34 +27,11 @@ WITH CTE AS (
     LEFT JOIN Dash_Agent_Performance_Detailed PD
            ON BD.DATE_TO_DELIVER = PD.DELIVERY_DATE
           AND BD.CUSTOMER_ID = PD.STORE_CODE
-    WHERE BD.DATE_TO_DELIVER = :dt1
-      AND BD.COMPANY_ID = :cid1
-      AND BD.SITE_ID = :sid1
-    GROUP BY BD.BATCH
-)
-SELECT *, LOGIN_ID AS LG_ID
-FROM Dash_Plan_Batch_Transaction BT
-JOIN CTE ON BT.BATCH_ID = CTE.BATCH
-LEFT JOIN Dash_Agent_Performance_Summary PS
-       ON BT.AGENT = PS.AGENT_ID
-      AND BT.DATE_TO_DELIVER = PS.DELIVERY_DATE
-WHERE BT.STATUS <> 'READY'
-  AND BT.DATE_TO_DELIVER = :dt2
-  AND BT.COMPANY_ID = :cid2
-  AND BT.SITE_ID = :sid2
-";
-$stmt = $conn->prepare($sql);
-$stmt->execute([
-  ':dt1'  => $date_selected,
-  ':cid1' => $COMPANY_ID,
-  ':sid1' => $SITE_ID,
+    WHERE BD.DATE_TO_DELIVER = '$date_selected'
+      AND BD.COMPANY_ID = '$COMPANY_ID'
+      AND BD.SITE_ID = '$SITE_ID'";
 
-  ':dt2'  => $date_selected,
-  ':cid2' => $COMPANY_ID,
-  ':sid2' => $SITE_ID
-]);
-
-$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$query_items = $conn->query($sql)->fetch(PDO::FETCH_ASSOC);
 
 /* ===============================
    HELPER FUNCTIONS
@@ -72,14 +46,14 @@ function peso($v)
   return '₱' . number_format($v, 2);
 }
 
-function getToDate($agent, $dt, $conn)
+function getToDate($dt, $conn)
 {
   $start = date("Y-m-01", strtotime($dt));
-  $q = $conn->prepare("
-        SELECT COUNT(*) TOTAL_STORE,
+  $q = $conn->prepare("SELECT COUNT(*) TOTAL_STORE,
                SUM(TOTAL_AMOUNT) TOT_AMOUNT,
                ISNULL(SUM(COLLECTED_AMOUNT),0) TOTAL_DELIVERED,
                SUM(CASE WHEN PD.STORE_CODE IS NOT NULL THEN 1 ELSE 0 END) VISITED,
+               COUNT(*) - SUM(CASE WHEN PD.STORE_CODE IS NOT NULL THEN 1 ELSE 0 END) NOT_VISITED,
                SUM(CASE WHEN BD.STATUS IN('DELIVERED','VERIFIED') THEN 1 ELSE 0 END) DELIVERED,
                SUM(CASE WHEN BD.STATUS='FAILED' THEN 1 ELSE 0 END) FAILED
         FROM Dash_Plan_Batch_Details BD
@@ -87,14 +61,15 @@ function getToDate($agent, $dt, $conn)
         LEFT JOIN Dash_Agent_Performance_Detailed PD
              ON BD.DATE_TO_DELIVER=PD.DELIVERY_DATE
             AND BD.CUSTOMER_ID=PD.STORE_CODE
-        WHERE BD.AGENT_ID=?
-          AND BD.DATE_TO_DELIVER BETWEEN ? AND ?
+        WHERE  BD.DATE_TO_DELIVER BETWEEN ? AND ?
           AND BD.COMPANY_ID=?
           AND BD.SITE_ID=?
     ");
-  $q->execute([$agent, $start, $dt, $_SESSION['comp_id'], $_SESSION['ses_site']]);
+  $q->execute([$start, $dt, $_SESSION['comp_id'], $_SESSION['ses_site']]);
   return $q->fetch(PDO::FETCH_ASSOC);
 }
+
+$tod = getToDate($date_selected, $conn);
 ?>
 
 
@@ -173,99 +148,89 @@ function getToDate($agent, $dt, $conn)
     <div class="row">
       <div class="row g-2 justify-content-end align-items-center mb-3">
 
-        <div class="col-md-3 col-sm-4 col-12 d-flex justify-content-md-end justify-content-start">
+        <div class="col-md-4 col-lg-4 col-sm-12   d-flex justify-content-md-end justify-content-start">
           <input type="date" id="dt_filter" value="<?= $date_selected ?>" class="form-control">
         </div>
       </div>
+      <div class="col-sm-12 mb-2">
+        <a class="btn_nav_coverage"
+          href="?page=agent_dsr_det&date=<?= $date_selected ?>">
 
-
-
-      <?php foreach ($rows as $r):
-        $AGENT = $r['LG_ID'] ?? $r['AGENT'];
-        $tod   = getToDate($r['AGENT'], $date_selected, $conn);
-        $notVisited = $r['TOTAL_STORE'] - $r['VISITED'];
-        $todNotVisited = $tod['TOTAL_STORE'] - $tod['VISITED'];
-      ?>
-        <div class="col-sm-12 col-lg-6 mb-2">
-          <a class="btn_nav_coverage"
-            href="?page=view_coverage&BATCH_ID=<?= $r['BATCH_ID'] ?>&AGENT_ID=<?= $AGENT ?>&DELIVERY_DATE=<?= $r['DATE_TO_DELIVER'] ?>">
-
-            <div class="card">
-              <div class="card-header">
-                <div class="beat-info">
-                  <span>DA #: <?= $r['AGENT'] ?></span><br>
-                  <span>SUB-DA #: <?= $AGENT ?></span>
-                  <h3><i class="fas fa-truck"></i><?= $r['VEHICLE_ID'] ?></h3>
-                </div>
-              </div>
-              <div class="table-responsive">
-                <table class="data-table">
-                  <thead>
-                    <tr>
-                      <th rowspan="2">Metrics</th>
-                      <th colspan="3">Today</th>
-                      <th colspan="3">Todate</th>
-                    </tr>
-                    <tr>
-                      <th>Obj</th>
-                      <th>Act</th>
-                      <th>%</th>
-                      <th>Obj</th>
-                      <th>Act</th>
-                      <th>%</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Volume</td>
-                      <td><?= peso($r['TOTAL_VALUE']) ?></td>
-                      <td><?= peso($r['TOTAL_DELIVERED_AMOUNT']) ?></td>
-                      <td><?= percent($r['TOTAL_DELIVERED_AMOUNT'], $r['TOTAL_VALUE']) ?>%</td>
-                      <td><?= peso($tod['TOT_AMOUNT']) ?></td>
-                      <td><?= peso($tod['TOTAL_DELIVERED']) ?></td>
-                      <td><?= percent($tod['TOTAL_DELIVERED'], $tod['TOT_AMOUNT']) ?>%</td>
-                    </tr>
-
-                    <tr>
-                      <td>Visited</td>
-                      <td rowspan="4"><?= $r['TOTAL_STORE'] ?></td>
-                      <td><?= $r['VISITED'] ?></td>
-                      <td><?= percent($r['VISITED'], $r['TOTAL_STORE']) ?>%</td>
-                      <td rowspan="4"><?= $tod['TOTAL_STORE'] ?></td>
-                      <td><?= $tod['VISITED'] ?></td>
-                      <td><?= percent($tod['VISITED'], $tod['TOTAL_STORE']) ?>%</td>
-                    </tr>
-
-                    <tr>
-                      <td>Not Visited</td>
-                      <td><?= $notVisited ?></td>
-                      <td><?= percent($notVisited, $r['TOTAL_STORE']) ?>%</td>
-                      <td><?= $todNotVisited ?></td>
-                      <td><?= percent($todNotVisited, $tod['TOTAL_STORE']) ?>%</td>
-                    </tr>
-
-                    <tr>
-                      <td>Delivered</td>
-                      <td><?= $r['DELIVERED'] ?></td>
-                      <td><?= percent($r['DELIVERED'], $r['TOTAL_STORE']) ?>%</td>
-                      <td><?= $tod['DELIVERED'] ?></td>
-                      <td><?= percent($tod['DELIVERED'], $tod['TOTAL_STORE']) ?>%</td>
-                    </tr>
-
-                    <tr>
-                      <td>Failed</td>
-                      <td><?= $r['FAILED'] ?></td>
-                      <td><?= percent($r['FAILED'], $r['TOTAL_STORE']) ?>%</td>
-                      <td><?= $tod['FAILED'] ?></td>
-                      <td><?= percent($tod['FAILED'], $tod['TOTAL_STORE']) ?>%</td>
-                    </tr>
-                  </tbody>
-                </table>
+          <div class="card">
+            <div class="card-header">
+              <div class="beat-info">
+                <h3><i class="fas fa-info-circle"></i>DSR SUMMARY</h3>
               </div>
             </div>
-          </a>
-        </div>
-      <?php endforeach; ?>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th rowspan="2">Metrics</th>
+                    <th colspan="3">Today</th>
+                    <th colspan="3">Todate</th>
+                  </tr>
+                  <tr>
+                    <th>Obj</th>
+                    <th>Act</th>
+                    <th>%</th>
+                    <th>Obj</th>
+                    <th>Act</th>
+                    <th>%</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Volume</td>
+                    <td><?= peso($query_items['TOT_AMOUNT']) ?></td>
+                    <td><?= peso($query_items['TOTAL_DELIVERED_AMOUNT']) ?></td>
+                    <td><?= percent($query_items['TOTAL_DELIVERED_AMOUNT'], $query_items['TOT_AMOUNT']) ?>%</td>
+
+                    <td><?= peso($tod['TOT_AMOUNT']) ?></td>
+                    <td><?= peso($tod['TOTAL_DELIVERED']) ?></td>
+                    <td><?= percent($tod['TOTAL_DELIVERED'], $tod['TOT_AMOUNT']) ?>%</td>
+                  </tr>
+
+                  <tr>
+                    <td>Visited</td>
+                    <td rowspan="4"><?= $query_items['TOTAL_STORE'] ?></td>
+                    <td><?= $query_items['VISITED'] ?></td>
+                    <td><?= percent($query_items['VISITED'], $query_items['TOTAL_STORE']) ?>%</td>
+                    <td rowspan="4"><?= $tod['TOTAL_STORE'] ?></td>
+                    <td><?= $tod['VISITED'] ?></td>
+                    <td><?= percent($tod['VISITED'], $tod['TOTAL_STORE']) ?>%</td>
+                  </tr>
+
+                  <tr>
+                    <td>Not Visited</td>
+                    <td><?= $query_items['NOT_VISITED'] ?></td>
+                    <td><?= percent($query_items['NOT_VISITED'], $query_items['TOTAL_STORE']) ?>%</td>
+                    <td><?= $tod['NOT_VISITED'] ?></td>
+                    <td><?= percent($tod['NOT_VISITED'], $tod['TOTAL_STORE']) ?>%</td>
+                  </tr>
+
+                  <tr>
+                    <td>Delivered</td>
+                    <td><?= $query_items['TOTAL_DELIVERED'] ?></td>
+                    <td><?= percent($query_items['TOTAL_DELIVERED'], $query_items['TOTAL_STORE']) ?>%</td>
+                    <td><?= $tod['DELIVERED'] ?></td>
+                    <td><?= percent($tod['DELIVERED'], $tod['TOTAL_STORE']) ?>%</td>
+                  </tr>
+
+                  <tr>
+                    <td>Failed</td>
+                    <td><?= $query_items['FAILED'] ?></td>
+                    <td><?= percent($query_items['FAILED'], $query_items['TOTAL_STORE']) ?>%</td>
+                    <td><?= $tod['FAILED'] ?></td>
+                    <td><?= percent($tod['FAILED'], $tod['TOTAL_STORE']) ?>%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </a>
+      </div>
+
     </div>
   </div>
 
