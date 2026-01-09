@@ -278,7 +278,77 @@ WHERE DPBD.INVOICE_NUMBER = :orderno;";
         ]);
     }
     exit;
+
+} else if ($action === 'getStoreOrders') {
+
+    $company        = $_GET['company'] ?? '';
+    $start_datetxt  = $_GET['start_date'] ?? '';
+    $end_date       = $_GET['end_date'] ?? '';
+
+    $sql = "SELECT
+    H.ORDER_ID,
+    H.CUSTOMER_NAME,
+    H.ORDER_DATE,
+    H.TOTAL_AMOUNT,
+    H.STATUS,
+
+    D.BARCODE,
+    D.DESCRIPTION,
+    D.QTY,
+    D.PRICE,
+    D.AMOUNT
+FROM OK_Store_Order_Transaction H
+LEFT JOIN OK_Store_Order_Details D
+    ON H.ORDER_ID = D.ORDER_ID
+WHERE H.COMPANY_ID = :company
+  AND H.ORDER_DATE BETWEEN :start_date AND :end_date
+ORDER BY H.ORDER_DATE DESC;
+";
+
+    $stmt = $conn->prepare($sql);
+$stmt->execute([
+    ':company'    => $company,
+    ':start_date' => $start_datetxt,
+    ':end_date'   => $end_date
+]);
+
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$orders = [];
+
+foreach ($rows as $row) {
+    $orderId = $row['ORDER_ID'];
+
+    if (!isset($orders[$orderId])) {
+        $orders[$orderId] = [
+            'ORDER_ID'       => $orderId,
+            'CUSTOMER_NAME'  => $row['CUSTOMER_NAME'],
+            'ORDER_DATE'     => $row['ORDER_DATE'],
+            'TOTAL_AMOUNT'   => $row['TOTAL_AMOUNT'],
+            'STATUS'         => $row['STATUS'],
+            'items'          => []
+        ];
+    }
+
+    if (!empty($row['BARCODE'])) {
+        $orders[$orderId]['items'][] = [
+            'BARCODE'     => $row['BARCODE'],
+            'DESCRIPTION' => $row['DESCRIPTION'],
+            'QTY'         => $row['QTY'],
+            'PRICE'       => $row['PRICE'],
+            'AMOUNT'      => $row['AMOUNT']
+        ];
+    }
 }
+
+echo json_encode([
+    'success' => true,
+    'data'    => array_values($orders)
+]);
+exit;
+
+}
+
 
 } catch (Exception $e) {
     // Log error internally, don't expose details in production
