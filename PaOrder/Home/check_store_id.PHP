@@ -37,7 +37,9 @@ if (isset($_GET['store_id']) && !empty($_GET['store_id'])) {
     } else {
         echo json_encode(['exists' => false, 'message' => 'Store ID not found in customer master', 'status' => 'not_found']);
     }
+    
 } else {
+
     echo json_encode(['exists' => false, 'message' => 'No store ID provided', 'status' => 'error']);
 
 }

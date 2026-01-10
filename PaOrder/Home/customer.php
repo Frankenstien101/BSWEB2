@@ -16,8 +16,8 @@ if (!isset($_SESSION['Name_of_user']) || empty($_SESSION['Name_of_user'])) {
 <title>Order Ko</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/3/atlas.min.css" type="text/css">
-<script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/3/atlas.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <style>
     body { background-color: #f8f9fa; padding-top: 100px; }
@@ -253,10 +253,49 @@ if (!isset($_SESSION['Name_of_user']) || empty($_SESSION['Name_of_user'])) {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 // === CONFIGURATION ===
-const AZURE_MAPS_KEY = 'AQIIJuE89StPCOYSpGilq6BW0J31v3cRjUvKyqlpC3xjuhUk10Q7JQQJ99BKACYeBjFGwMfqAAAgAZMP9MwY';
 const orderModal = new bootstrap.Modal(document.getElementById('orderModal'));
 const loadingOverlay = document.getElementById('loadingOverlay');
 let currentMap = null;
+let currentRouteLayer = null;
+let currentRiderMarker = null;
+let riderPollInterval = null;
+
+function startRiderPolling(orderNo) {
+    if (!orderNo) return;
+    // clear existing
+    if (riderPollInterval) clearInterval(riderPollInterval);
+
+    const fetchAndUpdate = () => {
+        fetch(`/PaOrder/datafetcher/customers_data.php?action=getDeliveryDetails&order_no=${encodeURIComponent(orderNo)}&_=${Date.now()}`)
+            .then(r => r.json())
+            .then(res => {
+                if (!res.success || !res.data || !res.data[0]) return;
+                const d = res.data[0];
+                if (d.rider_lat && d.rider_lng && !isNaN(parseFloat(d.rider_lat)) && !isNaN(parseFloat(d.rider_lng))) {
+                    const lat = parseFloat(d.rider_lat);
+                    const lng = parseFloat(d.rider_lng);
+                    const latlng = [lat, lng];
+                    if (currentRiderMarker) {
+                        currentRiderMarker.setLatLng(latlng);
+                    } else if (currentMap) {
+                        currentRiderMarker = L.marker(latlng).addTo(currentMap).bindPopup('Delivery Agent');
+                    }
+                }
+            })
+            .catch(err => console.error('Rider poll error:', err));
+    };
+
+    // initial fetch immediately
+    fetchAndUpdate();
+    riderPollInterval = setInterval(fetchAndUpdate, 5000);
+}
+
+function stopRiderPolling() {
+    if (riderPollInterval) {
+        clearInterval(riderPollInterval);
+        riderPollInterval = null;
+    }
+}
 
 // CART SYSTEM
 let cart = [];
@@ -630,7 +669,7 @@ function loadModal(title, actionQuery, renderer) {
             document.getElementById('modalOrderBody').innerHTML = html;
 
             if (actionQuery.includes('getDeliveryDetails') && document.getElementById('deliveryMap')) {
-                setTimeout(() => initDeliveryMap(res.data), 0);
+                setTimeout(() => initDeliveryMap(res.data, actionQuery), 0);
             }
         })
         .catch(err => {
@@ -792,110 +831,99 @@ function buildCompletedView(completedData, orderNo){
    AZURE MAP INITIALIZATION
 ========================= */
 
-function initDeliveryMap(data) {
+function initDeliveryMap(data, actionQuery = '') {
     if (currentMap) {
-        currentMap.dispose();
+        try { currentMap.remove(); } catch (e) { console.warn(e); }
         currentMap = null;
+    }
+    if (currentRouteLayer) {
+        try { currentRouteLayer.remove(); } catch (e) { console.warn(e); }
+        currentRouteLayer = null;
     }
 
     const d = data[0];
 
-    const warehousePos = [parseFloat(d.warehouse_lng), parseFloat(d.warehouse_lat)];
-    const storePos = [parseFloat(d.STORE_LONG), parseFloat(d.STORE_LAT)];
+    // Leaflet expects [lat, lng]
+    const warehousePos = [parseFloat(d.warehouse_lat), parseFloat(d.warehouse_lng)];
+    const storePos = [parseFloat(d.STORE_LAT), parseFloat(d.STORE_LONG)];
 
     let riderPos = null;
     let hasRider = false;
-    if (d.rider_lng && d.rider_lat && !isNaN(parseFloat(d.rider_lng)) && !isNaN(parseFloat(d.rider_lat))) {
-        riderPos = [parseFloat(d.rider_lng), parseFloat(d.rider_lat)];
+    if (d.rider_lat && d.rider_lng && !isNaN(parseFloat(d.rider_lat)) && !isNaN(parseFloat(d.rider_lng))) {
+        riderPos = [parseFloat(d.rider_lat), parseFloat(d.rider_lng)];
         hasRider = true;
     }
 
-    const map = new atlas.Map('deliveryMap', {
-        center: hasRider ? riderPos : warehousePos,
-        zoom: 12,
-        view: 'Auto',
-        authOptions: {
-            authType: 'subscriptionKey',
-            subscriptionKey: AZURE_MAPS_KEY
-        }
-    });
+    const center = hasRider ? riderPos : warehousePos;
+
+    const map = L.map('deliveryMap').setView(center, 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
 
     currentMap = map;
 
-    map.events.add('ready', () => {
-        const datasource = new atlas.source.DataSource();
-        map.sources.add(datasource);
+    const whMarker = L.marker(warehousePos).addTo(map).bindPopup('Warehouse');
+    const storeMarker = L.marker(storePos).addTo(map).bindPopup('Store');
+    // set or replace global rider marker
+    if (currentRiderMarker) {
+        try { currentRiderMarker.remove(); } catch (e) { console.warn(e); }
+        currentRiderMarker = null;
+    }
+    if (hasRider) {
+        currentRiderMarker = L.marker(riderPos).addTo(map).bindPopup('Delivery Agent');
+    }
 
-        datasource.add(new atlas.data.Feature(new atlas.data.Point(warehousePos), { type: 'warehouse', title: 'Warehouse' }));
-        datasource.add(new atlas.data.Feature(new atlas.data.Point(storePos), { type: 'store', title: 'Store' }));
+    // Fit bounds to points
+    const points = [warehousePos, storePos];
+    if (hasRider) points.push(riderPos);
+    map.fitBounds(points, { padding: [80, 80] });
 
-        if (hasRider) {
-            datasource.add(new atlas.data.Feature(new atlas.data.Point(riderPos), { type: 'rider', title: 'Delivery Agent' }));
-        }
-
-        map.layers.add(new atlas.layer.SymbolLayer(datasource, null, {
-            iconOptions: {
-                image: ['match', ['get', 'type'],
-                    'warehouse', 'pin-darkblue',
-                    'rider', 'marker-red',
-                    'store', 'pin-round-red',
-                    'marker-black'
-                ],
-                anchor: 'center',
-                allowOverlap: true
-            },
-            textOptions: {
-                textField: ['get', 'title'],
-                offset: [0, 2.2],
-                color: '#FFFFFF',
-                haloColor: '#000000',
-                haloWidth: 2,
-                size: 12
-            }
-        }));
-
-        const warehouseQuery = `${d.warehouse_lat},${d.warehouse_lng}`;
-        const storeQuery = `${d.STORE_LAT},${d.STORE_LONG}`;
-        const query = `${warehouseQuery}:${storeQuery}`;
-
-        const routeURL = `https://atlas.microsoft.com/route/directions/json?api-version=1.0&subscription-key=${AZURE_MAPS_KEY}&query=${query}`;
-
-        fetch(routeURL)
+    // Request a driving route from OSRM public API and draw it
+    try {
+        const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${warehousePos[1]},${warehousePos[0]};${storePos[1]},${storePos[0]}?overview=full&geometries=geojson`;
+        fetch(osrmUrl)
             .then(r => r.json())
             .then(routeData => {
-                if (routeData.routes && routeData.routes.length > 0) {
-                    const legs = routeData.routes[0].legs;
-                    legs.forEach(leg => {
-                        const coords = leg.points.map(p => [p.longitude, p.latitude]);
-                        datasource.add(new atlas.data.Feature(new atlas.data.LineString(coords), {}));
-                    });
-
-                    map.layers.add(new atlas.layer.LineLayer(datasource, null, {
-                        filter: ['==', ['geometry-type'], 'LineString'],
-                        strokeColor: '#0078d4',
-                        strokeWidth: 6,
-                        strokeOpacity: 0.9
-                    }));
+                if (routeData && routeData.routes && routeData.routes.length > 0) {
+                    const geometry = routeData.routes[0].geometry;
+                    currentRouteLayer = L.geoJSON(geometry, {
+                        style: { color: '#0078d4', weight: 6, opacity: 0.9 }
+                    }).addTo(map);
+                    try { map.fitBounds(currentRouteLayer.getBounds(), { padding: [80, 80] }); } catch (e) {}
                 }
             })
-            .catch(err => console.error('Route API error:', err));
+            .catch(err => console.error('Routing error:', err));
+    } catch (e) {
+        console.error('Routing request failed', e);
+    }
 
-        let points = [warehousePos, storePos];
-        if (hasRider) points.push(riderPos);
-
-        const bounds = atlas.data.BoundingBox.fromPoints(points);
-        map.setCamera({
-            bounds: bounds,
-            padding: 80
-        });
-    });
+    // Extract order_no from actionQuery if present and start polling for rider updates
+    let orderNo = null;
+    if (actionQuery) {
+        const m = actionQuery.match(/order_no=([^&]+)/);
+        if (m) orderNo = decodeURIComponent(m[1]);
+    }
+    if (!orderNo && d.order_no) orderNo = d.order_no;
+    if (!orderNo && d.ORDER_NO) orderNo = d.ORDER_NO;
+    if (orderNo) startRiderPolling(orderNo);
 }
 
 // Clean up map on modal close
 document.querySelectorAll('#orderModal .btn-close, #orderModal .btn-secondary').forEach(btn => {
     btn.addEventListener('click', () => {
+        stopRiderPolling();
+        if (currentRiderMarker) {
+            try { currentRiderMarker.remove(); } catch (e) { console.warn(e); }
+            currentRiderMarker = null;
+        }
+        if (currentRouteLayer) {
+            try { currentRouteLayer.remove(); } catch (e) { console.warn(e); }
+            currentRouteLayer = null;
+        }
         if (currentMap) {
-            currentMap.dispose();
+            try { currentMap.remove(); } catch (e) { console.warn(e); }
             currentMap = null;
         }
     });

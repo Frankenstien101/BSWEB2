@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,14 +29,14 @@
                     <div class="col-md-4">
                         <label class="form-label">Start Date</label>
                         <div class="input-group" id="start-datepicker">
-                            <input type="text" id="start_date" class="form-control" placeholder="yyyy-mm-dd">
+                            <input type="text" id="start_date" class="form-control" placeholder="yyyy-mm-dd" value="<?php echo date('Y-m-d'); ?> ">
                             <span class="input-group-text"><i class="bi bi-calendar"></i></span>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">End Date</label>
                         <div class="input-group" id="end-datepicker">
-                            <input type="text" id="end_date" class="form-control" placeholder="yyyy-mm-dd">
+                            <input type="text" id="end_date" class="form-control" placeholder="yyyy-mm-dd" value="<?php echo date('Y-m-d'); ?>">
                             <span class="input-group-text"><i class="bi bi-calendar"></i></span>
                         </div>
                     </div>
@@ -82,7 +81,7 @@
         });
 
         // Constants
-        const companyId = "<?php echo $_SESSION['COMPANY_ID'] ?? 'NO_DATA'; ?>";
+        const companyId = "<?php echo $_SESSION['Company_ID'] ?? 'NO_DATA'; ?>";
         const API_PATH = '/PaOrder/datafetcher/customers_data.php';
 
         const ordersContainer = document.getElementById('orders-container');

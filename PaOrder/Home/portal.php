@@ -7,6 +7,11 @@ include '../../DB/dbcon.php';
 
 // If site not set in session, get the first available site for the user
 
+if (!isset($_SESSION['Name_of_user']) || empty($_SESSION['Name_of_user'])) {
+    header("Location: /PaOrder/Home/verify.php");
+    exit;
+}
+
 ?>
 <!doctype html>
 <html lang="en">

@@ -196,6 +196,7 @@
             color: var(--text-muted);
             background-color: rgba(3, 35, 109, 0.5);
             backdrop-filter: blur(12px);
+           
         }
 
         @media (max-width: 768px) {
@@ -330,14 +331,15 @@
                   </div>
 
             </div>
-             
-    </div>
 
-        </main>
+             </main>
 
-        <footer>
+            <footer>
             © <?php echo date("Y"); ?> BLUESYS. All rights reserved.
-        </footer>
+            </footer>
+        
     </div>
-</body>
+
+    </body>
+
 </html>
