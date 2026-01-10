@@ -103,8 +103,6 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     ?>
 
-
     <!-- Repeat other cards -->
-
   </div>
 </div>
