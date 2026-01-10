@@ -4,7 +4,7 @@ $BATHC_ID = isset($_GET['BATCH_ID']) ? $_GET['BATCH_ID'] : '';
 $AGENT_ID = isset($_GET['AGENT_ID']) ? $_GET['AGENT_ID'] : '';
 $DELIVERY_DATE = isset($_GET['DELIVERY_DATE']) ? $_GET['DELIVERY_DATE'] : '';
 
-$query = "SELECT *,BD.STATUS AS DELIVERY_STATUS   from [dbo].[Dash_Plan_Batch_Transaction] BT join Dash_Plan_Batch_Details BD on
+$query = "SELECT *,(CASE WHEN PD.STATUS = 'COMPLETE' THEN 'VISITED' ELSE 'NOT VISITED' END)  AS VISIT_STATUS,BD.STATUS AS DELIVERY_STATUS  from [dbo].[Dash_Plan_Batch_Transaction] BT join Dash_Plan_Batch_Details BD on
 BT.BATCH_ID = BD.BATCH  LEFT JOIN [dbo].[Dash_Agent_Performance_Detailed] PD ON 
 BD.DATE_TO_DELIVER=PD.DELIVERY_DATE AND BD.CUSTOMER_ID=PD.STORE_CODE  AND PD.BATCH_ID='$AGENT_ID' WHERE BT.BATCH_ID=:batch_id order by PD.STORE_ENTRY ASC";
 $stmt = $conn->prepare($query);
@@ -83,7 +83,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     ?>
       <div class="col-12 col-sm-6 col-md-4 col-lg-3 ">
         <a href="" class="btn_stores">
-          <div class="card <?php echo ($row['STORE_CODE'] ? 'custom-card-visited' : 'custom-card-notvisited'); ?>">
+          <div class="card <?php echo ($row['VISIT_STATUS'] == 'VISITED' ? 'custom-card-visited' : 'custom-card-notvisited'); ?>">
             <div class="card-body d-flex justify-content-between align-items-start">
               <div>
                 <div class="code-title"><?= $row['CUSTOMER_ID'] ?></div>
