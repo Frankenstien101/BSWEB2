@@ -20,15 +20,15 @@ try {
     if ($result) {
         $_SESSION['role'] = $result["ROLE"];
         $_SESSION['fullname'] = $result["FULLNAME"];
-    	$_SESSION['user_id'] = $result["USERNAME"];
+        $_SESSION['user_id'] = $result["USERNAME"];
         $_SESSION['id'] = $result["ID"];
+        insert_logs($conn, $result["USERNAME"], "Login Successful");
         echo "1"; // User authenticated successfully
     } else {
-    	session_destroy();
+        session_destroy();
         echo "0"; // Authentication failed
     }
 } catch (PDOException $e) {
     // Handle any errors
     echo "Error: " . $e->getMessage();
 }
-?>
