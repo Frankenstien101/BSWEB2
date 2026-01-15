@@ -14,9 +14,9 @@ $SITE_ID       = $_SESSION['ses_site'];
 $sql = "SELECT COUNT(BD.CUSTOMER_ID) AS TOTAL_STORE,
         SUM(BD.TOTAL_AMOUNT) AS TOT_AMOUNT,
         ISNULL(SUM(DP.COLLECTED_AMOUNT),0) AS TOTAL_DELIVERED_AMOUNT,
-        SUM(CASE WHEN PD.STORE_CODE IS NOT NULL THEN 1 ELSE 0 END) AS VISITED,
-        COUNT(BD.CUSTOMER_ID)-SUM(CASE WHEN PD.STORE_CODE IS NOT NULL THEN 1 ELSE 0 END)  AS NOT_VISITED,
-        SUM(CASE WHEN BD.STATUS IN ('DELIVERED','VERIFIED') THEN 1 ELSE 0 END) AS TOTAL_DELIVERED,
+      SUM(CASE WHEN PD.STATUS = 'COMPLETE' THEN 1 ELSE 0 END) VISITED,
+          COUNT(*) - SUM(CASE WHEN PD.STATUS = 'COMPLETE' THEN 1 ELSE 0 END) NOT_VISITED,
+                SUM(CASE WHEN BD.STATUS IN ('DELIVERED','VERIFIED') THEN 1 ELSE 0 END) AS TOTAL_DELIVERED,
         SUM(CASE WHEN BD.STATUS='FAILED' THEN 1 ELSE 0 END) AS FAILED,
         SUM(CASE WHEN BD.RCA='NO OWNER' THEN 1 ELSE 0 END) AS NO_OWNER,
         SUM(CASE WHEN BD.RCA='NO BUDGET' THEN 1 ELSE 0 END) AS NO_BUDGET,
@@ -46,14 +46,35 @@ function peso($v)
   return '₱' . number_format($v, 2);
 }
 
+function get_color_class($percentage)
+{
+  if ($percentage >= 90) {
+    return 'bg-success text-white';
+  } elseif ($percentage >= 80 and $percentage < 90) {
+    return 'bg-warning text-white';
+  } elseif ($percentage < 80 && $percentage >= 1) {
+    return 'bg-danger text-white';
+  }
+}
+function get_color_class_negative($percentage)
+{
+
+  if ($percentage >= 90) {
+    return 'bg-danger text-white';
+  } elseif ($percentage >= 10 and $percentage < 90) {
+    return 'bg-warning text-white';
+  } elseif ($percentage < 10 && $percentage >= 1) {
+    return 'bg-success text-white';
+  }
+}
 function getToDate($dt, $conn)
 {
   $start = date("Y-m-01", strtotime($dt));
   $q = $conn->prepare("SELECT COUNT(*) TOTAL_STORE,
                SUM(TOTAL_AMOUNT) TOT_AMOUNT,
                ISNULL(SUM(COLLECTED_AMOUNT),0) TOTAL_DELIVERED,
-               SUM(CASE WHEN PD.STORE_CODE IS NOT NULL THEN 1 ELSE 0 END) VISITED,
-               COUNT(*) - SUM(CASE WHEN PD.STORE_CODE IS NOT NULL THEN 1 ELSE 0 END) NOT_VISITED,
+               SUM(CASE WHEN PD.STATUS = 'COMPLETE' THEN 1 ELSE 0 END) VISITED,
+               COUNT(*) - SUM(CASE WHEN PD.STATUS = 'COMPLETE' THEN 1 ELSE 0 END) NOT_VISITED,
                SUM(CASE WHEN BD.STATUS IN('DELIVERED','VERIFIED') THEN 1 ELSE 0 END) DELIVERED,
                SUM(CASE WHEN BD.STATUS='FAILED' THEN 1 ELSE 0 END) FAILED
         FROM Dash_Plan_Batch_Details BD
@@ -184,45 +205,45 @@ $tod = getToDate($date_selected, $conn);
                     <td>Volume</td>
                     <td><?= peso($query_items['TOT_AMOUNT']) ?></td>
                     <td><?= peso($query_items['TOTAL_DELIVERED_AMOUNT']) ?></td>
-                    <td><?= percent($query_items['TOTAL_DELIVERED_AMOUNT'], $query_items['TOT_AMOUNT']) ?>%</td>
+                    <td class="<?= get_color_class(percent($query_items['TOTAL_DELIVERED_AMOUNT'], $query_items['TOT_AMOUNT'])) ?>"><?= percent($query_items['TOTAL_DELIVERED_AMOUNT'], $query_items['TOT_AMOUNT']) ?>%</td>
 
                     <td><?= peso($tod['TOT_AMOUNT']) ?></td>
                     <td><?= peso($tod['TOTAL_DELIVERED']) ?></td>
-                    <td><?= percent($tod['TOTAL_DELIVERED'], $tod['TOT_AMOUNT']) ?>%</td>
+                    <td class="<?= get_color_class(percent($tod['TOTAL_DELIVERED'], $tod['TOT_AMOUNT'])) ?>"><?= percent($tod['TOTAL_DELIVERED'], $tod['TOT_AMOUNT']) ?>%</td>
                   </tr>
 
                   <tr>
                     <td>Visited</td>
                     <td rowspan="4"><?= $query_items['TOTAL_STORE'] ?></td>
                     <td><?= $query_items['VISITED'] ?></td>
-                    <td><?= percent($query_items['VISITED'], $query_items['TOTAL_STORE']) ?>%</td>
+                    <td class="<?= get_color_class(percent($query_items['VISITED'], $query_items['TOTAL_STORE'])) ?>"><?= percent($query_items['VISITED'], $query_items['TOTAL_STORE']) ?>%</td>
                     <td rowspan="4"><?= $tod['TOTAL_STORE'] ?></td>
                     <td><?= $tod['VISITED'] ?></td>
-                    <td><?= percent($tod['VISITED'], $tod['TOTAL_STORE']) ?>%</td>
+                    <td class="<?= get_color_class(percent($tod['VISITED'], $tod['TOTAL_STORE'])) ?>"><?= percent($tod['VISITED'], $tod['TOTAL_STORE']) ?>%</td>
                   </tr>
-
-                  <tr>
-                    <td>Not Visited</td>
-                    <td><?= $query_items['NOT_VISITED'] ?></td>
-                    <td><?= percent($query_items['NOT_VISITED'], $query_items['TOTAL_STORE']) ?>%</td>
-                    <td><?= $tod['NOT_VISITED'] ?></td>
-                    <td><?= percent($tod['NOT_VISITED'], $tod['TOTAL_STORE']) ?>%</td>
-                  </tr>
-
                   <tr>
                     <td>Delivered</td>
                     <td><?= $query_items['TOTAL_DELIVERED'] ?></td>
-                    <td><?= percent($query_items['TOTAL_DELIVERED'], $query_items['TOTAL_STORE']) ?>%</td>
+                    <td class="<?= get_color_class(percent($query_items['TOTAL_DELIVERED'], $query_items['TOTAL_STORE'])) ?>"><?= percent($query_items['TOTAL_DELIVERED'], $query_items['TOTAL_STORE']) ?>%</td>
                     <td><?= $tod['DELIVERED'] ?></td>
-                    <td><?= percent($tod['DELIVERED'], $tod['TOTAL_STORE']) ?>%</td>
+                    <td class="<?= get_color_class(percent($tod['DELIVERED'], $tod['TOTAL_STORE'])) ?>"><?= percent($tod['DELIVERED'], $tod['TOTAL_STORE']) ?>%</td>
                   </tr>
+                  <tr>
+                    <td>Not Visited</td>
+                    <td><?= $query_items['NOT_VISITED'] ?></td>
+                    <td class="<?= get_color_class_negative(percent($query_items['NOT_VISITED'], $query_items['TOTAL_STORE'])) ?>"><?= percent($query_items['NOT_VISITED'], $query_items['TOTAL_STORE']) ?>%</td>
+                    <td><?= $tod['NOT_VISITED'] ?></td>
+                    <td class="<?= get_color_class_negative(percent($tod['NOT_VISITED'], $tod['TOTAL_STORE'])) ?>"><?= percent($tod['NOT_VISITED'], $tod['TOTAL_STORE']) ?>%</td>
+                  </tr>
+
+
 
                   <tr>
                     <td>Failed</td>
                     <td><?= $query_items['FAILED'] ?></td>
-                    <td><?= percent($query_items['FAILED'], $query_items['TOTAL_STORE']) ?>%</td>
+                    <td class="<?= get_color_class_negative(percent($query_items['FAILED'], $query_items['TOTAL_STORE'])) ?>"><?= percent($query_items['FAILED'], $query_items['TOTAL_STORE']) ?>%</td>
                     <td><?= $tod['FAILED'] ?></td>
-                    <td><?= percent($tod['FAILED'], $tod['TOTAL_STORE']) ?>%</td>
+                    <td class="<?= get_color_class_negative(percent($tod['FAILED'], $tod['TOTAL_STORE'])) ?>"><?= percent($tod['FAILED'], $tod['TOTAL_STORE']) ?>%</td>
                   </tr>
                 </tbody>
               </table>

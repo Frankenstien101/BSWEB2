@@ -18,7 +18,8 @@ WITH CTE AS (
         COUNT(BD.CUSTOMER_ID) AS TOTAL_STORE,
         SUM(BD.TOTAL_AMOUNT) AS TOTAL_VALUE,
         ISNULL(SUM(DP.COLLECTED_AMOUNT),0) AS TOTAL_DELIVERED_AMOUNT,
-        SUM(CASE WHEN PD.STORE_CODE IS NOT NULL THEN 1 ELSE 0 END) AS VISITED,
+                    SUM(CASE WHEN PD.STATUS = 'COMPLETE' THEN 1 ELSE 0 END) VISITED,
+               COUNT(*) - SUM(CASE WHEN PD.STATUS = 'COMPLETE' THEN 1 ELSE 0 END) NOT_VISITED,
         SUM(CASE WHEN BD.STATUS IN ('DELIVERED','VERIFIED') THEN 1 ELSE 0 END) AS DELIVERED,
         SUM(CASE WHEN BD.STATUS='FAILED' THEN 1 ELSE 0 END) AS FAILED,
         SUM(CASE WHEN BD.RCA='NO OWNER' THEN 1 ELSE 0 END) AS NO_OWNER,
@@ -72,6 +73,27 @@ function peso($v)
     return '₱' . number_format($v, 2);
 }
 
+function get_color_class($percentage)
+{
+    if ($percentage >= 90) {
+        return 'bg-success text-white';
+    } elseif ($percentage >= 80 and $percentage < 90) {
+        return 'bg-warning text-white';
+    } elseif ($percentage < 80 && $percentage >= 1) {
+        return 'bg-danger text-white';
+    }
+}
+function get_color_class_negative($percentage)
+{
+
+    if ($percentage >= 90) {
+        return 'bg-danger text-white';
+    } elseif ($percentage >= 10 and $percentage < 90) {
+        return 'bg-warning text-white';
+    } elseif ($percentage < 10 && $percentage >= 1) {
+        return 'bg-success text-white';
+    }
+}
 function getToDate($agent, $dt, $conn)
 {
     $start = date("Y-m-01", strtotime($dt));
@@ -79,7 +101,8 @@ function getToDate($agent, $dt, $conn)
         SELECT COUNT(*) TOTAL_STORE,
                SUM(TOTAL_AMOUNT) TOT_AMOUNT,
                ISNULL(SUM(COLLECTED_AMOUNT),0) TOTAL_DELIVERED,
-               SUM(CASE WHEN PD.STORE_CODE IS NOT NULL THEN 1 ELSE 0 END) VISITED,
+                      SUM(CASE WHEN PD.STATUS = 'COMPLETE' THEN 1 ELSE 0 END) VISITED,
+               COUNT(*) - SUM(CASE WHEN PD.STATUS = 'COMPLETE' THEN 1 ELSE 0 END) NOT_VISITED,
                SUM(CASE WHEN BD.STATUS IN('DELIVERED','VERIFIED') THEN 1 ELSE 0 END) DELIVERED,
                SUM(CASE WHEN BD.STATUS='FAILED' THEN 1 ELSE 0 END) FAILED
         FROM Dash_Plan_Batch_Details BD
@@ -179,12 +202,15 @@ function getToDate($agent, $dt, $conn)
             </div>
 
 
+            <?php
 
-            <?php foreach ($rows as $r):
+
+            foreach ($rows as $r):
                 $AGENT = $r['LG_ID'] ?? $r['AGENT'];
                 $tod   = getToDate($r['AGENT'], $date_selected, $conn);
                 $notVisited = $r['TOTAL_STORE'] - $r['VISITED'];
                 $todNotVisited = $tod['TOTAL_STORE'] - $tod['VISITED'];
+                $colorclassVolume = (percent($r['TOTAL_DELIVERED_AMOUNT'], $r['TOTAL_VALUE']) >= 90) ? 'bg-success text-white' : ((percent($r['TOTAL_DELIVERED_AMOUNT'], $r['TOTAL_VALUE']) >= 80) ? 'bg-warning text-white' : 'bg-danger text-white');
             ?>
                 <div class="col-sm-12 col-lg-6 mb-2">
                     <a class="btn_nav_coverage"
@@ -220,44 +246,44 @@ function getToDate($agent, $dt, $conn)
                                             <td>Volume</td>
                                             <td><?= peso($r['TOTAL_VALUE']) ?></td>
                                             <td><?= peso($r['TOTAL_DELIVERED_AMOUNT']) ?></td>
-                                            <td><?= percent($r['TOTAL_DELIVERED_AMOUNT'], $r['TOTAL_VALUE']) ?>%</td>
+                                            <td class="<?= get_color_class(percent($r['TOTAL_DELIVERED_AMOUNT'], $r['TOTAL_VALUE'])) ?>"><?= percent($r['TOTAL_DELIVERED_AMOUNT'], $r['TOTAL_VALUE']) ?>%</td>
                                             <td><?= peso($tod['TOT_AMOUNT']) ?></td>
                                             <td><?= peso($tod['TOTAL_DELIVERED']) ?></td>
-                                            <td><?= percent($tod['TOTAL_DELIVERED'], $tod['TOT_AMOUNT']) ?>%</td>
+                                            <td class="<?= get_color_class(percent($tod['TOTAL_DELIVERED'], $tod['TOT_AMOUNT'])) ?>"><?= percent($tod['TOTAL_DELIVERED'], $tod['TOT_AMOUNT']) ?>%</td>
                                         </tr>
 
                                         <tr>
                                             <td>Visited</td>
                                             <td rowspan="4"><?= $r['TOTAL_STORE'] ?></td>
                                             <td><?= $r['VISITED'] ?></td>
-                                            <td><?= percent($r['VISITED'], $r['TOTAL_STORE']) ?>%</td>
+                                            <td class="<?= get_color_class(percent($r['VISITED'], $r['TOTAL_STORE'])) ?>"><?= percent($r['VISITED'], $r['TOTAL_STORE']) ?>%</td>
                                             <td rowspan="4"><?= $tod['TOTAL_STORE'] ?></td>
                                             <td><?= $tod['VISITED'] ?></td>
-                                            <td><?= percent($tod['VISITED'], $tod['TOTAL_STORE']) ?>%</td>
+                                            <td class="<?= get_color_class(percent($tod['VISITED'], $tod['TOTAL_STORE'])) ?>"><?= percent($tod['VISITED'], $tod['TOTAL_STORE']) ?>%</td>
                                         </tr>
                                         <tr>
                                             <td>Delivered</td>
                                             <td><?= $r['DELIVERED'] ?></td>
-                                            <td><?= percent($r['DELIVERED'], $r['TOTAL_STORE']) ?>%</td>
+                                            <td class="<?= get_color_class(percent($r['DELIVERED'], $r['TOTAL_STORE'])) ?>"><?= percent($r['DELIVERED'], $r['TOTAL_STORE']) ?>%</td>
                                             <td><?= $tod['DELIVERED'] ?></td>
-                                            <td><?= percent($tod['DELIVERED'], $tod['TOTAL_STORE']) ?>%</td>
+                                            <td class="<?= get_color_class(percent($tod['DELIVERED'], $tod['TOTAL_STORE'])) ?>"><?= percent($tod['DELIVERED'], $tod['TOTAL_STORE']) ?>%</td>
                                         </tr>
-                                        <tr class="bg-danger text-light">
+                                        <tr>
                                             <td>Not Visited</td>
                                             <td><?= $notVisited ?></td>
-                                            <td><?= percent($notVisited, $r['TOTAL_STORE']) ?>%</td>
+                                            <td class="<?= get_color_class_negative(percent($notVisited, $r['TOTAL_STORE'])) ?>"><?= percent($notVisited, $r['TOTAL_STORE']) ?>%</td>
                                             <td><?= $todNotVisited ?></td>
-                                            <td><?= percent($todNotVisited, $tod['TOTAL_STORE']) ?>%</td>
+                                            <td class="<?= get_color_class_negative(percent($todNotVisited, $tod['TOTAL_STORE'])) ?>"><?= percent($todNotVisited, $tod['TOTAL_STORE']) ?>%</td>
                                         </tr>
 
 
-
-                                        <tr class="bg-danger text-light">
+                                        <!-- 90-100 - success | 80-89 warning | 79 - below danger -->
+                                        <tr>
                                             <td>Failed</td>
                                             <td><?= $r['FAILED'] ?></td>
-                                            <td><?= percent($r['FAILED'], $r['TOTAL_STORE']) ?>%</td>
+                                            <td class="<?= get_color_class_negative(percent($r['FAILED'], $r['TOTAL_STORE'])) ?>"><?= percent($r['FAILED'], $r['TOTAL_STORE']) ?>%</td>
                                             <td><?= $tod['FAILED'] ?></td>
-                                            <td><?= percent($tod['FAILED'], $tod['TOTAL_STORE']) ?>%</td>
+                                            <td class="<?= get_color_class_negative(percent($tod['FAILED'], $tod['TOTAL_STORE'])) ?>"><?= percent($tod['FAILED'], $tod['TOTAL_STORE']) ?>%</td>
                                         </tr>
                                     </tbody>
                                 </table>
