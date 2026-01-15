@@ -186,6 +186,7 @@
                 <th>SITE ID</th>
                 <th>TRANSACTION ID</th>
                 <th>INVOICE TYPE</th>
+                 <th>ORDER DATE</th>
                 <th>TRANSACTION DATE</th>
                 <th>SELLER ID</th>
                 <th>SELLER NAME</th>
@@ -528,6 +529,7 @@ function renderTable(data, currentPage = 1) {
             <td>${item.SITE_ID || ''}</td>
             <td>${item.TRANSACTION_ID || ''}</td>
             <td>${item.INVOICE_TYPE || ''}</td>
+             <td>${item.ORDER_DATE || ''}</td>
             <td>${item.TRANSACTION_DATE || ''}</td>
             <td>${item.SELLER_ID || ''}</td>
             <td>${item.SELLER_NAME || ''}</td>

@@ -2047,6 +2047,7 @@ if (isset($_GET['action'])) {
                     t.SITE_ID,
                     t.TRANSACTION_ID,
                     t.INVOICE_TYPE,
+                    t.ORDER_DATE,
                     t.TRANSACTION_DATE,
                     t.SELLER_ID,
                     t.SELLER_NAME,
@@ -2079,7 +2080,7 @@ if (isset($_GET['action'])) {
                   AND d.COMPANY_ID = t.COMPANY_ID
                 WHERE d.COMPANY_ID = ?
                   AND d.SITE_ID = ?
-                  AND t.TRANSACTION_DATE BETWEEN ? AND ?
+                  AND t.ORDER_DATE BETWEEN ? AND ?
                   AND t.SELLER_ID IN ($placeholders)
                 ORDER BY t.CUSTOMER_NAME ASC
                 OFFSET $offsetInt ROWS FETCH NEXT $limitInt ROWS ONLY
@@ -2131,6 +2132,7 @@ if (isset($_GET['action'])) {
                     t.SITE_ID,
                     t.TRANSACTION_ID,
                     t.INVOICE_TYPE,
+                    t.ORDER_DATE,
                     t.TRANSACTION_DATE,
                     t.SELLER_ID,
                     t.SELLER_NAME,
@@ -2163,7 +2165,7 @@ if (isset($_GET['action'])) {
                   AND d.COMPANY_ID = t.COMPANY_ID
                 WHERE d.COMPANY_ID = ?
                   AND d.SITE_ID = ?
-                  AND t.TRANSACTION_DATE BETWEEN ? AND ?
+                  AND t.ORDER_DATE BETWEEN ? AND ?
                   AND t.SELLER_ID IN ($placeholders)
                 ORDER BY t.CUSTOMER_NAME ASC
             ";
@@ -3102,6 +3104,7 @@ if (isset($_GET['action'])) {
                     t.SITE_ID,
                     t.TRANSACTION_ID,
                     t.INVOICE_TYPE,
+                     t.ORDER_DATE,
                     t.TRANSACTION_DATE,
                     t.SELLER_ID,
                     t.SELLER_NAME,
@@ -3133,7 +3136,7 @@ if (isset($_GET['action'])) {
                   ON t.TRANSACTION_ID = d.TRANSACTION_ID 
                   AND d.COMPANY_ID = t.COMPANY_ID
                 WHERE d.COMPANY_ID = ?
-                  AND t.TRANSACTION_DATE BETWEEN ? AND ?
+                  AND t.ORDER_DATE BETWEEN ? AND ?
                   AND t.SITE_ID IN ($placeholders)
                 ORDER BY t.SITE_ID ASC
                 OFFSET $offsetInt ROWS FETCH NEXT $limitInt ROWS ONLY
@@ -3186,6 +3189,7 @@ if (isset($_GET['action'])) {
                 t.SITE_ID,
                 t.TRANSACTION_ID,
                 t.INVOICE_TYPE,
+                 t.ORDER_DATE,
                 t.TRANSACTION_DATE,
                 t.SELLER_ID,
                 t.SELLER_NAME,
@@ -3217,7 +3221,7 @@ if (isset($_GET['action'])) {
                 ON t.TRANSACTION_ID = d.TRANSACTION_ID 
                 AND d.COMPANY_ID = t.COMPANY_ID
             WHERE d.COMPANY_ID = ?
-                AND t.TRANSACTION_DATE BETWEEN ? AND ?
+                AND t.ORDER_DATE BETWEEN ? AND ?
                 AND t.SITE_ID IN ($placeholders)
             ORDER BY t.SITE_ID ASC
         ";
