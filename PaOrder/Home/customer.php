@@ -68,6 +68,20 @@ if (!isset($_SESSION['Name_of_user']) || empty($_SESSION['Name_of_user'])) {
         border-bottom: 1px solid #eee;
         padding: 0.75rem 0;
     }
+
+    /* Custom Leaflet marker using Font Awesome */
+    .custom-div-icon .marker-pin{
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        font-size: 16px;
+    }
+    .custom-div-icon i{ line-height: 1; }
 </style>
 </head>
 <body>
@@ -259,6 +273,10 @@ let currentMap = null;
 let currentRouteLayer = null;
 let currentRiderMarker = null;
 let riderPollInterval = null;
+// Icon placeholders (will be initialized when map is created)
+let warehouseIcon = null;
+let storeIcon = null;
+let riderIcon = null;
 
 function startRiderPolling(orderNo) {
     if (!orderNo) return;
@@ -275,10 +293,14 @@ function startRiderPolling(orderNo) {
                     const lat = parseFloat(d.rider_lat);
                     const lng = parseFloat(d.rider_lng);
                     const latlng = [lat, lng];
+                    console.log('Rider poll response:', d);
                     if (currentRiderMarker) {
+                        console.log('Updating existing rider marker to', lat, lng);
                         currentRiderMarker.setLatLng(latlng);
+                        try { currentRiderMarker.setIcon(riderIcon); } catch(e) { /* ignore */ }
                     } else if (currentMap) {
-                        currentRiderMarker = L.marker(latlng).addTo(currentMap).bindPopup('Delivery Agent');
+                        console.log('Creating new rider marker at', lat, lng);
+                        currentRiderMarker = L.marker(latlng, { icon: riderIcon }).addTo(currentMap).bindPopup('Delivery Agent');
                     }
                 }
             })
@@ -863,16 +885,38 @@ function initDeliveryMap(data, actionQuery = '') {
     }).addTo(map);
 
     currentMap = map;
+    // define custom icons using Font Awesome
+    warehouseIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: `<div class="marker-pin" style="background:#6c757d;"><i class="fas fa-warehouse"></i></div>`,
+        iconSize: [34, 34],
+        iconAnchor: [17, 34],
+        popupAnchor: [0, -30]
+    });
+    storeIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: `<div class="marker-pin" style="background:#28a745;"><i class="fas fa-store"></i></div>`,
+        iconSize: [34, 34],
+        iconAnchor: [17, 34],
+        popupAnchor: [0, -30]
+    });
+    riderIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: `<div class="marker-pin" style="background:#0078d4;"><i class="fas fa-user"></i></div>`,
+        iconSize: [34, 34],
+        iconAnchor: [17, 34],
+        popupAnchor: [0, -30]
+    });
 
-    const whMarker = L.marker(warehousePos).addTo(map).bindPopup('Warehouse');
-    const storeMarker = L.marker(storePos).addTo(map).bindPopup('Store');
+    const whMarker = L.marker(warehousePos, { icon: warehouseIcon }).addTo(map).bindPopup('Warehouse');
+    const storeMarker = L.marker(storePos, { icon: storeIcon }).addTo(map).bindPopup('Store');
     // set or replace global rider marker
     if (currentRiderMarker) {
         try { currentRiderMarker.remove(); } catch (e) { console.warn(e); }
         currentRiderMarker = null;
     }
     if (hasRider) {
-        currentRiderMarker = L.marker(riderPos).addTo(map).bindPopup('Delivery Agent');
+        currentRiderMarker = L.marker(riderPos, { icon: riderIcon }).addTo(map).bindPopup('Delivery Agent');
     }
 
     // Fit bounds to points
