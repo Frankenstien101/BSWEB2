@@ -2,7 +2,7 @@
     <div class="row">
         <div class="card col-12 mb-2" style="height: 50px;">
             <div class="d-flex justify-content-end align-items-center" style="height: 100%;">
-                <button class="btn btn-sm btn-primary" id="btn_addnew" data-toggle="modal" data-target="#exampleModal">Add New</button>
+                <a class="btn btn-sm btn-primary" href="index.php?page=account_monitoring_map">Maps View</a>
             </div>
         </div>
         <div class="col-12">

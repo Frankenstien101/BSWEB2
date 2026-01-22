@@ -358,11 +358,11 @@ $selected_site = $_SESSION['selected_site'] ?? '';
         </div>
         <ul class="sidebar-menu">
             <li><a href="index.php" class="<?= ($page == "dashboard") ? "active" : "" ?>"> <i class="fas fa-home"></i><span class="menu-text">Dashboard</span></a></li>
-            <li><a href="index.php?page=account_monitoring" class="<?= ($page == "account_monitoring") ? "active" : "" ?>"><i class="fas fa-building "></i><span class="menu-text">Account's Monitoring</span></a></li>
-            <li><a href="#"><i class="fas fa-chart-bar"></i><span class="menu-text">Analytics</span></a></li>
+            <li><a href="index.php?page=account_monitoring" class="<?= ($page == "account_monitoring" || $page == "account_monitoring_map") ? "active" : "" ?>"><i class="fas fa-building "></i><span class="menu-text">Account's Monitoring</span></a></li>
+            <!-- <li><a href="#"><i class="fas fa-chart-bar"></i><span class="menu-text">Analytics</span></a></li> -->
             <li><a href="index.php?page=user" class="<?= ($page == "user") ? "active" : "" ?>"><i class="fas fa-users"></i><span class="menu-text">Users</span></a></li>
-            <li><a href="#"><i class="fas fa-cog"></i><span class="menu-text">Profile</span></a></li>
-            <li><a href="#"><i class="fas fa-cog"></i><span class="menu-text">Logout</span></a></li>
+            <!-- <li><a href="#"><i class="fas fa-cog"></i><span class="menu-text">Profile</span></a></li> -->
+            <li><a href="query/logout.php"><i class="fas fa-cog"></i><span class="menu-text">Logout</span></a></li>
         </ul>
     </nav>
 
