@@ -293,7 +293,8 @@
 
             <div class="modal-footer border-0 bg-light py-3 px-4">
                 <button type="button" class="btn btn-outline-secondary btn-sm px-4" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary btn-sm px-4 shadow-sm" id="btnSaveChanges">SET AS SUBMITTED</button>
+                <button type="button" class="btn btn-primary btn-sm px-4 shadow-sm" id="btnUpdateOnly">UPDATE ONLY</button>
+                <button type="button" class="btn btn-success btn-sm px-4 shadow-sm" id="btnSaveChanges">SET AS SUBMITTED</button>
             </div>
         </div>
     </div>
@@ -320,70 +321,112 @@ function setRadio(name, value) {
         console.warn(`Radio not found for ${name}=${value} → defaulted to ${defaultValue}`);
     }
 }
+function isForLoad(lastLoadDate, balance) {
+    // Rule 1: balance below 5GB
+    if (Number(balance) < 5) return true;
+
+    // Rule 2: last load 6 months ago
+    if (lastLoadDate) {
+        const lastLoad = new Date(lastLoadDate);
+        const now = new Date();
+
+        if (!isNaN(lastLoad)) {
+            const diffMonths =
+                (now.getFullYear() - lastLoad.getFullYear()) * 12 +
+                (now.getMonth() - lastLoad.getMonth());
+
+            if (diffMonths >= 6) return true;
+        }
+    }
+    return false;
+}
+
+function getBalanceColor(balance) {
+    const bal = Number(balance);
+    if (bal < 1) return 'red';
+    if (bal < 5) return 'yellow';
+    return 'green';
+}
 
 function loaddevices() {
     const companyId = "<?php echo $_SESSION['Company_ID'] ?? ''; ?>";
     const tbody = document.querySelector('#itemsTable tbody');
     if (!tbody) return;
+
     tbody.innerHTML = '';
 
     fetch(`/LM/datafetcher/loadcheckingdata.php?action=loaddevice&company=${encodeURIComponent(companyId)}`)
-    .then(response => {
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        return response.json();
-    })
-    .then(data => {
-        loadedPOs = data;
-        console.log("First loaded item:", data[0] || "No data"); // debug
-        if (!data || data.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="15" class="text-center">No items found.</td></tr>';
-            return;
-        }
-        data.forEach((item, index) => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${index + 1}</td>
-                <td>${item.SITE_ID || ''}</td>
-                <td>${item.DEPARTMENT || ''}</td>
-                <td>${item.PRINCIPAL || ''}</td>
-                <td>${item.POSITION || ''}</td>
-                <td>${item.BARND || item.BRAND || ''}</td>
-                <td>${item.MODEL || ''}</td>
-                <td>${item.SERIAL || ''}</td>
-                <td>${item.DATE_DEPLOYED || ''}</td>
-                <td>${item.PERSON_USING || ''}</td>
-                <td>${item.NUMBER || ''}</td>
-                <td style="
-                  background-color:${
-                    Number(item.BALANCE) < 1
-                      ? 'red'
-                      : Number(item.BALANCE) < 5
-                      ? 'yellow'
-                      : 'green'
-                  };
-                  color:black;
-                ">
-                  ${item.BALANCE ?? ''}
-                </td>
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+             loadedPOs = data;
+            if (!data || data.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="16" class="text-center">No items found.</td>
+                    </tr>`;
+                return;
+            }
 
-                <td>${item.LAST_LOAD_HISTORY || ''}</td>
-                <td style="background-color:${item.LOAD_STATUS === 'FOR LOAD' ? 'red' : 'green'}; color:white;">
-                  ${item.LOAD_STATUS || ''}
-                </td>
-                <td>
-                    <button class="btn btn-primary btn-sm" style="font-size:9px;padding:2px 6px;" onclick="selectDevice(${index})">
-                        Select
-                    </button>
-                </td>
-            `;
-            tbody.appendChild(tr);
+            data.forEach((item, index) => {
+                const forLoad = isForLoad(item.LAST_LOAD_HISTORY, item.BALANCE);
+                const loadStatus = forLoad ? 'FOR LOAD' : 'OK';
+                const balanceColor = getBalanceColor(item.BALANCE);
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${item.SITE_ID || ''}</td>
+                    <td>${item.DEPARTMENT || ''}</td>
+                    <td>${item.PRINCIPAL || ''}</td>
+                    <td>${item.POSITION || ''}</td>
+                    <td>${item.BARND || item.BRAND || ''}</td>
+                    <td>${item.MODEL || ''}</td>
+                    <td>${item.SERIAL || ''}</td>
+                    <td>${item.DATE_DEPLOYED || ''}</td>
+                    <td>${item.PERSON_USING || ''}</td>
+                    <td>${item.NUMBER || ''}</td>
+
+                    <td style="
+                        background-color:${balanceColor};
+                        color:black;
+                        font-weight:bold;
+                        text-align:center;
+                    ">
+                        ${item.BALANCE ?? ''}
+                    </td>
+
+                    <td>${item.LAST_LOAD_HISTORY || ''}</td>
+
+                    <td style="
+                        background-color:${forLoad ? 'red' : 'green'};
+                        color:white;
+                        font-weight:bold;
+                        text-align:center;
+                    ">
+                        ${loadStatus}
+                    </td>
+
+                    <td>
+                        <button
+                            class="btn btn-primary btn-sm"
+                            style="font-size:9px;padding:2px 6px;"
+                            onclick="selectDevice(${index})">
+                            Select
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        })
+        .catch(err => {
+            console.error('Error loading items:', err);
+            document.getElementById('table-error').textContent = 'Failed to load data.';
         });
-    })
-    .catch(err => {
-        console.error('Error loading items:', err);
-        document.getElementById('table-error').textContent = 'Failed to load data.';
-    });
 }
+
 
 function selectDevice(index) {
     const item = loadedPOs[index];
@@ -395,6 +438,7 @@ function selectDevice(index) {
     console.log("Selected device:", item); // ← Check this in browser console (F12)
 
     // Populate fields
+    document.getElementById('edit_id').value      = item.LINEID      || '';
     document.getElementById('edit_site').value      = item.SITE_ID      || '';
     document.getElementById('edit_dept').value      = item.DEPARTMENT   || '';
     document.getElementById('edit_principal').value = item.PRINCIPAL    || '';
@@ -411,7 +455,7 @@ function selectDevice(index) {
     document.getElementById('edit_user').value      = item.PERSON_USING || '';
     document.getElementById('edit_number').value    = item.NUMBER       || '';
     document.getElementById('edit_remarks').value   = item.REMARKS      || '';
-    document.getElementById('edit_data_left').value = item.BALANCE    || '';
+   
 
     // Safely set radio buttons
     setRadio('data_submitted',  item.DATA_SUBMITTED  || 'Yes');
@@ -429,13 +473,21 @@ function selectDevice(index) {
 }
 
 document.getElementById('btnSaveChanges')?.addEventListener('click', () => {
-    const formData = {
+   
+const bal =  document.getElementById('edit_data_left').value.trim()
+
+   if (!bal) {
+        alert('Please insert current data balance');
+        return;
+    }
+
+const formData = {
         id:              document.getElementById('edit_id').value || '',
         SITE_ID:         document.getElementById('edit_site').value.trim(),
         DEPARTMENT:      document.getElementById('edit_dept').value.trim(),
         PRINCIPAL:       document.getElementById('edit_principal').value.trim(),
         POSITION:        document.getElementById('edit_position').value.trim(),
-        BARND:           document.getElementById('edit_brand').value.trim(),
+        BRAND:           document.getElementById('edit_brand').value.trim(),
         MODEL:           document.getElementById('edit_model').value.trim(),
         IMEI:            document.getElementById('edit_imei').value.trim(),
         SERIAL:          document.getElementById('edit_serial').value.trim(),
@@ -454,7 +506,7 @@ document.getElementById('btnSaveChanges')?.addEventListener('click', () => {
     console.log("Data to save:", formData);
 
     // Uncomment when backend is ready
-    /*
+    
     fetch('/LM/datafetcher/loadcheckingdata.php?action=update_device', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -474,8 +526,69 @@ document.getElementById('btnSaveChanges')?.addEventListener('click', () => {
         console.error(err);
         alert('Error saving changes');
     });
-    */
+    
 });
+
+
+
+
+document.getElementById('btnUpdateOnly')?.addEventListener('click', () => {
+   
+const bal =  document.getElementById('edit_data_left').value.trim()
+
+   if (!bal) {
+        alert('Please insert current data balance');
+        return;
+    }
+
+const formData = {
+        id:              document.getElementById('edit_id').value || '',
+        SITE_ID:         document.getElementById('edit_site').value.trim(),
+        DEPARTMENT:      document.getElementById('edit_dept').value.trim(),
+        PRINCIPAL:       document.getElementById('edit_principal').value.trim(),
+        POSITION:        document.getElementById('edit_position').value.trim(),
+        BRAND:           document.getElementById('edit_brand').value.trim(),
+        MODEL:           document.getElementById('edit_model').value.trim(),
+        IMEI:            document.getElementById('edit_imei').value.trim(),
+        SERIAL:          document.getElementById('edit_serial').value.trim(),
+        DATE_DEPLOYED:   document.getElementById('edit_date').value,
+        PERSON_USING:    document.getElementById('edit_user').value.trim(),
+        NUMBER:          document.getElementById('edit_number').value.trim(),
+        REMARKS:         document.getElementById('edit_remarks').value.trim(),
+        BALANCE:       document.getElementById('edit_data_left').value.trim(),
+        DATA_SUBMITTED:  document.querySelector('input[name="data_submitted"]:checked')?.value || 'Yes',
+        PHYSICALLY_OK:   document.querySelector('input[name="physically_ok"]:checked')?.value || 'Yes',
+        GAMES:           document.querySelector('input[name="games"]:checked')?.value || 'No',
+        SYSTEM_UPDATED:  document.querySelector('input[name="system_updated"]:checked')?.value || 'Yes',
+        OTHER_ISSUES:    document.getElementById('other_issues').value.trim()
+    };
+
+    console.log("Data to save:", formData);
+
+    // Uncomment when backend is ready
+    
+    fetch('/LM/datafetcher/loadcheckingdata.php?action=updateonly', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+    })
+    .then(r => r.json())
+    .then(res => {
+        if (res.success) {
+            alert('Device details updated successfully');
+            $('#editDeviceModal').modal('hide');
+            loaddevices();
+        } else {
+            alert('Save failed: ' + (res.message || 'Unknown error'));
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Error saving changes');
+    });
+    
+});
+
 
 // Auto-focus on "Data Left" field when modal becomes visible
 $('#editDeviceModal').on('shown.bs.modal', function () {

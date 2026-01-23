@@ -43,6 +43,7 @@
       font-weight: bold;
       font-size: 1rem;
       text-align: center;
+      color:chocolate;
     }
     .card-text {
       margin-top: 6px;
@@ -69,10 +70,10 @@
     <div class="row row-cards d-flex flex-wrap">
       <!-- Wrap each card in a col -->
       <div class="col-auto px-2 first-card">
-        <a href="#" class="card-link">
+        <a href="portal.php?page=addnewdevice" class="card-link">
           <div class="card-custom">
-            <img src="\PaOrder\Home\img\transactions\upload.png" class="card-icon" alt="Upload Orders Icon"/>
-            <div class="card-title">REGISTER NEW SIM</div>
+            <img src="\LM\Home\img\transactions\sim-card.PNG" class="card-icon mb-4 mt-2" alt="Upload Orders Icon" style="height:100px;"/>
+            <div class="card-title">REGISTER NEW</div>
             <div class="card-text">Create your orders quickly and easily.</div>
           </div>
         </a>
@@ -80,22 +81,30 @@
       <div class="col-auto px-2">
         <a href="portal.php?page=loadchecking" class="card-link">
           <div class="card-custom">
-            <img src="\Dash\Home\img\transactions\vieworders.jpg" class="card-icon" alt="Order View Icon"/>
+            <img src="\LM\Home\img\transactions\smartphone.png" class="card-icon" alt="Order View Icon"/>
             <div class="card-title">LOAD CHECKING</div>
             <div class="card-text">View and manage your orders seamlessly.</div>
           </div>
         </a>
       </div>
       <div class="col-auto px-2">
+        <a href="portal.php?page=loadrequest" class="card-link">
+          <div class="card-custom">
+            <img src="\LM\Home\img\transactions\sim-req.png" class="card-icon mb-3 mt-3" alt="Order Preparation Icon" style="height:100px;"/>
+            <div class="card-title">LOAD REQUEST</div>
+            <div class="card-text">Prepare customer orders and create truck size configuration.</div>
+          </div>
+        </a>
+      </div>
+            <div class="col-auto px-2">
         <a href="" class="card-link">
           <div class="card-custom">
-            <img src="\Dash\Home\img\transactions\orderpreps.jpg" class="card-icon" alt="Order Preparation Icon"/>
+            <img src="\LM\Home\img\transactions\phone-sim.png" class="card-icon mb-3 mt-3" alt="Order Preparation Icon" style="height:100px;"/>
             <div class="card-title">LOAD PURCHASE</div>
             <div class="card-text">Prepare customer orders and create truck size configuration.</div>
           </div>
         </a>
       </div>
-      
     </div>
   </div>
 

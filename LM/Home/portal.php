@@ -3,10 +3,6 @@ session_start();
 
 include '../../DB/dbcon.php';
 
-   // Unset all session variables
-
-// If site not set in session, get the first available site for the user
-
 if (!isset($_SESSION['Name_of_user']) || empty($_SESSION['Name_of_user'])) {
     header("Location: /LM/Home/verify.php");
     exit;
@@ -18,7 +14,7 @@ if (!isset($_SESSION['Name_of_user']) || empty($_SESSION['Name_of_user'])) {
 <head>
          <link rel="icon" type="image/x-icon" href="\Services\img\orderkoico.ico">
 
-  <!-- Required meta tags -->
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -65,9 +61,7 @@ if (!isset($_SESSION['Name_of_user']) || empty($_SESSION['Name_of_user'])) {
       </li>
     </ul>
 
-  <!-- Right navbar links -->
 <ul class="navbar-nav ml-auto">
-  <!-- User Dropdown Menu -->
 
   <li class="nav-item dropdown">
     
@@ -87,7 +81,6 @@ if (!isset($_SESSION['Name_of_user']) || empty($_SESSION['Name_of_user'])) {
 
       <div class="dropdown-divider"></div>
 
-      <!-- Dropdown Button with Selectable Items -->
   <div class="d-flex justify-content-center">
       <div class="dropdown px-2">
   <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -160,17 +153,15 @@ if (!isset($_SESSION['Name_of_user']) || empty($_SESSION['Name_of_user'])) {
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <title>Delivery Dash</title>
   <style>
-    /* Custom gradient for sidebar */
+   
     .sidebar-dark-primary {
       background: linear-gradient(135deg, rgb(59, 40, 4) 0%, rgba(119, 65, 3, 0.92) 100%) !important;
     }
     
-    /* Improve text visibility on gradient */
     .brand-text, .nav-link p, .info a {
       text-shadow: 0 1px 2px rgba(224, 219, 219, 0.3);
     }
     
-    /* Hover effects for menu items */
     .nav-item .nav-link:hover {
       background-color: rgba(12, 0, 0, 0.15) !important;
     }
@@ -181,23 +172,22 @@ if (!isset($_SESSION['Name_of_user']) || empty($_SESSION['Name_of_user'])) {
   </style>
 </head>
 
-  <!-- Main Sidebar Container - UPDATED WITH GRADIENT -->
+
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
+
     <a href="#" class="brand-link text-center">
       <img src="\LM\Home\img\LoadGuard2.png" alt="Logo" style="width: 170px; height: 150px;">
     </a>
 
-    <!-- Sidebar -->
     <div class="sidebar">
-      <!-- User panel -->
+
       <div class="user-panel mt-3 pb-3 mb-1 d-flex">
         <div class="info">
           <a href="#" class="d-block"><?php echo $_SESSION['Company_Name']; ?></a>
         </div>
       </div>
 
-      <!-- Sidebar Menu -->
+
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
           <li class="nav-item">
@@ -213,13 +203,13 @@ if (!isset($_SESSION['Name_of_user']) || empty($_SESSION['Name_of_user'])) {
             </a>
           </li>
           <li class="nav-item">
-            <a href="portal.php?page=reports2" class="nav-link d-flex align-items-center">
+            <a href="portal.php?page=#" class="nav-link d-flex align-items-center">
               <img src="\Dash\Home\img\documents.png" style="width: 30px; height: 30px; margin-right: 10px;">
               <p class="mb-0">Reports</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="portal.php?page=settings" class="nav-link d-flex align-items-center">
+            <a href="portal.php?page=#" class="nav-link d-flex align-items-center">
               <img src="\Dash\Home\img\settings.png" style="width: 30px; height: 30px; margin-right: 10px;">
               <p class="mb-0">Settings</p>
             </a>
@@ -229,16 +219,15 @@ if (!isset($_SESSION['Name_of_user']) || empty($_SESSION['Name_of_user'])) {
     </div>
   </aside>
 
-  <!-- Content Wrapper -->
+
   <div class="content-wrapper p-4">
     <?php
-    // Your PHP content logic remains unchanged
     $role = $_SESSION['Role'] ?? '';
     
     if ($role === 'ADMIN') {
         // Admin pages logic
         $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
-        $allowedPages = ['dashboard', 'transactions', 'reports2' , 'settings' , 'loadchecking'];
+        $allowedPages = ['dashboard', 'transactions', 'reports2' , 'settings' , 'loadchecking', 'addnewdevice', 'loadrequest'];
         if (in_array($page, $allowedPages)) {
             include "pages/{$page}.php";
         } else {
