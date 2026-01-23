@@ -506,7 +506,7 @@ $selected_site = $_SESSION['selected_site'] ?? '';
         <header id="mainHeader">
             <button id="mobileMenuToggle" class="btn btn-outline-primary d-lg-none me-3"><i class="fas fa-bars"></i></button>
             <div class="header-title">
-                <h1>Welcome, <?= $_SESSION['fullname'] ?></h1>
+                <h6>Welcome, <?= $_SESSION['fullname'] ?></h6>
             </div>
             <div class="header-filters">
 
