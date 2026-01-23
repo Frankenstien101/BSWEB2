@@ -192,54 +192,6 @@
         margin: auto;
     }
 
-    /* =======================
-   ✅ RESPONSIVE CUSTOMER MODAL
-=========================== */
-    .customer-modal .modal-dialog {
-        max-width: 420px;
-        width: 95%;
-    }
-
-    .customer-modal .modal-content {
-        border-radius: 18px;
-        overflow: hidden;
-        box-shadow: var(--shadow-md);
-        background: white;
-        border: none;
-        position: relative;
-    }
-
-
-    .customer-avatar {
-        width: 110px;
-        height: 110px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 4px solid white;
-    }
-
-    .card-body {
-        padding: 25px 18px;
-    }
-
-    #customerName {
-        font-size: 1.25rem;
-    }
-
-    #customerId {
-        font-size: 0.95rem;
-    }
-
-    /* Grid for Entry / Exit / Spent – responsive */
-    .customer-info-grid {
-        display: flex;
-        justify-content: space-between;
-        gap: 10px;
-    }
-
-    .customer-info-grid .col {
-        flex: 1;
-    }
 
     /* ✅ Mobile responsive adjustments */
     @media (max-width: 480px) {
@@ -265,68 +217,136 @@
             width: 100%;
         }
     }
+
+    /* ===========================
+   ACCOUNT MODAL STYLING
+   =========================== */
+
+    #customerModal .modal-content {
+        border-radius: 16px;
+        overflow: hidden;
+        background: #ffffff;
+    }
+
+    /* ---------- HEADER ---------- */
+    #customerModal .modal-header {
+        padding: 1rem 1.25rem;
+        background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+        border-bottom: none;
+    }
+
+    #customerModal .modal-title {
+        font-weight: 600;
+        letter-spacing: 0.3px;
+    }
+
+    #customerModal #accountType {
+        font-size: 0.75rem;
+        padding: 0.35em 0.6em;
+        border-radius: 12px;
+    }
+
+    /* ---------- BODY ---------- */
+    #customerModal .modal-body {
+        padding: 1.25rem;
+    }
+
+    #customerModal strong {
+        font-size: 0.85rem;
+        color: #495057;
+    }
+
+    /* ---------- IMAGE PREVIEW ---------- */
+    #customerModal img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        border-radius: 12px;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        cursor: pointer;
+    }
+
+    #customerModal img:hover {
+        transform: scale(1.03);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    /* ---------- INFO TEXT ---------- */
+    #customerModal .text-muted {
+        font-size: 0.9rem;
+    }
+
+    /* ---------- STATUS BADGE ---------- */
+    #customerModal #accountStatus {
+        font-size: 0.75rem;
+        padding: 0.4em 0.7em;
+        border-radius: 12px;
+        font-weight: 500;
+    }
+
+    /* ---------- ADDRESS ---------- */
+    #customerModal #accountAddress {
+        background: #f8f9fa;
+        padding: 0.75rem;
+        border-radius: 10px;
+        font-size: 0.9rem;
+    }
+
+    /* ---------- FOOTER ---------- */
+    #customerModal .modal-footer {
+        border-top: 1px solid #e9ecef;
+        padding: 0.75rem 1.25rem;
+    }
+
+    #customerModal .btn {
+        border-radius: 10px;
+        padding: 0.4rem 1.1rem;
+        font-size: 0.85rem;
+    }
+
+    /* ---------- MOBILE ---------- */
+    @media (max-width: 576px) {
+        #customerModal img {
+            height: 180px;
+        }
+
+        #customerModal .modal-title {
+            font-size: 1rem;
+        }
+
+        #customerModal .btn {
+            width: 100%;
+        }
+    }
 </style>
 
-<?php
-
-?>
-<div class="modal fade customer-modal" id="customerModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-
-            <div class="gradient-header"></div>
-
-            <div class="text-center" style="position:relative;">
-                <img id="customerAvatar" src="" class="customer-avatar shadow position-absolute top-0 start-50 translate-middle" alt="Store Avatar">
-            </div>
-
-            <div class="card-body text-center mt-4 pt-4">
-                <h4 id="customerName" class="font-weight-bold mb-1">Store Name</h4>
-                <h5 id="customerId" class="text-muted mb-3">STORE123</h5>
-
-                <hr class="mx-auto" style="width: 80%">
-
-                <div class="customer-info-grid">
-                    <div class="col">
-                        <p class="text-muted mb-1"><i class="fas fa-sign-in-alt me-2"></i>Entry</p>
-                        <p id="storeEntry" class="h5 fw-bold">--:-- --</p>
-                    </div>
-                    <div class="col">
-                        <p class="text-muted mb-1"><i class="fas fa-sign-out-alt me-2"></i>Exit</p>
-                        <p id="storeExit" class="h5 fw-bold">--:-- --</p>
-                    </div>
-                    <div class="col">
-                        <p class="text-muted mb-1"><i class="fas fa-clock me-2"></i>Spent</p>
-                        <p id="timeSpent" class="h5 fw-bold">--</p>
-                    </div>
-                </div>
-
-                <div class="mt-4">
-                    <button type="button" class="btn btn-primary px-4 rounded-pill mb-2" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-2"></i>Close
-                    </button>
-                    <button type="button" class="btn btn-secondary px-4 rounded-pill btn-navigate">
-                        <i class="fas fa-map me-2"></i>Navigate
-                    </button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
 
 <div class="container-fluid">
     <div class="header-section">
         <div class="row">
+            <div class="col-12 d-flex align-items-center gap-3 mb-3">
+                <select class="form-select form-select-sm me-2 col-12" id="filter_account_type">
+                    <option selected>Account Type</option>
+                    <?php
+                    $account_types = $conn->query("
+                    SELECT DISTINCT ACCOUNT_TYPE
+                    FROM [dbo].[KAVS_ACCOUNTS]
+                    WHERE COMPANY_ID = {$_SESSION['selected_comp']}
+                    AND SITE_ID = {$_SESSION['selected_site']}
+                    AND STATUS = 1
+                ");
 
-            <select class="form-control form-control-sm col-4">
-                <option value="">All</option>
-                <option value="billboard">Billboard</option>
-                <option value="partner store">Partner Store</option>
-            </select>
+                    foreach ($account_types as $type) {
+                    ?>
+                        <option value="<?= $type['ACCOUNT_TYPE'] ?>">
+                            <?= $type['ACCOUNT_TYPE'] ?>
+                        </option>
+                    <?php } ?>
+                </select>
+            </div>
         </div>
-
     </div>
+
 
     <div class="map-container">
         <div id="map"></div>
@@ -339,48 +359,129 @@
     </div>
 </div>
 <script>
-    $(document).ready(function() {
-        initMap();
+    let map;
+    let markerData = [];
+
+    $(document).ready(async function() {
+        await loadData(); // ✅ load markers first
+        initMap(); // ✅ then load map
     });
 
+    async function loadData() {
+        markerData = await $.getJSON('query/get_marker.php');
+
+    }
+
     function initMap() {
-        $.getScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyDZH6zrXo-8_OzoeL5au1hplE7tjxeMUAI", function() {
+        $.getScript(
+            "https://maps.googleapis.com/maps/api/js?key=AIzaSyDZH6zrXo-8_OzoeL5au1hplE7tjxeMUAI",
+            function() {
 
+                let defaultCenter = {
+                    lat: 6.481333,
+                    lng: 124.864305
+                };
 
-            let defaultCenter = {
-                lat: 6.481333,
-                lng: 124.864305
-            };
-
-
-            // Try to get current location
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    defaultCenter = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        function(position) {
+                            defaultCenter = {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude
+                            };
+                            createMap(defaultCenter);
+                        },
+                        function() {
+                            createMap(defaultCenter);
+                        }
+                    );
+                } else {
                     createMap(defaultCenter);
-                }, function() {
-                    createMap(defaultCenter); // fallback
-                });
-            } else {
-                createMap(defaultCenter); // fallback
+                }
             }
+        );
+    }
 
-            function createMap(centerCoords) {
-                const map = new google.maps.Map(document.getElementById("map"), {
-                    zoom: 12,
-                    scrollwheel: true,
-                    center: centerCoords,
+    function createMap(centerCoords) {
+        map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 12,
+            center: centerCoords,
+            scrollwheel: true
+        });
 
-                });
+        addMarkersToMap(map, markerData);
 
-                // Hide the loading spinner once map loads
-                google.maps.event.addListenerOnce(map, 'tilesloaded', function() {
-                    $("#loadingSpinner").fadeOut(300);
-                });
-            }
+        google.maps.event.addListenerOnce(map, 'tilesloaded', function() {
+            $("#loadingSpinner").fadeOut(300);
         });
     }
+
+    function addMarkersToMap(map, markers) {
+        markers.forEach((marker) => {
+            const mapMarker = new google.maps.Marker({
+                position: {
+                    lat: parseFloat(marker.LATITUDE),
+                    lng: parseFloat(marker.LONGITUDE)
+                },
+                map: map,
+                title: marker.NAME,
+                icon: getStatusIcon(marker.IS_FOR_GEOTAG)
+            });
+
+            mapMarker.addListener('click', () => {
+                showCustomerModal(marker);
+            });
+        });
+    }
+
+    function showCustomerModal(marker) {
+
+        // Text fields
+        $('#customerName').text(marker.NAME);
+        $('#customerId').text(marker.ACCOUNT_ID || '');
+        $('#accountType').text(marker.ACCOUNT_TYPE);
+        $('#adsType').text(marker.ADS_TYPE);
+        $('#adsSpecific').text(marker.ADS_SPECIFIC);
+        $('#accountCategory').text(marker.STORE_CATEGORY);
+        $('#accountAddress').text(marker.ADDRESS + " " + marker.LANDMARK);
+        $('#accountStatus').text(marker.IS_FOR_GEOTAG == 1 ? 'For Geotag' : 'Geotagged');
+
+        // Images (fallback if empty)
+        $('#img1').attr('src', marker.IMG1 || 'assets/no-image.png');
+        $('#img2').attr('src', marker.IMG2 || 'assets/no-image.png');
+        $("#img1").attr('data-img', marker.IMG1 || 'assets/no-image.png');
+        $("#img2").attr('data-img', marker.IMG2 || 'assets/no-image.png');
+        // Avatar (use first image)
+        $('#customerAvatar').attr('src', marker.IMG1 || 'assets/no-image.png');
+
+        // Show modal
+        const modal = new bootstrap.Modal(document.getElementById('customerModal'));
+        modal.show();
+    }
+
+    function getStatusIcon(status) {
+        const baseUrl = "https://maps.google.com/mapfiles/ms/icons/";
+
+        switch (status) {
+            case "0":
+                return {
+                    url: baseUrl + "green-dot.png",
+                        scaledSize: new google.maps.Size(32, 32)
+                };
+            case "1":
+                return {
+                    url: baseUrl + "green-dot.png",
+                        scaledSize: new google.maps.Size(32, 32)
+                };
+            default:
+                return {
+                    url: baseUrl + "green-dot.png",
+                        scaledSize: new google.maps.Size(32, 32)
+                };
+        }
+    }
+    $(document).on('click', '.img-thumb', function() {
+        const imgSrc = $(this).data('img');
+        $('#modalImage').attr('src', imgSrc);
+    });
 </script>

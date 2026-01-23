@@ -345,8 +345,141 @@ $selected_site = $_SESSION['selected_site'] ?? '';
                 font-size: 1.8rem;
             }
         }
+
+        img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        img:hover {
+            opacity: 0.8;
+        }
+
+        .preview-image {
+            width: auto;
+            height: auto;
+            max-width: 100vw;
+            max-height: 100vh;
+            object-fit: contain;
+            transition: transform 0.2s ease;
+            transform-origin: center center;
+            cursor: grab;
+        }
+
+        .modal-content {
+            background: transparent;
+        }
     </style>
 </head>
+
+
+<div class="modal fade" id="customerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 rounded-4 shadow">
+
+            <!-- HEADER -->
+            <div class="modal-header bg-primary text-white rounded-top-4">
+                <div>
+                    <h5 class="modal-title mb-0" id="customerName">Account Name</h5>
+                    <small id="accountType" class="badge bg-light text-dark mt-1">
+                        Account Type
+                    </small>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- BODY -->
+            <div class="modal-body">
+
+                <!-- IMAGES -->
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6 text-center">
+                        <img id="img1" class="img-fluid rounded shadow-sm img-thumb" data-bs-toggle="modal"
+                            data-bs-target="#imageModal"
+                            style="max-height:220px;object-fit:cover;"
+                            src="" alt="Image 1">
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <img id="img2" class="img-fluid rounded shadow-sm img-thumb" data-bs-toggle="modal"
+                            data-bs-target="#imageModal"
+                            style="max-height:220px;object-fit:cover;"
+                            src="" alt="Image 2">
+                    </div>
+                </div>
+
+                <!-- DETAILS -->
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <strong>Ads Type:</strong>
+                        <div id="adsType" class="text-muted">—</div>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <strong>Ads Specific:</strong>
+                        <div id="adsSpecific" class="text-muted">—</div>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <strong>Category:</strong>
+                        <div id="accountCategory" class="text-muted">—</div>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <strong>Status:</strong>
+                        <div>
+                            <span id="accountStatus" class="badge bg-success">
+                                Active
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ADDRESS -->
+                <div class="mt-3">
+                    <strong>Address:</strong>
+                    <p id="accountAddress" class="text-muted mb-0">
+                        —
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- FOOTER -->
+            <div class="modal-footer justify-content-between">
+                <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    Close
+                </button>
+                <button class="btn btn-primary">
+                    Navigate
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Image Preview Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content bg-dark">
+
+            <!-- Toolbar -->
+            <div class="position-absolute top-0 end-0 p-3 d-flex gap-2 z-3">
+                <button id="zoomIn" class="btn btn-sm btn-light">+</button>
+                <button id="zoomOut" class="btn btn-sm btn-light">−</button>
+                <a id="downloadImage" class="btn btn-sm btn-success" download>Download</a>
+                <button class="btn btn-sm btn-danger" data-bs-dismiss="modal">✕</button>
+            </div>
+
+            <!-- Image -->
+            <div class="modal-body d-flex justify-content-center align-items-center p-0">
+                <img id="modalImage" class="preview-image" alt="Preview">
+            </div>
+
+        </div>
+    </div>
+</div>
+
 
 <body>
 
@@ -360,7 +493,9 @@ $selected_site = $_SESSION['selected_site'] ?? '';
             <li><a href="index.php" class="<?= ($page == "dashboard") ? "active" : "" ?>"> <i class="fas fa-home"></i><span class="menu-text">Dashboard</span></a></li>
             <li><a href="index.php?page=account_monitoring" class="<?= ($page == "account_monitoring" || $page == "account_monitoring_map") ? "active" : "" ?>"><i class="fas fa-building "></i><span class="menu-text">Account's Monitoring</span></a></li>
             <!-- <li><a href="#"><i class="fas fa-chart-bar"></i><span class="menu-text">Analytics</span></a></li> -->
-            <li><a href="index.php?page=user" class="<?= ($page == "user") ? "active" : "" ?>"><i class="fas fa-users"></i><span class="menu-text">Users</span></a></li>
+            <?php if ($_SESSION['role'] == 'Admin'): ?>
+                <li><a href="index.php?page=user" class="<?= ($page == "user") ? "active" : "" ?>"><i class="fas fa-users"></i><span class="menu-text">Users</span></a></li>
+            <?php endif; ?>
             <!-- <li><a href="#"><i class="fas fa-cog"></i><span class="menu-text">Profile</span></a></li> -->
             <li><a href="query/logout.php"><i class="fas fa-cog"></i><span class="menu-text">Logout</span></a></li>
         </ul>
@@ -371,7 +506,7 @@ $selected_site = $_SESSION['selected_site'] ?? '';
         <header id="mainHeader">
             <button id="mobileMenuToggle" class="btn btn-outline-primary d-lg-none me-3"><i class="fas fa-bars"></i></button>
             <div class="header-title">
-                <h1>Company Dashboard</h1>
+                <h1>Welcome, <?= $_SESSION['fullname'] ?></h1>
             </div>
             <div class="header-filters">
 
@@ -423,66 +558,109 @@ $selected_site = $_SESSION['selected_site'] ?? '';
         </div>
     </div>
 
-    <!-- Bootstrap & jQuery -->
 
-    <script>
-        $(document).ready(function() {
-            // Desktop Sidebar Toggle
-            $('#sidebarToggle').click(function() {
-                $('#sidebar').toggleClass('collapsed');
-                $('#mainContent').toggleClass('expanded');
-                $('#mainHeader').toggleClass('expanded');
-                $(this).find('i').toggleClass('fa-chevron-left fa-chevron-right');
-            });
-
-            // Mobile Sidebar Toggle
-            $('#mobileMenuToggle').click(function() {
-                $('#sidebar').toggleClass('mobile-open');
-            });
-
-            // Close mobile sidebar when clicking outside
-            $(document).click(function(e) {
-                if ($(window).width() <= 992 && !$(e.target).closest('#sidebar,#mobileMenuToggle').length) {
-                    $('#sidebar').removeClass('mobile-open');
-                }
-            });
-
-            $("#companyFilter").change(function() {
-                var company_id = $(this).val();
-                $.ajax({
-                    url: 'query/select_comp.php',
-                    type: 'POST',
-                    data: {
-                        company_id: company_id
-                    },
-                    success: function(response) {
-                        alert(response)
-                    },
-                    error: function(xhr, status, error) {
-                        alert("An error occurred: " + error);
-                    }
-                });
-            });
-            $("#siteFilter").change(function() {
-                var site_id = $(this).val();
-                $.ajax({
-                    url: 'query/select_site.php',
-                    type: 'POST',
-                    data: {
-                        site_id: site_id
-                    },
-                    success: function(response) {
-                        alert(response)
-                        location.reload();
-                    },
-                    error: function(xhr, status, error) {
-                        alert("An error occurred: " + error);
-                    }
-                });
-            });
-
-        });
-    </script>
 </body>
 
 </html>
+
+<script>
+    $(document).ready(function() {
+        let scale = 1;
+
+        $(document).on('click', '.img-thumb', function() {
+
+            const imgSrc = $(this).data('img');
+            alert(imgSrc);
+            scale = 1; // reset zoom
+
+            $('#modalImage')
+                .attr('src', imgSrc)
+                .css({
+                    transform: 'scale(1)',
+                    maxWidth: '100vw',
+                    maxHeight: '100vh'
+                });
+
+            $('#downloadImage').attr('href', imgSrc);
+        });
+
+        $('#zoomIn').on('click', function() {
+            scale += 0.2;
+            $('#modalImage').css('transform', `scale(${scale})`);
+        });
+
+        $('#zoomOut').on('click', function() {
+            if (scale > 0.6) {
+                scale -= 0.2;
+                $('#modalImage').css('transform', `scale(${scale})`);
+            }
+        });
+
+        $('#modalImage').on('wheel', function(e) {
+            e.preventDefault();
+            scale += e.originalEvent.deltaY < 0 ? 0.1 : -0.1;
+            scale = Math.max(scale, 0.6);
+            $(this).css('transform', `scale(${scale})`);
+        });
+        // Desktop Sidebar Toggle
+        $('#sidebarToggle').click(function() {
+            $('#sidebar').toggleClass('collapsed');
+            $('#mainContent').toggleClass('expanded');
+            $('#mainHeader').toggleClass('expanded');
+            $(this).find('i').toggleClass('fa-chevron-left fa-chevron-right');
+        });
+
+        // Mobile Sidebar Toggle
+        $('#mobileMenuToggle').click(function() {
+            $('#sidebar').toggleClass('mobile-open');
+        });
+
+        // Close mobile sidebar when clicking outside
+        $(document).click(function(e) {
+            if ($(window).width() <= 992 && !$(e.target).closest('#sidebar,#mobileMenuToggle').length) {
+                $('#sidebar').removeClass('mobile-open');
+            }
+        });
+
+        $("#companyFilter").change(function() {
+            var select = $(this);
+            var company_id = $(this).val();
+            select.attr("disabled", true);
+            $.ajax({
+                url: 'query/select_comp.php',
+                type: 'POST',
+                data: {
+                    company_id: company_id
+                },
+                success: function(response) {
+                    select.attr("disabled", false);
+                },
+                error: function(xhr, status, error) {
+                    select.attr("disabled", true);
+                    alert("An error occurred: " + error);
+                }
+            });
+        });
+        $("#siteFilter").change(function() {
+            var select = $(this);
+            var site_id = $(this).val();
+            select.attr("disabled", true);
+            $.ajax({
+                url: 'query/select_site.php',
+                type: 'POST',
+                data: {
+                    site_id: site_id
+                },
+                success: function(response) {
+                    select.attr("disabled", false);
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                    select.attr("disabled", false);
+                    alert("An error occurred: " + error);
+                }
+            });
+        });
+
+    });
+</script>
