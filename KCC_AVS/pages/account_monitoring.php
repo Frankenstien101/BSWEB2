@@ -107,17 +107,17 @@
         $("#filter_category").on('change', function() {
             var selectedCategory = $(this).val();
             if (selectedCategory === "Category") {
-                tbl.column(8).search('').draw();
+                tbl.column(9).search('').draw();
             } else {
-                tbl.column(8).search('^' + selectedCategory + '$', true, false).draw();
+                tbl.column(9).search('^' + selectedCategory + '$', true, false).draw();
             }
         });
         $('#filter_account_type').on('change', function() {
             var selectedType = $(this).val();
             if (selectedType === "Select Account Type") {
-                tbl.column(3).search('').draw();
+                tbl.column(4).search('').draw();
             } else {
-                tbl.column(3).search('^' + selectedType + '$', true, false).draw();
+                tbl.column(4).search('^' + selectedType + '$', true, false).draw();
             }
         });
         $(document).on('click', '.img-thumb', function() {

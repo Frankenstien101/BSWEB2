@@ -570,7 +570,7 @@ $selected_site = $_SESSION['selected_site'] ?? '';
         $(document).on('click', '.img-thumb', function() {
 
             const imgSrc = $(this).data('img');
-            alert(imgSrc);
+
             scale = 1; // reset zoom
 
             $('#modalImage')
