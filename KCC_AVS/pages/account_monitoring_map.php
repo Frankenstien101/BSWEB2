@@ -525,7 +525,7 @@
                     url: baseUrl + "yellow-dot.png",
                         scaledSize: new google.maps.Size(32, 32)
                 };
-            case "FOR GEOTAGING":
+            case "FOR GEOTAGGING":
                 return {
                     url: baseUrl + "orange-dot.png",
                         scaledSize: new google.maps.Size(32, 32)

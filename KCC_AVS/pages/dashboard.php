@@ -148,9 +148,9 @@ while ($row = $stmt_geotag->fetch(PDO::FETCH_ASSOC)) {
     new Chart(document.getElementById('geotagChart'), {
         type: 'doughnut',
         data: {
-            labels: ['Active (' + <?= $get_geotag_status['ACTIVE'] ?? 0; ?> + ')', 'NEW (' + <?= $get_geotag_status['NEW'] ?? 0; ?> + ')', 'Geotagged (' + <?= $get_geotag_status['GEOTAGGED'] ?? 0; ?> + ')', 'For Geotagging (' + <?= $get_geotag_status['FOR GEOTAGING'] ?? 0; ?> + ')'],
+            labels: ['Active (' + <?= $get_geotag_status['ACTIVE'] ?? 0; ?> + ')', 'NEW (' + <?= $get_geotag_status['NEW'] ?? 0; ?> + ')', 'Geotagged (' + <?= $get_geotag_status['GEOTAGGED'] ?? 0; ?> + ')', 'For Geotagging (' + <?= $get_geotag_status['FOR GEOTAGGING'] ?? 0; ?> + ')'],
             datasets: [{
-                data: [<?php echo $get_geotag_status['ACTIVE'] ?? 0; ?>, <?php echo $get_geotag_status['NEW'] ?? 0; ?>, <?php echo $get_geotag_status['GEOTAGGED'] ?? 0; ?>, <?php echo $get_geotag_status['FOR GEOTAGING'] ?? 0; ?>],
+                data: [<?php echo $get_geotag_status['ACTIVE'] ?? 0; ?>, <?php echo $get_geotag_status['NEW'] ?? 0; ?>, <?php echo $get_geotag_status['GEOTAGGED'] ?? 0; ?>, <?php echo $get_geotag_status['FOR GEOTAGGING'] ?? 0; ?>],
                 backgroundColor: ['#198754', '#F39625', '#2596F3', '#dc3545']
             }]
         },
