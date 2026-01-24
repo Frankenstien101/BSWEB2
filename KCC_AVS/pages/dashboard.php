@@ -16,12 +16,12 @@ while ($row = $stmt_accounts->fetch(PDO::FETCH_ASSOC)) {
     $get_total_accounts[$row['ACCOUNT_TYPE']] = $row['TOTAL'];
 }
 
-$query_geotag = "SELECT IS_FOR_GEOTAG, COUNT(*) AS TOTAL from [dbo].[KAVS_ACCOUNTS]
-WHERE   COMPANY_ID=$selectec_comp AND SITE_ID=$selected_site  GROUP BY IS_FOR_GEOTAG ";
+$query_geotag = "SELECT ACCOUNT_STATUS, COUNT(*) AS TOTAL from [dbo].[KAVS_ACCOUNTS]
+WHERE   COMPANY_ID=$selectec_comp AND SITE_ID=$selected_site  GROUP BY ACCOUNT_STATUS ";
 
 $stmt_geotag = $conn->query($query_geotag);
 while ($row = $stmt_geotag->fetch(PDO::FETCH_ASSOC)) {
-    $get_geotag_status[$row['IS_FOR_GEOTAG']] = $row['TOTAL'];
+    $get_geotag_status[$row['ACCOUNT_STATUS']] = $row['TOTAL'];
 }
 
 ?>
@@ -148,10 +148,10 @@ while ($row = $stmt_geotag->fetch(PDO::FETCH_ASSOC)) {
     new Chart(document.getElementById('geotagChart'), {
         type: 'doughnut',
         data: {
-            labels: ['Active (' + <?= $get_geotag_status['0'] ?? 0; ?> + ')', 'Geotagged (' + <?= $get_geotag_status['2'] ?? 0; ?> + ')', 'For Geotagged (' + <?= $get_geotag_status['1'] ?? 0; ?> + ')'],
+            labels: ['Active (' + <?= $get_geotag_status['ACTIVE'] ?? 0; ?> + ')', 'NEW (' + <?= $get_geotag_status['NEW'] ?? 0; ?> + ')', 'Geotagged (' + <?= $get_geotag_status['GEOTAGGED'] ?? 0; ?> + ')', 'For Geotagging (' + <?= $get_geotag_status['FOR GEOTAGING'] ?? 0; ?> + ')'],
             datasets: [{
-                data: [<?php echo $get_geotag_status['0'] ?? 0; ?>, <?php echo $get_geotag_status['2'] ?? 0; ?>, <?php echo $get_geotag_status['1'] ?? 0; ?>],
-                backgroundColor: ['#198754', '#2596F3', '#dc3545']
+                data: [<?php echo $get_geotag_status['ACTIVE'] ?? 0; ?>, <?php echo $get_geotag_status['NEW'] ?? 0; ?>, <?php echo $get_geotag_status['GEOTAGGED'] ?? 0; ?>, <?php echo $get_geotag_status['FOR GEOTAGING'] ?? 0; ?>],
+                backgroundColor: ['#198754', '#F39625', '#2596F3', '#dc3545']
             }]
         },
         options: chartOptions

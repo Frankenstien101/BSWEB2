@@ -322,11 +322,23 @@
 
 
 <div class="container-fluid">
-    <div class="header-section">
-        <div class="row">
-            <div class="col-12 d-flex align-items-center gap-3 mb-3">
-                <select class="form-select form-select-sm me-2 col-12" id="filter_account_type">
-                    <option selected>Account Type</option>
+    <div class="header-section d-flex align-items-center justify-content-between">
+
+        <!-- LEFT: Back button -->
+        <button id="btn-back" class="back-btn d-flex align-items-center gap-2">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back</span>
+        </button>
+
+        <!-- RIGHT: Filters -->
+        <div class="d-flex align-items-end gap-3">
+
+            <div class="d-flex flex-column">
+                <label for="filter_account_type" class="form-label mb-1 small text-muted">
+                    Account Type
+                </label>
+                <select class="form-select form-select-sm" style="width:180px;" id="filter_account_type">
+                    <option value="">All</option>
                     <?php
                     $account_types = $conn->query("
                     SELECT DISTINCT ACCOUNT_TYPE
@@ -335,7 +347,6 @@
                     AND SITE_ID = {$_SESSION['selected_site']}
                     AND STATUS = 1
                 ");
-
                     foreach ($account_types as $type) {
                     ?>
                         <option value="<?= $type['ACCOUNT_TYPE'] ?>">
@@ -344,23 +355,29 @@
                     <?php } ?>
                 </select>
             </div>
+
         </div>
+
     </div>
 
 
-    <div class="map-container">
-        <div id="map"></div>
+</div>
 
 
-        <div class="spinner-wrapper" id="loadingSpinner">
-            <div class="spinner"></div>
-            <p>Loading trip data…</p>
-        </div>
+<div class="map-container">
+    <div id="map"></div>
+
+
+    <div class="spinner-wrapper" id="loadingSpinner">
+        <div class="spinner"></div>
+        <p>Loading trip data…</p>
     </div>
+</div>
 </div>
 <script>
     let map;
     let markerData = [];
+    let mapMarkers = []; // ✅ store active markers
 
     $(document).ready(async function() {
         await loadData(); // ✅ load markers first
@@ -369,7 +386,6 @@
 
     async function loadData() {
         markerData = await $.getJSON('query/get_marker.php');
-
     }
 
     function initMap() {
@@ -381,6 +397,14 @@
                     lat: 6.481333,
                     lng: 124.864305
                 };
+                if (markerData.length > 0) {
+                    defaultCenter = {
+                        lat: parseFloat(markerData[0].LATITUDE),
+                        lng: parseFloat(markerData[0].LONGITUDE)
+                    };
+                    createMap(defaultCenter);
+                    return;
+                }
 
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(
@@ -404,7 +428,7 @@
 
     function createMap(centerCoords) {
         map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 12,
+            zoom: 8,
             center: centerCoords,
             scrollwheel: true
         });
@@ -417,6 +441,8 @@
     }
 
     function addMarkersToMap(map, markers) {
+        clearMarkers(); // ✅ clear existing markers
+
         markers.forEach((marker) => {
             const mapMarker = new google.maps.Marker({
                 position: {
@@ -425,14 +451,35 @@
                 },
                 map: map,
                 title: marker.NAME,
-                icon: getStatusIcon(marker.IS_FOR_GEOTAG)
+                icon: getStatusIcon(marker.ACCOUNT_STATUS)
             });
 
             mapMarker.addListener('click', () => {
                 showCustomerModal(marker);
             });
+
+            mapMarkers.push(mapMarker); // ✅ store marker
         });
     }
+
+    function clearMarkers() {
+        mapMarkers.forEach(marker => marker.setMap(null));
+        mapMarkers = [];
+    }
+    $('#filter_account_type').on('change', function() {
+        const selectedType = $(this).val();
+
+        let filteredData = markerData;
+
+        if (selectedType && selectedType !== 'Account Type') {
+            filteredData = markerData.filter(item =>
+                item.ACCOUNT_TYPE === selectedType
+            );
+        }
+
+        addMarkersToMap(map, filteredData);
+    });
+
 
     function showCustomerModal(marker) {
 
@@ -444,7 +491,7 @@
         $('#adsSpecific').text(marker.ADS_SPECIFIC);
         $('#accountCategory').text(marker.STORE_CATEGORY);
         $('#accountAddress').text(marker.ADDRESS + " " + marker.LANDMARK);
-        $('#accountStatus').text(marker.IS_FOR_GEOTAG == 1 ? 'For Geotag' : 'Geotagged');
+        $('#accountStatus').text(marker.ACCOUNT_STATUS);
 
         // Images (fallback if empty)
         $('#img1').attr('src', marker.IMG1 || 'assets/no-image.png');
@@ -463,23 +510,41 @@
         const baseUrl = "https://maps.google.com/mapfiles/ms/icons/";
 
         switch (status) {
-            case "0":
+            case "ACTIVE":
                 return {
                     url: baseUrl + "green-dot.png",
                         scaledSize: new google.maps.Size(32, 32)
                 };
-            case "1":
+            case "INACTIVE":
                 return {
-                    url: baseUrl + "green-dot.png",
+                    url: baseUrl + "red-dot.png",
+                        scaledSize: new google.maps.Size(32, 32)
+                };
+            case "NEW":
+                return {
+                    url: baseUrl + "yellow-dot.png",
+                        scaledSize: new google.maps.Size(32, 32)
+                };
+            case "FOR GEOTAGING":
+                return {
+                    url: baseUrl + "orange-dot.png",
+                        scaledSize: new google.maps.Size(32, 32)
+                };
+            case "GEOTAGGED":
+                return {
+                    url: baseUrl + "blue-dot.png",
                         scaledSize: new google.maps.Size(32, 32)
                 };
             default:
                 return {
-                    url: baseUrl + "green-dot.png",
+                    url: baseUrl + "red-dot.png",
                         scaledSize: new google.maps.Size(32, 32)
                 };
         }
     }
+    $("#btn-back").on('click', function() {
+        window.history.back();
+    });
     $(document).on('click', '.img-thumb', function() {
         const imgSrc = $(this).data('img');
         $('#modalImage').attr('src', imgSrc);

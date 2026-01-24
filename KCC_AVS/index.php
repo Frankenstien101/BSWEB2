@@ -383,6 +383,7 @@ $selected_site = $_SESSION['selected_site'] ?? '';
             <div class="modal-header bg-primary text-white rounded-top-4">
                 <div>
                     <h5 class="modal-title mb-0" id="customerName">Account Name</h5>
+                    <h6 class="modal-title mb-0" id="customerId">Account Name</h6>
                     <small id="accountType" class="badge bg-light text-dark mt-1">
                         Account Type
                     </small>
@@ -509,7 +510,6 @@ $selected_site = $_SESSION['selected_site'] ?? '';
                 <h6>Welcome, <?= $_SESSION['fullname'] ?></h6>
             </div>
             <div class="header-filters">
-
                 <div class="row g-2 align-items-center">
                     <div class="col-md-auto">
                         <select id="companyFilter" class="form-select">
