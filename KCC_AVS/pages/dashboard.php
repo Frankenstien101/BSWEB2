@@ -5,22 +5,23 @@
 $get_total_accounts = [];
 $get_geotag_status = [];
 $get_audit_compliance = [];
-
+$selectec_comp = $_SESSION['selected_comp'] ?? '0';
+$selected_site = $_SESSION['selected_site'] ?? '0';
 
 $query_accounts = "SELECT ACCOUNT_TYPE, COUNT(*) AS TOTAL from [dbo].[KAVS_ACCOUNTS]
-WHERE  STATUS=1 AND COMPANY_ID={$_SESSION['selected_comp']} AND SITE_ID={$_SESSION['selected_site']}  GROUP BY ACCOUNT_TYPE";
+WHERE  COMPANY_ID=$selectec_comp AND SITE_ID=$selected_site  GROUP BY ACCOUNT_TYPE";
 
 $stmt_accounts = $conn->query($query_accounts);
 while ($row = $stmt_accounts->fetch(PDO::FETCH_ASSOC)) {
     $get_total_accounts[$row['ACCOUNT_TYPE']] = $row['TOTAL'];
 }
 
-$query_geotag = "SELECT IS_FOR_GEOTAG, COUNT(*) AS TOTAL from [dbo].[KAVS_ACCOUNTS]
-WHERE  STATUS=1 AND COMPANY_ID={$_SESSION['selected_comp']} AND SITE_ID={$_SESSION['selected_site']}  GROUP BY IS_FOR_GEOTAG ";
+$query_geotag = "SELECT ACCOUNT_STATUS, COUNT(*) AS TOTAL from [dbo].[KAVS_ACCOUNTS]
+WHERE   COMPANY_ID=$selectec_comp AND SITE_ID=$selected_site  GROUP BY ACCOUNT_STATUS ";
 
 $stmt_geotag = $conn->query($query_geotag);
 while ($row = $stmt_geotag->fetch(PDO::FETCH_ASSOC)) {
-    $get_geotag_status[$row['IS_FOR_GEOTAG']] = $row['TOTAL'];
+    $get_geotag_status[$row['ACCOUNT_STATUS']] = $row['TOTAL'];
 }
 
 ?>
@@ -68,7 +69,7 @@ while ($row = $stmt_geotag->fetch(PDO::FETCH_ASSOC)) {
     <div class="row g-4">
 
         <!-- Total Accounts -->
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-3 col-md-6">
             <div class="stat-card">
                 <div class="stat-header">
                     <span>Total Accounts</span>
@@ -80,7 +81,7 @@ while ($row = $stmt_geotag->fetch(PDO::FETCH_ASSOC)) {
         </div>
 
         <!-- Geotag Status -->
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-3 col-md-6">
             <div class="stat-card">
                 <div class="stat-header">
                     <span>Geotag Status</span>
@@ -92,14 +93,24 @@ while ($row = $stmt_geotag->fetch(PDO::FETCH_ASSOC)) {
         </div>
 
         <!-- Audit Compliance -->
-        <div class="col-lg-4 col-md-12">
+        <div class="col-lg-3 col-md-12">
             <div class="stat-card">
                 <div class="stat-header">
                     <span>Audit Compliance</span>
                     <i class="fas fa-clipboard-check"></i>
                 </div>
-                <h2 class="stat-number">1,240</h2>
+                <h2 class="stat-number"><?php echo array_sum($get_geotag_status); ?></h2>
                 <canvas id="auditChart" height="50"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-12">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span>Account Categories</span>
+                    <i class="fas fa-clipboard-check"></i>
+                </div>
+                <h2 class="stat-number"><?php echo array_sum($get_geotag_status); ?></h2>
+                <canvas id="categoryChart" height="50"></canvas>
             </div>
         </div>
 
@@ -124,7 +135,7 @@ while ($row = $stmt_geotag->fetch(PDO::FETCH_ASSOC)) {
     new Chart(document.getElementById('accountTypeChart'), {
         type: 'doughnut',
         data: {
-            labels: ['Billboard', 'Partner Store'],
+            labels: ['Billboard (' + <?= $get_total_accounts['Billboard'] ?? 0; ?> + ')', 'Partner Store (' + <?= $get_total_accounts['Partner Store'] ?? 0; ?> + ')'],
             datasets: [{
                 data: [<?php echo $get_total_accounts['Billboard'] ?? 0; ?>, <?php echo $get_total_accounts['Partner Store'] ?? 0; ?>],
                 backgroundColor: ['#0B2D5F', '#adb5bd']
@@ -137,10 +148,10 @@ while ($row = $stmt_geotag->fetch(PDO::FETCH_ASSOC)) {
     new Chart(document.getElementById('geotagChart'), {
         type: 'doughnut',
         data: {
-            labels: ['Geotagged', 'For Geotagged', 'Not Geotagged'],
+            labels: ['Active (' + <?= $get_geotag_status['ACTIVE'] ?? 0; ?> + ')', 'NEW (' + <?= $get_geotag_status['NEW'] ?? 0; ?> + ')', 'Geotagged (' + <?= $get_geotag_status['GEOTAGGED'] ?? 0; ?> + ')', 'For Geotagging (' + <?= $get_geotag_status['FOR GEOTAGGING'] ?? 0; ?> + ')'],
             datasets: [{
-                data: [<?php echo $get_geotag_status['0'] ?? 0; ?>, <?php echo $get_geotag_status['2'] ?? 0; ?>, <?php echo $get_geotag_status['1'] ?? 0; ?>],
-                backgroundColor: ['#198754', '#2596F3', '#dc3545']
+                data: [<?php echo $get_geotag_status['ACTIVE'] ?? 0; ?>, <?php echo $get_geotag_status['NEW'] ?? 0; ?>, <?php echo $get_geotag_status['GEOTAGGED'] ?? 0; ?>, <?php echo $get_geotag_status['FOR GEOTAGGING'] ?? 0; ?>],
+                backgroundColor: ['#198754', '#F39625', '#2596F3', '#dc3545']
             }]
         },
         options: chartOptions
@@ -152,7 +163,7 @@ while ($row = $stmt_geotag->fetch(PDO::FETCH_ASSOC)) {
         data: {
             labels: ['Compliant', 'Non-Compliant'],
             datasets: [{
-                data: [890, 350],
+                data: [0, 0],
                 backgroundColor: ['#0d6efd', '#ffc107']
             }]
         },
