@@ -325,13 +325,28 @@
                       <img src="\MainImg\paordernew.png" alt="ERP Logo" class="app-logo" style="height:150px; width:150px;">
                       <h2 class="app-name"> </h2>
                       <p class="app-description">  
-                            A web-based purchase order tracking system that streamlines order processing, tracks deliveries, and manages supplier relationships. 
+                            A web-based purchase order tracking system to streamlines order processing, tracks deliveries, and manages supplier relationships. 
                     </p>
                       <a href="\orderko.php" class="app-button">Visit Site</a>
                   </div>
 
+
+            <div class="app-card">
+                      <img src="\MainImg\loadguard2.png" alt="ERP Logo" class="app-logo" style="height:100px; width:100px;">
+                      <h2 class="app-name"> </h2>
+                      <p class="app-description">  
+                         A load tracking application that streamlines load monitoring, status updates, and load request management in real time.
+                      </p>
+
+                      <a href="\LoadGuard.php" class="app-button">Visit Site</a>
+                  </div>
+
             </div>
 
+
+            </div>
+
+            
              </main>
 
             <footer>

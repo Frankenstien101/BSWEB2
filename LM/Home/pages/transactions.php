@@ -15,7 +15,7 @@
       padding-left: 15px;
       padding-right: 15px;
     }
-    /* Card styles */
+  
     .card-custom {
       background: #fff;
       border-radius: 15px;
@@ -66,47 +66,66 @@
 </head>
 <body>
   <h3>LOAD MANAGEMENT</h3>
-  <div class="section-container">
+<div class="section-container">
     <div class="row row-cards d-flex flex-wrap">
-      <!-- Wrap each card in a col -->
+      <!-- Register New Device -->
       <div class="col-auto px-2 first-card">
         <a href="portal.php?page=addnewdevice" class="card-link">
           <div class="card-custom">
-            <img src="\LM\Home\img\transactions\sim-card.PNG" class="card-icon mb-4 mt-2" alt="Upload Orders Icon" style="height:100px;"/>
+            <img src="\LM\Home\img\transactions\sim-card.PNG" class="card-icon mb-4 mt-2" alt="Register Device Icon" style="height:100px;"/>
             <div class="card-title">REGISTER NEW</div>
-            <div class="card-text">Create your orders quickly and easily.</div>
+            <div class="card-text">Add a new device to your system quickly and securely.</div>
           </div>
         </a>
       </div>
+
+      <!-- Load Checking -->
       <div class="col-auto px-2">
         <a href="portal.php?page=loadchecking" class="card-link">
           <div class="card-custom">
-            <img src="\LM\Home\img\transactions\smartphone.png" class="card-icon" alt="Order View Icon"/>
+            <img src="\LM\Home\img\transactions\smartphone.png" class="card-icon" alt="Load Checking Icon"/>
             <div class="card-title">LOAD CHECKING</div>
-            <div class="card-text">View and manage your orders seamlessly.</div>
+            <div class="card-text">Monitor device balances and identify devices that need load.</div>
           </div>
         </a>
       </div>
+
+
+          <!-- Load Checking -->
+      <div class="col-auto px-2">
+        <a href="portal.php?page=loadcheckresult" class="card-link">
+          <div class="card-custom">
+            <img src="\LM\Home\img\transactions\testing.png" class="card-icon mt-2 mb-4" alt="Load Checking Icon"style="height:100px;"/>
+            <div class="card-title">CHECKING RESULT</div>
+            <div class="card-text">Shows result status of conducted load checking.</div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Load Request -->
       <div class="col-auto px-2">
         <a href="portal.php?page=loadrequest" class="card-link">
           <div class="card-custom">
-            <img src="\LM\Home\img\transactions\sim-req.png" class="card-icon mb-3 mt-3" alt="Order Preparation Icon" style="height:100px;"/>
+            <img src="\LM\Home\img\transactions\sim-req.png" class="card-icon mb-3 mt-3" alt="Load Request Icon" style="height:100px;"/>
             <div class="card-title">LOAD REQUEST</div>
-            <div class="card-text">Prepare customer orders and create truck size configuration.</div>
+            <div class="card-text">Request load for devices and track pending load requests efficiently.</div>
           </div>
         </a>
       </div>
-            <div class="col-auto px-2">
-        <a href="" class="card-link">
+
+      <!-- Load Purchase -->
+      <div class="col-auto px-2">
+        <a href="portal.php?page=loadpurchase" class="card-link">
           <div class="card-custom">
-            <img src="\LM\Home\img\transactions\phone-sim.png" class="card-icon mb-3 mt-3" alt="Order Preparation Icon" style="height:100px;"/>
+            <img src="\LM\Home\img\transactions\phone-sim.png" class="card-icon mb-3 mt-3" alt="Load Purchase Icon" style="height:100px;"/>
             <div class="card-title">LOAD PURCHASE</div>
-            <div class="card-text">Prepare customer orders and create truck size configuration.</div>
+            <div class="card-text">Purchase and manage SIM load for multiple devices easily.</div>
           </div>
         </a>
       </div>
     </div>
-  </div>
+</div>
+
 
   
   </div>

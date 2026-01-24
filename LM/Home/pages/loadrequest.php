@@ -39,7 +39,6 @@
                         <th>Balance (GB)</th>
                         <th>Last Load</th>
                         <th>Status</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody id="forLoadTable">
@@ -57,6 +56,40 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+function requestLoad(id, personUsing, number, balance, lastLoad, siteId, btn) {
+    // Disable the button immediately
+    btn.disabled = true;
+
+    fetch(`/LM/datafetcher/load_request.php?action=loadrequest`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            device_id: id, 
+            person_using: personUsing, 
+            number: number, 
+            balance: balance, 
+            last_load: lastLoad,
+            SITE_ID: siteId  // include SITE_ID
+        })
+    })
+    .then(res => res.json())
+    .then(res => {
+        if (res.status === 'success') {
+            alert(`Load status updated: ${res.load_status}`);
+            loadForLoadDevices();
+        } else {
+            alert('Error: ' + res.message);
+            btn.disabled = false; // Re-enable button if error
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Server error');
+        btn.disabled = false; // Re-enable button if server error
+    });
+}
+
+// Updated table row button call to include SITE_ID
 function loadForLoadDevices() {
     const tbody = document.getElementById('forLoadTable');
     tbody.innerHTML = `<tr><td colspan="15" class="text-center text-muted">Loading...</td></tr>`;
@@ -87,13 +120,9 @@ function loadForLoadDevices() {
                     <td>${item.PERSON_USING || ''}</td>
                     <td>${item.NUMBER || ''}</td>
                     <td>${item.BALANCE ?? ''}</td>
-                    <td>${item.LAST_LOAD_HISTORY || ''}</td>
+                    <td>${item.LAST_LOAD_HISTORY ?? ''}</td>
                     <td><span class="status-badge ${statusClass}">${item.LOAD_STATUS}</span></td>
-                    <td>
-                        <button class="btn btn-sm btn-success" onclick="requestLoad(${item.LINEID}, ${item.BALANCE}, '${item.LAST_LOAD_HISTORY}')">
-                            <i class="fas fa-bolt"></i> Request Load
-                        </button>
-                    </td>
+                   
                 `;
                 tbody.appendChild(tr);
             });
@@ -104,30 +133,10 @@ function loadForLoadDevices() {
         });
 }
 
-// Optional: call load automatically on page load
 document.addEventListener('DOMContentLoaded', loadForLoadDevices);
-
-// Load request function (calls load_request.php)
-function requestLoad(id, balance, lastLoad) {
-    fetch('/LM/datafetcher/load_request.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ device_id: id, balance: balance, last_load: lastLoad })
-    })
-    .then(res => res.json())
-    .then(res => {
-        if (res.status === 'success') {
-            alert(`Load status updated: ${res.load_status}`);
-            loadForLoadDevices();
-        } else {
-            alert('Error: ' + res.message);
-        }
-    })
-    .catch(err => {
-        console.error(err);
-        alert('Server error');
-    });
-}
 </script>
+
+
+
 </body>
 </html>

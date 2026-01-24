@@ -227,7 +227,7 @@ if (!isset($_SESSION['Name_of_user']) || empty($_SESSION['Name_of_user'])) {
     if ($role === 'ADMIN') {
         // Admin pages logic
         $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
-        $allowedPages = ['dashboard', 'transactions', 'reports2' , 'settings' , 'loadchecking', 'addnewdevice', 'loadrequest'];
+        $allowedPages = ['dashboard', 'transactions', 'reports2' , 'settings' , 'loadchecking', 'addnewdevice', 'loadrequest', 'loadcheckresult', 'loadpurchase'];
         if (in_array($page, $allowedPages)) {
             include "pages/{$page}.php";
         } else {

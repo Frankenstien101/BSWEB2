@@ -228,6 +228,57 @@ if ($action === 'update_device') {
     }
 }
 
+
+if (isset($_GET['action']) && $_GET['action'] === 'loadcheckresult') {
+    header('Content-Type: application/json');
+
+    if (!$conn || !($conn instanceof PDO)) {
+        echo json_encode(['error' => 'Database connection failed']);
+        exit;
+    }
+
+    try {
+        $companyId = $_GET['company'] ?? '';
+        $datefrom  = $_GET['datefrom'] ?? '';
+        $dateto    = $_GET['dateto'] ?? '';
+
+        if (empty($companyId) || empty($datefrom) || empty($dateto)) {
+            echo json_encode(['error' => 'Missing required parameters']);
+            exit;
+        }
+
+        $sql = "
+            SELECT *
+            FROM BS_Checking_logs
+            WHERE COMPANY_ID = :companyid
+              AND DATE_CHECKED BETWEEN :datefrom AND :dateto
+            ORDER BY SITE_ID ASC
+        ";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':companyid', $companyId, PDO::PARAM_STR);
+        $stmt->bindParam(':datefrom', $datefrom, PDO::PARAM_STR);
+        $stmt->bindParam(':dateto', $dateto, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode($items);
+
+    } catch (PDOException $e) {
+        echo json_encode([
+            'error' => 'Database error',
+            'message' => $e->getMessage()
+        ]);
+    } catch (Exception $e) {
+        echo json_encode([
+            'error' => 'Application error',
+            'message' => $e->getMessage()
+        ]);
+    }
+    exit;
+}
+
 $response = [];
 
 try {

@@ -77,44 +77,63 @@
 </style>
 </head>
 <body>
-<h3>LOAD CHECKING TRANSACTION</h3>
-
+<h3>LOAD CHECKING RESULT</h3>
 <div class="card text-bg-light" style="max-width: 100%; height: 750px; margin-bottom: 0.5rem; font-size: 9px;">
-    <div class="card-header d-flex justify-content-between align-items-center py-1 px-2" style="min-height: 32px;">
-        <div class="input-group input-group-sm" style="width: 220px;">
-            <input type="text" class="form-control border-start-0 border-end-0" placeholder="Search..." id="searchInput"
-                   style="font-size: 9px; height: 24px; padding: 2px 6px;">
-        </div>  
+
+    <!-- CARD HEADER -->
+    <div class="card-header d-flex align-items-center justify-content-between py-1 px-2" style="min-height:32px;">
+        
+        <div class="d-flex align-items-end gap-2">
+            <div class="form-group mb-0">
+                <input type="date" id="datefrom"
+                       class="form-control form-control-sm"
+                       value="<?php echo date('Y-m-d'); ?>">
+            </div>
+
+            <div class="form-group mb-0 ml-2">
+                <input type="date" id="dateto"
+                       class="form-control form-control-sm"
+                       value="<?php echo date('Y-m-d'); ?>">
+            </div>
+
+            <button class="btn btn-primary btn-sm px-3 ml-2" onclick="loaddeviceschecked()">
+                <i class="fas fa-filter mr-1"></i> Generate
+            </button>
+        </div>
+
     </div>
 
+    <!-- CARD BODY -->
     <div class="card-body card-body-scroll p-2" style="height: calc(100% - 32px); overflow-y: auto;">
-        <table id="itemsTable" class="table table-striped table-hover table-bordered table-sm mb-0" style="font-size: 9px;">
+        <table id="itemsTable"
+               class="table table-striped table-hover table-bordered table-sm mb-0"
+               style="font-size: 9px;">
             <thead>
                 <tr>
                     <th>#</th>
                     <th>SITE</th>
-                    <th>DEPARTMENT</th>
-                    <th>PRINCIPAL</th>
-                    <th>POSITION</th>
-                    <th>BRAND</th>
-                    <th>MODEL</th>
-                    <th>SERIAL</th>
-                    <th>DATE DEPLOYED</th>
+                    <th>DATE</th>
                     <th>USER</th>
                     <th>NUMBER</th>
-                    <th>DATA(GB)</th>
-                    <th>LAST LOAD</th>
-                    <th>LOAD STATUS</th>
-                    <th>ACTION</th>
+                    <th>DATA BALANCE</th>
+                    <th>IS SUBMITTED</th>
+                    <th>IS PHYSICALLY OK</th>
+                    <th>HAS GAMES</th>
+                    <th>IS SYSTEM UPDATED</th>
+                    <th>OTHER ISSUES</th>
+                    <th>CHECKED BY</th>
                 </tr>
             </thead>
             <tbody></tbody>
         </table>
     </div>
 
+    <!-- MESSAGES -->
     <div id="table-error" class="error-message text-danger small p-1"></div>
     <div id="table-success" class="success-message text-success small p-1"></div>
+
 </div>
+
 
 <!-- EDIT MODAL -->
 <div class="modal fade" id="editDeviceModal" tabindex="-1" role="dialog" aria-labelledby="editDeviceModalLabel" aria-hidden="true">
@@ -348,270 +367,71 @@ function getBalanceColor(balance) {
     return 'green';
 }
 
-function loaddevices() {
+function loaddeviceschecked() {
+    // Get parameters
     const companyId = "<?php echo $_SESSION['Company_ID'] ?? ''; ?>";
+    const datefrom  = document.getElementById('datefrom').value;
+    const dateto    = document.getElementById('dateto').value;
+
+    // Check if table body exists
     const tbody = document.querySelector('#itemsTable tbody');
     if (!tbody) return;
 
-    tbody.innerHTML = '';
+    tbody.innerHTML = ''; 
 
-    fetch(`/LM/datafetcher/loadcheckingdata.php?action=loaddevice&company=${encodeURIComponent(companyId)}`)
+    tbody.innerHTML = `
+        <tr>
+            <td colspan="12" class="text-center">Loading...</td>
+        </tr>
+    `;
+
+    fetch(`/LM/datafetcher/loadcheckingdata.php?action=loadcheckresult&company=${encodeURIComponent(companyId)}&datefrom=${encodeURIComponent(datefrom)}&dateto=${encodeURIComponent(dateto)}`)
         .then(response => {
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             return response.json();
         })
         .then(data => {
-             loadedPOs = data;
+            tbody.innerHTML = ''; 
+
             if (!data || data.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="16" class="text-center">No items found.</td>
-                    </tr>`;
+                        <td colspan="12" class="text-center">No items found.</td>
+                    </tr>
+                `;
                 return;
             }
 
             data.forEach((item, index) => {
-                const forLoad = isForLoad(item.LAST_LOAD_HISTORY, item.BALANCE);
-                const loadStatus = forLoad ? 'FOR LOAD' : 'OK';
-                const balanceColor = getBalanceColor(item.BALANCE);
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${index + 1}</td>
                     <td>${item.SITE_ID || ''}</td>
-                    <td>${item.DEPARTMENT || ''}</td>
-                    <td>${item.PRINCIPAL || ''}</td>
-                    <td>${item.POSITION || ''}</td>
-                    <td>${item.BARND || item.BRAND || ''}</td>
-                    <td>${item.MODEL || ''}</td>
-                    <td>${item.SERIAL || ''}</td>
-                    <td>${item.DATE_DEPLOYED || ''}</td>
-                    <td>${item.PERSON_USING || ''}</td>
+                    <td>${item.DATE_CHECKED || ''}</td>
+                    <td>${item.USER || ''}</td>
                     <td>${item.NUMBER || ''}</td>
-
-                    <td style="
-                        background-color:${balanceColor};
-                        color:black;
-                        font-weight:bold;
-                        text-align:center;
-                    ">
-                        ${item.BALANCE ?? ''}
-                    </td>
-
-                    <td>${item.LAST_LOAD_HISTORY || ''}</td>
-
-                    <td style="
-                        background-color:${forLoad ? 'red' : 'green'};
-                        color:white;
-                        font-weight:bold;
-                        text-align:center;
-                    ">
-                        ${loadStatus}
-                    </td>
-
-                    <td>
-                        <button
-                            class="btn btn-primary btn-sm"
-                            style="font-size:9px;padding:2px 6px;"
-                            onclick="selectDevice(${index})">
-                            Select
-                        </button>
-                    </td>
+                    <td>${item.LOAD_BALANCE || ''}</td>
+                    <td>${item.IS_SUBMIT || ''}</td>
+                    <td>${item.IS_PHYSICAL_OK || ''}</td>
+                    <td>${item.HAS_GAMES || ''}</td>
+                    <td>${item.IS_SYSTEM_UPDATED || ''}</td>
+                    <td>${item.OTHER_ISSUES || ''}</td>
+                    <td>${item.CHECKED_BY || ''}</td>
                 `;
                 tbody.appendChild(tr);
             });
         })
         .catch(err => {
             console.error('Error loading items:', err);
-            document.getElementById('table-error').textContent = 'Failed to load data.';
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="12" class="text-center text-danger">Failed to load data.</td>
+                </tr>
+            `;
         });
 }
 
-
-function selectDevice(index) {
-    const item = loadedPOs[index];
-    if (!item) {
-        console.warn("No item at index:", index);
-        return;
-    }
-
-    console.log("Selected device:", item); // ← Check this in browser console (F12)
-
-    // Populate fields
-    document.getElementById('edit_id').value      = item.LINEID      || '';
-    document.getElementById('edit_site').value      = item.SITE_ID      || '';
-    document.getElementById('edit_dept').value      = item.DEPARTMENT   || '';
-    document.getElementById('edit_principal').value = item.PRINCIPAL    || '';
-    document.getElementById('edit_position').value  = item.POSITION     || '';
-    document.getElementById('edit_brand').value     = item.BRAND || item.BRAND || '';
-    document.getElementById('edit_model').value     = item.MODEL        || '';
-    document.getElementById('edit_imei').value      = item.IMEI         || '';
-    document.getElementById('edit_serial').value    = item.SERIAL       || '';
-
-    let dateVal = item.DATE_DEPLOYED || '';
-    if (dateVal && dateVal.includes(' ')) dateVal = dateVal.split(' ')[0];
-    document.getElementById('edit_date').value      = dateVal;
-
-    document.getElementById('edit_user').value      = item.PERSON_USING || '';
-    document.getElementById('edit_number').value    = item.NUMBER       || '';
-      document.getElementById('edit_data_left').value    = item.BALANCE       || '';
-    document.getElementById('edit_remarks').value   = item.REMARKS      || '';
-   
-
-    // Safely set radio buttons
-    setRadio('data_submitted',  item.DATA_SUBMITTED  || 'Yes');
-    setRadio('physically_ok',   item.PHYSICALLY_OK   || 'Yes');
-    setRadio('games',           item.GAMES           || 'No');
-    setRadio('system_updated',  item.SYSTEM_UPDATED  || 'Yes');
-
-    document.getElementById('other_issues').value = item.OTHER_ISSUES || '';
-
-    // Highlight row
-    document.querySelectorAll('#itemsTable tbody tr').forEach(r => r.classList.remove('table-active'));
-    document.querySelectorAll('#itemsTable tbody tr')[index]?.classList.add('table-active');
-
-    $('#editDeviceModal').modal('show');
-}
-
-document.getElementById('btnSaveChanges')?.addEventListener('click', () => {
-   
-const bal =  document.getElementById('edit_data_left').value.trim()
-
-   if (!bal) {
-        alert('Please insert current data balance');
-        return;
-    }
-
-const formData = {
-        id:              document.getElementById('edit_id').value || '',
-        SITE_ID:         document.getElementById('edit_site').value.trim(),
-        DEPARTMENT:      document.getElementById('edit_dept').value.trim(),
-        PRINCIPAL:       document.getElementById('edit_principal').value.trim(),
-        POSITION:        document.getElementById('edit_position').value.trim(),
-        BRAND:           document.getElementById('edit_brand').value.trim(),
-        MODEL:           document.getElementById('edit_model').value.trim(),
-        IMEI:            document.getElementById('edit_imei').value.trim(),
-        SERIAL:          document.getElementById('edit_serial').value.trim(),
-        DATE_DEPLOYED:   document.getElementById('edit_date').value,
-        PERSON_USING:    document.getElementById('edit_user').value.trim(),
-        NUMBER:          document.getElementById('edit_number').value.trim(),
-        REMARKS:         document.getElementById('edit_remarks').value.trim(),
-        BALANCE:       document.getElementById('edit_data_left').value.trim(),
-        DATA_SUBMITTED:  document.querySelector('input[name="data_submitted"]:checked')?.value || 'Yes',
-        PHYSICALLY_OK:   document.querySelector('input[name="physically_ok"]:checked')?.value || 'Yes',
-        GAMES:           document.querySelector('input[name="games"]:checked')?.value || 'No',
-        SYSTEM_UPDATED:  document.querySelector('input[name="system_updated"]:checked')?.value || 'Yes',
-        OTHER_ISSUES:    document.getElementById('other_issues').value.trim()
-    };
-
-    console.log("Data to save:", formData);
-
-    // Uncomment when backend is ready
-    
-    fetch('/LM/datafetcher/loadcheckingdata.php?action=update_device', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-    })
-    .then(r => r.json())
-    .then(res => {
-        if (res.success) {
-            alert('Device submitted successfully');
-            $('#editDeviceModal').modal('hide');
-            loaddevices();
-        } else {
-            alert('Save failed: ' + (res.message || 'Unknown error'));
-        }
-    })
-    .catch(err => {
-        console.error(err);
-        alert('Error saving changes');
-    });
-    
-});
-
-
-
-
-document.getElementById('btnUpdateOnly')?.addEventListener('click', () => {
-   
-const bal =  document.getElementById('edit_data_left').value.trim()
-
-   if (!bal) {
-        alert('Please insert current data balance');
-        return;
-    }
-
-const formData = {
-        id:              document.getElementById('edit_id').value || '',
-        SITE_ID:         document.getElementById('edit_site').value.trim(),
-        DEPARTMENT:      document.getElementById('edit_dept').value.trim(),
-        PRINCIPAL:       document.getElementById('edit_principal').value.trim(),
-        POSITION:        document.getElementById('edit_position').value.trim(),
-        BRAND:           document.getElementById('edit_brand').value.trim(),
-        MODEL:           document.getElementById('edit_model').value.trim(),
-        IMEI:            document.getElementById('edit_imei').value.trim(),
-        SERIAL:          document.getElementById('edit_serial').value.trim(),
-        DATE_DEPLOYED:   document.getElementById('edit_date').value,
-        PERSON_USING:    document.getElementById('edit_user').value.trim(),
-        NUMBER:          document.getElementById('edit_number').value.trim(),
-        REMARKS:         document.getElementById('edit_remarks').value.trim(),
-        BALANCE:       document.getElementById('edit_data_left').value.trim(),
-        DATA_SUBMITTED:  document.querySelector('input[name="data_submitted"]:checked')?.value || 'Yes',
-        PHYSICALLY_OK:   document.querySelector('input[name="physically_ok"]:checked')?.value || 'Yes',
-        GAMES:           document.querySelector('input[name="games"]:checked')?.value || 'No',
-        SYSTEM_UPDATED:  document.querySelector('input[name="system_updated"]:checked')?.value || 'Yes',
-        OTHER_ISSUES:    document.getElementById('other_issues').value.trim()
-    };
-
-    console.log("Data to save:", formData);
-
-    // Uncomment when backend is ready
-    
-    fetch('/LM/datafetcher/loadcheckingdata.php?action=updateonly', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-    })
-    .then(r => r.json())
-    .then(res => {
-        if (res.success) {
-            alert('Device details updated successfully');
-            $('#editDeviceModal').modal('hide');
-            loaddevices();
-        } else {
-            alert('Save failed: ' + (res.message || 'Unknown error'));
-        }
-    })
-    .catch(err => {
-        console.error(err);
-        alert('Error saving changes');
-    });
-    
-});
-
-
-// Auto-focus on "Data Left" field when modal becomes visible
-$('#editDeviceModal').on('shown.bs.modal', function () {
-    const dataLeftInput = document.getElementById('edit_data_left');
-    if (dataLeftInput) {
-        dataLeftInput.focus();
-        // Optional: select the text (user can immediately type and replace old value)
-        // dataLeftInput.select();
-    }
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-    loaddevices();
-
-    const searchInput = document.getElementById('searchInput');
-    searchInput.addEventListener('keyup', () => {
-        const filter = searchInput.value.toLowerCase();
-        document.querySelectorAll('#itemsTable tbody tr').forEach(row => {
-            row.style.display = row.textContent.toLowerCase().includes(filter) ? '' : 'none';
-        });
-    });
-});
 </script>
 </body>
 </html>
