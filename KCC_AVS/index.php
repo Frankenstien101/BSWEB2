@@ -3,6 +3,9 @@ session_start();
 include 'db_connection.php';
 $page = isset($_GET["page"]) ? $_GET["page"] : "dashboard";
 $user_id = $_SESSION['user_id'];
+if (!isset($_SESSION['user_id'])) {
+    header('Location:../KCC_AVS/pages/login_form.php');
+}
 $selected_comp = $_SESSION['selected_comp'] ?? '';
 $selected_site = $_SESSION['selected_site'] ?? '';
 ?>
