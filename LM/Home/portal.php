@@ -203,7 +203,7 @@ if (!isset($_SESSION['Name_of_user']) || empty($_SESSION['Name_of_user'])) {
             </a>
           </li>
           <li class="nav-item">
-            <a href="portal.php?page=#" class="nav-link d-flex align-items-center">
+            <a href="portal.php?page=reports" class="nav-link d-flex align-items-center">
               <img src="\Dash\Home\img\documents.png" style="width: 30px; height: 30px; margin-right: 10px;">
               <p class="mb-0">Reports</p>
             </a>
@@ -227,13 +227,13 @@ if (!isset($_SESSION['Name_of_user']) || empty($_SESSION['Name_of_user'])) {
     if ($role === 'ADMIN') {
         // Admin pages logic
         $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
-        $allowedPages = ['dashboard', 'transactions', 'reports2' , 'settings' , 'loadchecking', 'addnewdevice', 'loadrequest', 'loadcheckresult', 'loadpurchase'];
+        $allowedPages = ['dashboard', 'transactions', 'reports2' , 'settings' , 'loadchecking', 'addnewdevice', 'loadrequest', 'loadcheckresult', 'loadpurchase', 'reports', 'devicelist', 'loadcheckingreport', 'purchasereport'];
         if (in_array($page, $allowedPages)) {
             include "pages/{$page}.php";
         } else {
             echo "<h1 class='text-center'>Page not found or not allowed</h1>";
         }
-    } elseif ($role === 'TRUCK-SIZER') {
+    } elseif ($role === 'FINANCE') {
         // Encoder pages logic
         $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
         $allowedPages = ['dashboard', 'transactions', 'loadchecking'];

@@ -112,15 +112,12 @@
                     </form>
                 </div>
                 <div class="modal-footer py-2">
-                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary btn-sm" id="btnConfirmPurchase">Confirm Purchase</button>
+                    <button type="button" class="btn btn-secondary btn-md" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btn-md" id="btnConfirmPurchase">Confirm Purchase</button>
                 </div>
             </div>
         </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
     let currentRowData = null;
@@ -233,7 +230,7 @@
         .then(res => res.json())
         .then(res => {
             if (res.status === 'success') {
-                alert('Load purchase recorded successfully!');
+               // alert('Load purchase recorded successfully!');
                 $('#purchaseLoadModal').modal('hide');
                 loadForLoadDevices(); 
             } else {

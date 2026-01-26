@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 <title>Load Checking</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" />
 
 <style>
     .card-body-scroll { overflow-y: auto; max-width: 100%; height: 600px; }
@@ -432,6 +433,37 @@ function loaddeviceschecked() {
         });
 }
 
+function exportToExcel() {
+    if (!loadedPOs.length) {
+        alert("No data to export!");
+        return;
+    }
+
+    // Convert array of objects to worksheet
+    const worksheet = XLSX.utils.json_to_sheet(loadedPOs);
+
+    // Generate CSV content from worksheet
+    const csvOutput = XLSX.utils.sheet_to_csv(worksheet);
+
+    // Create a Blob with CSV data
+    const blob = new Blob([csvOutput], { type: 'text/csv;charset=utf-8;' });
+
+    // Create a download link and trigger click
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", ".csv");
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+}
+
 </script>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
 </body>
 </html>

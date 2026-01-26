@@ -293,23 +293,31 @@ try {
 
         $sql = "
             SELECT 
-                LINEID,
-                SITE_ID,
-                DEPARTMENT,
-                PRINCIPAL,
-                POSITION,
-                BRAND,
-                MODEL,
-                SERIAL,
-                DATE_DEPLOYED,
-                PERSON_USING,
-                NUMBER,
-                BALANCE,
-                LOAD_STATUS,
-                LAST_LOAD_HISTORY
-            FROM BS_Device
-            WHERE COMPANY_ID = :company_id
-            ORDER BY DATE_ADDED DESC
+            LINEID,
+            SITE_ID,
+            DEPARTMENT,
+            PRINCIPAL,
+            POSITION,
+            BRAND,
+            MODEL,
+            SERIAL,
+            DATE_DEPLOYED,
+            PERSON_USING,
+            NUMBER,
+            BALANCE,
+            LOAD_STATUS,
+            LAST_LOAD_HISTORY
+        FROM BS_Device
+        WHERE COMPANY_ID = :company_id
+          AND (
+              BALANCE < 5
+              OR 
+              LAST_LOAD_HISTORY < DATEADD(MONTH, -6, GETDATE())
+              -- Alternative (more precise ~180 days):
+              -- OR LAST_LOAD_HISTORY < DATEADD(DAY, -180, GETDATE())
+              -- OR LAST_LOAD_HISTORY < DATEADD(MONTH, -6, CAST(GETDATE() AS DATE))
+          )
+        ORDER BY DATE_ADDED DESC;
         ";
 
         $stmt = $conn->prepare($sql);
