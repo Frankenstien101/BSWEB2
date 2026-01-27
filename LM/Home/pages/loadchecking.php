@@ -409,7 +409,7 @@ function loaddevices() {
 
                     <td>
                         <button
-                            class="btn btn-primary btn-sm"
+                            class="btn btn-primary btn-md"
                             style="font-size:9px;padding:2px 6px;"
                             onclick="selectDevice(${index})">
                             Select

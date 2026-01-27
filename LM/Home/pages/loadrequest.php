@@ -41,7 +41,7 @@
 <body>
 
     <div class="container-fluid mt-3">
-        <div class="card text-bg-light" style="max-width: 100%; height: 750px; margin-bottom: 0.5rem; font-size: 9px;">
+        <div class="card text-bg-light" style="max-width: 100%; height: 730px; margin-bottom: 0.5rem; font-size: 9px;">
             <div class="card-header d-flex justify-content-between align-items-center py-1 px-2" style="min-height: 32px;">
                 <h5 class="mb-0">Devices For Load</h5>
  

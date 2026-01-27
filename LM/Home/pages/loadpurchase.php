@@ -123,54 +123,84 @@
     let currentRowData = null;
 
     function loadForLoadDevices() {
-        const tbody = document.getElementById('forLoadTable');
-        tbody.innerHTML = `<tr><td colspan="15" class="text-center text-muted">Loading...</td></tr>`;
+    const tbody = document.getElementById('forLoadTable');
 
-        fetch('/LM/datafetcher/loadcheckingdata.php?action=forload')
-            .then(res => res.json())
-            .then(data => {
-                if (!data || data.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="15" class="text-center text-muted">No devices need load</td></tr>`;
-                    return;
-                }
+    tbody.innerHTML = `
+        <tr>
+            <td colspan="15" class="text-center text-muted">Loading...</td>
+        </tr>
+    `;
 
-                tbody.innerHTML = '';
-                data.forEach((item, index) => {
-                    const statusClass = item.LOAD_STATUS === 'FOR LOAD' ? 'status-forload' : 'status-ok';
-                    const canPurchase = item.LOAD_STATUS === 'FOR LOAD';
+    fetch('/LM/datafetcher/purchasedata.php?action=forload')
+        .then(res => res.json())
+        .then(data => {
 
-                    const actionCell = canPurchase 
-                        ? `<button class="btn btn-primary btn-sm" onclick="openPurchaseModal(${item.id}, '${item.PERSON_USING || ''}', '${item.NUMBER || ''}', '${item.BALANCE ?? ''}', '${item.SITE_ID || ''}', this)">
-                             Purchase Load
-                           </button>`
-                        : `<span class="text-muted">—</span>`;
+            if (!Array.isArray(data) || data.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="15" class="text-center text-muted">
+                            No devices need load
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
 
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td>${item.SITE_ID || ''}</td>
-                        <td>${item.DEPARTMENT || ''}</td>
-                        <td>${item.PRINCIPAL || ''}</td>
-                        <td>${item.POSITION || ''}</td>
-                        <td>${item.BRAND || ''}</td>
-                        <td>${item.MODEL || ''}</td>
-                        <td>${item.SERIAL || ''}</td>
-                        <td>${item.DATE_DEPLOYED || ''}</td>
-                        <td>${item.PERSON_USING || ''}</td>
-                        <td>${item.NUMBER || ''}</td>
-                        <td>${item.BALANCE ?? ''}</td>
-                        <td>${item.LAST_LOAD_HISTORY ?? ''}</td>
-                        <td><span class="status-badge ${statusClass}">${item.LOAD_STATUS}</span></td>
-                        <td>${actionCell}</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            })
-            .catch(err => {
-                console.error(err);
-                tbody.innerHTML = `<tr><td colspan="15" class="text-center text-danger">Failed to load data</td></tr>`;
+            tbody.innerHTML = '';
+
+            data.forEach((item, index) => {
+
+                const actionCell = `
+                    <button class="btn btn-primary btn-sm"
+                        onclick="openPurchaseModal(
+                            ${item.LINEID},
+                            '${item.PERSON_USING ?? ''}',
+                            '${item.NUMBER ?? ''}',
+                            '${item.BALANCE ?? ''}',
+                            '${item.SITE_ID ?? ''}',
+                            this
+                        )">
+                        Purchase Load
+                    </button>
+                `;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${item.SITE_ID ?? ''}</td>
+                    <td>${item.DEPARTMENT ?? ''}</td>
+                    <td>${item.PRINCIPAL ?? ''}</td>
+                    <td>${item.POSITION ?? ''}</td>
+                    <td>${item.BRAND ?? ''}</td>
+                    <td>${item.MODEL ?? ''}</td>
+                    <td>${item.SERIAL ?? ''}</td>
+                    <td>${item.DATE_DEPLOYED ?? ''}</td>
+                    <td>${item.PERSON_USING ?? ''}</td>
+                    <td>${item.NUMBER ?? ''}</td>
+                    <td>${item.BALANCE ?? ''}</td>
+                    <td>${item.LAST_LOAD_HISTORY ?? ''}</td>
+                    <td>
+                        <span class="status-badge status-forload">
+                            ${item.LOAD_STATUS}
+                        </span>
+                    </td>
+                    <td>${actionCell}</td>
+                `;
+                tbody.appendChild(tr);
             });
-    }
+        })
+        .catch(err => {
+            console.error(err);
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="15" class="text-center text-danger">
+                        Failed to load data
+                    </td>
+                </tr>
+            `;
+        });
+}
+
 
     function openPurchaseModal(deviceId, user, number, balance, siteId, btn) {
         currentRowData = { deviceId, user, number, balance, siteId };

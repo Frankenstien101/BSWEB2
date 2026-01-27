@@ -146,9 +146,6 @@
     </div>
 </div>
 
-<!-- Summary Card -->
-
-<!-- Table Card -->
 <div class="card text-bg-light" style="max-width: 100%; height: 630px; margin-bottom: 0.5rem; font-size: 9px;">
     <div class="card-header"></div>
     <div class="card-body card-body-scroll">
@@ -178,15 +175,10 @@
     <div id="table-success" class="success-message"></div>
 </div>
 
-<!-- Pagination Card -->
-
-
-<!-- Export Button -->
 <div class="text-right mb-0">
     <button class="btn btn-success btn-sm mb-2" onclick="exportToExcel()">Export Data</button>
 </div>
 
-<!-- Loader -->
 <div id="loading" style="
     position: fixed;
     top: 0; left: 0;
@@ -202,7 +194,6 @@
     </div>
 </div>
 
-
 <div aria-live="polite" aria-atomic="true" style="position: fixed; bottom: 80px; right: 20px; min-width: 250px; z-index: 1080; pointer-events: none;">
   <div class="toast" id="poprocessed" data-delay="3000">
     <div class="toast-header bg-success text-white">
@@ -217,8 +208,9 @@
 </div>
 
 <script>
+
 document.addEventListener("DOMContentLoaded", function () {
-   // loaditems();
+
 });
 
 let loadedPOs = []; // Global storage
