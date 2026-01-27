@@ -189,15 +189,35 @@
             transform: translateY(-5px);
         }
 
-        footer {
-            text-align: center;
-            padding: 0.6rem;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            background-color: rgba(3, 35, 109, 0.5);
-            backdrop-filter: blur(12px);
-           
-        }
+       /* Make sure the whole page uses flexbox */
+html {
+    height: 100%;
+}
+
+body {
+    min-height: 100vh;           /* ← important */
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Main content area should grow to push footer down */
+main {
+    flex: 1 0 auto;             /* ← this line does the magic */
+}
+
+/* Your footer */
+footer {
+    text-align: center;
+    padding: 0.6rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    background-color: rgba(3, 35, 109, 0.5);
+    backdrop-filter: blur(12px);
+
+    /* Not always needed with flexbox, but good to have */
+    flex-shrink: 0;
+}
 
         @media (max-width: 768px) {
             header {
@@ -307,7 +327,6 @@
                       <a href="\TBC.php" class="app-button">Visit Site</a>
                   </div>
 
-
      <!-- Card 8 -->
            <div class="app-card">
                       <img src="\MainImg\dolibarr.png" alt="ERP Logo" class="app-logo">
@@ -318,20 +337,29 @@
                       <a href="http://bspierp.ct.ws/" class="app-button">Visit Site</a>
                   </div>
 
-      
-
-
             <div class="app-card">
-                      <img src="\MainImg\paordernew.png" alt="ERP Logo" class="app-logo" style="height:150px; width:150px;">
+                      <img src="\MainImg\paordernew.png" alt="ERP Logo" class="app-logo" style="height:170px; width:150px;">
                       <h2 class="app-name"> </h2>
                       <p class="app-description">  
-                            A web-based purchase order tracking system that streamlines order processing, tracks deliveries, and manages supplier relationships. 
+                            A web-based purchase order tracking system to streamlines order processing, tracks deliveries, and manages supplier relationships. 
                     </p>
                       <a href="\orderko.php" class="app-button">Visit Site</a>
                   </div>
 
+            <div class="app-card">
+                      <img src="\MainImg\loadguard2.png" alt="ERP Logo" class="app-logo" style="height:100px; width:100px;">
+                      <h2 class="app-name"> </h2>
+                      <p class="app-description">  
+                         A load tracking application that streamlines load monitoring, status updates, and load request management in real time.
+                      </p>
+
+                      <a href="\LoadGuard.php" class="app-button">Visit Site</a>
+                  </div>
+
+            </div>
             </div>
 
+            
              </main>
 
             <footer>

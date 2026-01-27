@@ -228,6 +228,57 @@ if ($action === 'update_device') {
     }
 }
 
+
+if (isset($_GET['action']) && $_GET['action'] === 'loadcheckresult') {
+    header('Content-Type: application/json');
+
+    if (!$conn || !($conn instanceof PDO)) {
+        echo json_encode(['error' => 'Database connection failed']);
+        exit;
+    }
+
+    try {
+        $companyId = $_GET['company'] ?? '';
+        $datefrom  = $_GET['datefrom'] ?? '';
+        $dateto    = $_GET['dateto'] ?? '';
+
+        if (empty($companyId) || empty($datefrom) || empty($dateto)) {
+            echo json_encode(['error' => 'Missing required parameters']);
+            exit;
+        }
+
+        $sql = "
+            SELECT *
+            FROM BS_Checking_logs
+            WHERE COMPANY_ID = :companyid
+              AND DATE_CHECKED BETWEEN :datefrom AND :dateto
+            ORDER BY SITE_ID ASC
+        ";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':companyid', $companyId, PDO::PARAM_STR);
+        $stmt->bindParam(':datefrom', $datefrom, PDO::PARAM_STR);
+        $stmt->bindParam(':dateto', $dateto, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode($items);
+
+    } catch (PDOException $e) {
+        echo json_encode([
+            'error' => 'Database error',
+            'message' => $e->getMessage()
+        ]);
+    } catch (Exception $e) {
+        echo json_encode([
+            'error' => 'Application error',
+            'message' => $e->getMessage()
+        ]);
+    }
+    exit;
+}
+
 $response = [];
 
 try {
@@ -242,23 +293,31 @@ try {
 
         $sql = "
             SELECT 
-                LINEID,
-                SITE_ID,
-                DEPARTMENT,
-                PRINCIPAL,
-                POSITION,
-                BRAND,
-                MODEL,
-                SERIAL,
-                DATE_DEPLOYED,
-                PERSON_USING,
-                NUMBER,
-                BALANCE,
-                LOAD_STATUS,
-                LAST_LOAD_HISTORY
-            FROM BS_Device
-            WHERE COMPANY_ID = :company_id
-            ORDER BY DATE_ADDED DESC
+            LINEID,
+            SITE_ID,
+            DEPARTMENT,
+            PRINCIPAL,
+            POSITION,
+            BRAND,
+            MODEL,
+            SERIAL,
+            DATE_DEPLOYED,
+            PERSON_USING,
+            NUMBER,
+            BALANCE,
+            LOAD_STATUS,
+            LAST_LOAD_HISTORY
+        FROM BS_Device
+        WHERE COMPANY_ID = :company_id
+          AND (
+              BALANCE < 5
+              OR 
+              LAST_LOAD_HISTORY < DATEADD(MONTH, -6, GETDATE())
+              -- Alternative (more precise ~180 days):
+              -- OR LAST_LOAD_HISTORY < DATEADD(DAY, -180, GETDATE())
+              -- OR LAST_LOAD_HISTORY < DATEADD(MONTH, -6, CAST(GETDATE() AS DATE))
+          )
+        ORDER BY DATE_ADDED DESC;
         ";
 
         $stmt = $conn->prepare($sql);

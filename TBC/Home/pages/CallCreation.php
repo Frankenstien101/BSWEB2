@@ -530,20 +530,20 @@ IF NOT MATCHED – put INCORRECT AMOUNT;
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">Store Name Right?</h5>
-      <input type="text" class="form-control form-control-sm" id="storeNameRight" style="border:none; background-color: ; text-align: center; font-size: 1rem;" value = "YES" readonly>
+      <input type="text" class="form-control form-control-sm" id="storeNameRight" style="border:none; background-color: gray; text-align: center; font-size: 1rem;" value = "YES" readonly>
     <p class="card-text"></p>
     </div>
   </div>
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">Phone # Correct?</h5>
-      <input type="text" class="form-control form-control-sm" id="phoneNumberCorrect" style="border:none; background-color: ; text-align: center; font-size: 1rem;" value = "YES" readonly>
+      <input type="text" class="form-control form-control-sm" id="phoneNumberCorrect" style="border:none; background-color: gray; text-align: center; font-size: 1rem;" value = "YES" readonly>
     </div>
   </div>
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">Is Store Visited?</h5>
-      <input type="text" class="form-control form-control-sm" id="storeVisited" style="border:none; background-color: ; text-align: center; font-size: 1rem;" value = "YES" readonly>
+      <input type="text" class="form-control form-control-sm" id="storeVisited" style="border:none; background-color: gray; text-align: center; font-size: 1rem;" value = "YES" readonly>
     </div>
   </div>
 </div>
@@ -553,20 +553,20 @@ IF NOT MATCHED – put INCORRECT AMOUNT;
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">Productive Call?</h5>
-      <input type="text" class="form-control form-control-sm" id="productiveCall" style="border:none; background-color: ; text-align: center; font-size: 1rem;" value = "YES" readonly>
+      <input type="text" class="form-control form-control-sm" id="productiveCall" style="border:none; background-color: gray; text-align: center; font-size: 1rem;" value = "YES" readonly>
     <p class="card-text"></p>
     </div>
   </div>
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">Amount Correct?</h5>
-      <input type="text" class="form-control form-control-sm" id="amountCorrect" style="border:none; background-color: ; text-align: center; font-size: 1rem;" value = "YES" readonly>
+      <input type="text" class="form-control form-control-sm" id="amountCorrect" style="border:none; background-color: gray; text-align: center; font-size: 1rem;" value = "YES" readonly>
     </div>
   </div>
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">Amount Verified</h5>
-      <input type="text" class="form-control form-control-sm" id="amountVerified" style="border:none; background-color: ; text-align: center; font-size: 1rem;" value = "YES" readonly>
+      <input type="text" class="form-control form-control-sm" id="amountVerified" style="border:none; background-color: gray; text-align: center; font-size: 1rem;" value = "YES" readonly>
     </div>
   </div>
 </div>
@@ -736,7 +736,6 @@ function endcall() {
     stopCallTimer();
     alert('Call ended. Duration: ' + document.getElementById('callTimer').textContent);
   }
-
 
 </script>
 

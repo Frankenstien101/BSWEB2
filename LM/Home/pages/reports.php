@@ -21,7 +21,7 @@
       border-radius: 15px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       width: 200px;
-      height: 270px;
+      height: 210px;
       margin: 10px;
       display: flex;
       flex-direction: column;
@@ -65,27 +65,25 @@
     integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
 </head>
 <body>
-  <h3>LOAD MANAGEMENT</h3>
+  <h3>REPORTS</h3>
 <div class="section-container">
     <div class="row row-cards d-flex flex-wrap">
       <!-- Register New Device -->
       <div class="col-auto px-2 first-card">
-        <a href="portal.php?page=addnewdevice" class="card-link">
+        <a href="portal.php?page=devicelist" class="card-link">
           <div class="card-custom">
-            <img src="\LM\Home\img\transactions\sim-card.PNG" class="card-icon mb-4 mt-2" alt="Register Device Icon" style="height:100px;"/>
-            <div class="card-title">REGISTER NEW</div>
-            <div class="card-text">Add a new device to your system quickly and securely.</div>
+            <img src="\LM\Home\img\report\phone.PNG" class="card-icon mb-4 mt-2" alt="Register Device Icon" style="height:100px;"/>
+            <div class="card-title">DEVICE LIST</div>
           </div>
         </a>
       </div>
 
       <!-- Load Checking -->
       <div class="col-auto px-2">
-        <a href="portal.php?page=loadchecking" class="card-link">
+        <a href="portal.php?page=loadcheckingreport" class="card-link">
           <div class="card-custom">
-            <img src="\LM\Home\img\transactions\smartphone.png" class="card-icon" alt="Load Checking Icon"/>
-            <div class="card-title">LOAD CHECKING</div>
-            <div class="card-text">Monitor device balances and identify devices that need load.</div>
+            <img src="\LM\Home\img\report\devicecheck.png" class="card-icon  mt-2 mb-3"  alt="Load Checking Icon" style="height:100px;"/>
+            <div class="card-title">LOAD CHECKING RESULT</div>
           </div>
         </a>
       </div>
@@ -93,41 +91,26 @@
 
           <!-- Load Checking -->
       <div class="col-auto px-2">
-        <a href="portal.php?page=loadcheckresult" class="card-link">
+        <a href="portal.php?page=loadrequest" class="card-link">
           <div class="card-custom">
-            <img src="\LM\Home\img\transactions\testing.png" class="card-icon mt-2 mb-4" alt="Load Checking Icon"style="height:100px;"/>
-            <div class="card-title">CHECKING RESULT</div>
-            <div class="card-text">Shows result status of conducted load checking.</div>
+            <img src="\LM\Home\img\report\forload.png" class="card-icon mt-2 mb-4" alt="Load Checking Icon"style="height:100px;"/>
+            <div class="card-title">FOR LOAD LIST</div>
           </div>
         </a>
       </div>
 
       <!-- Load Request -->
       <div class="col-auto px-2">
-        <a href="portal.php?page=loadrequest" class="card-link">
+        <a href="portal.php?page=purchasereport" class="card-link">
           <div class="card-custom">
-            <img src="\LM\Home\img\transactions\sim-req.png" class="card-icon mb-3 mt-3" alt="Load Request Icon" style="height:100px;"/>
-            <div class="card-title">LOAD REQUEST</div>
-            <div class="card-text">Request load for devices and track pending load requests efficiently.</div>
-          </div>
-        </a>
-      </div>
-
-      <!-- Load Purchase -->
-      <div class="col-auto px-2">
-        <a href="portal.php?page=loadpurchase" class="card-link">
-          <div class="card-custom">
-            <img src="\LM\Home\img\transactions\phone-sim.png" class="card-icon mb-3 mt-3" alt="Load Purchase Icon" style="height:100px;"/>
+            <img src="\LM\Home\img\report\loadpurchase.png" class="card-icon mb-3 mt-3" alt="Load Request Icon" style="height:100px;"/>
             <div class="card-title">LOAD PURCHASE</div>
-            <div class="card-text">Purchase and manage SIM load for multiple devices easily.</div>
           </div>
         </a>
       </div>
     </div>
 </div>
 
-
-  
-  </div>
+</div>
 </body>
 </html>
