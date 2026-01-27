@@ -118,7 +118,7 @@
                             <select class="form-select form-select-sm border-start-0 ps-0" id="filter_geotag_status">
                                 <option value="" selected>All Statuses</option>
                                 <?php
-                                $geotag_statuses = $conn->query("SELECT DISTINCT ACCOUNT_STATUS FROM [dbo].[KAVS_ACCOUNTS] WHERE COMPANY_ID = {$_SESSION['selected_comp']} AND SITE_ID = {$_SESSION['selected_site']} AND STATUS=1 ");
+                                $geotag_statuses = $conn->query("SELECT DISTINCT ACCOUNT_STATUS FROM [dbo].[KAVS_ACCOUNTS] WHERE COMPANY_ID = {$_SESSION['selected_comp']} AND SITE_ID = {$_SESSION['selected_site']} ");
                                 foreach ($geotag_statuses as $status) {
                                 ?>
                                     <option value="<?= $status['ACCOUNT_STATUS'] ?>"><?= $status['ACCOUNT_STATUS'] ?></option>
@@ -153,13 +153,15 @@
                         <th>Ads Type</th>
                         <th>Ads Specific</th>
                         <th>Category</th>
+                        <th>Mapped By</th>
+                        <th>Mapped At</th>
                         <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    $item = $conn->query("SELECT * from [dbo].[KAVS_ACCOUNTS] C JOIN [dbo].[KAVS_ACCOUNT_IMG] I ON C.ACCOUNT_ID=I.ACCOUNT_ID 
-                    WHERE C.COMPANY_ID = {$_SESSION['selected_comp']} AND C.SITE_ID = {$_SESSION['selected_site']} ");
+                    $item = $conn->query("SELECT *,C.ACCOUNT_TYPE AS AC_TYPE from [dbo].[KAVS_ACCOUNTS] C  left JOIN [dbo].[KAVS_ACCOUNT_IMG] I ON C.ACCOUNT_ID=I.ACCOUNT_ID left join 
+                    [dbo].[KAVS_USERS] ku on C.MAPPED_BY = ku.USERNAME WHERE C.COMPANY_ID = {$_SESSION['selected_comp']} AND C.SITE_ID = {$_SESSION['selected_site']} ");
                     $i = 0;
                     foreach ($item as $row) {
                         $i++;
@@ -184,12 +186,14 @@
                             </td>
 
                             <td><?= $row['ACCOUNT_ID'] ?></td>
-                            <td><?= $row['ACCOUNT_TYPE'] ?></td>
+                            <td><?= $row['AC_TYPE'] ?></td>
                             <td><?= $row['NAME'] ?></td>
                             <td><?= $row['LANDMARK'] . " | " . $row['ADDRESS'] ?></td>
                             <td><?= $row['ADS_TYPE'] ?></td>
                             <td><?= $row['ADS_SPECIFIC'] ?></td>
                             <td><?= $row['STORE_CATEGORY'] ?></td>
+                            <td><?= $row['FULLNAME'] ?></td>
+                            <td><?= date("M d, Y h:i A", strtotime($row['MAPPED_AT'])) ?></td>
                             <td><?= $row['ACCOUNT_STATUS'] ?></td>
                         </tr>
                     <?php
@@ -223,9 +227,9 @@
         $("#filter_geotag_status").on('change', function() {
             var selectedStatus = $(this).val();
             if (selectedStatus === "") {
-                tbl.column(10).search('').draw();
+                tbl.column(12).search('').draw();
             } else {
-                tbl.column(10).search('^' + selectedStatus + '$', true, false).draw();
+                tbl.column(12).search('^' + selectedStatus + '$', true, false).draw();
             }
         });
         $(document).on('click', '.img-thumb', function() {
