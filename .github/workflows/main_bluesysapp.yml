@@ -1,6 +1,3 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build and deploy PHP app to Azure Web App - bluesysapp
 
 on:
@@ -10,10 +7,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: read #This is required for actions/checkout
+      contents: read
+      id-token: write
 
     steps:
       - uses: actions/checkout@v4
@@ -23,48 +21,26 @@ jobs:
         with:
           php-version: '8.2'
 
-      - name: Check if composer.json exists
+      - name: Check composer.json
         id: check_files
         uses: andstor/file-existence-action@v1
         with:
           files: 'composer.json'
 
-      - name: Run composer install if composer.json exists
+      - name: Composer install
         if: steps.check_files.outputs.files_exists == 'true'
         run: composer validate --no-check-publish && composer install --prefer-dist --no-progress
 
-
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: php-app
-          path: .
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
-
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: php-app
-      
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_CE6FD8FCC31D4D389C13B3692503C6AD }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_2C0EB4540404495EA77ED589E8D4E206 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_6BE402420E4845E8BEF41B5F53B26086 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_53ADF1550C244F7E8C26B817EDD291D4 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_DAF39391396A41DBBB2AAE493A1F4F7F }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_AC04617D80AB444A89FA4285FFDAEC51 }}
 
-      - name: 'Deploy to Azure Web App'
+      - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
-        id: deploy-to-webapp
         with:
           app-name: 'bluesysapp'
           slot-name: 'Production'
           package: .
-          clean: true   # ← This removes previous files before deploying the new ones
