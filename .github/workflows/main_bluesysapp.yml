@@ -44,3 +44,4 @@ jobs:
           app-name: 'bluesysapp'
           slot-name: 'Production'
           package: .   # ← deploys everything in current dir
+          clean: true
