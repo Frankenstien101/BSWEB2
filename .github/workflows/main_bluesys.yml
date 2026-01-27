@@ -13,6 +13,11 @@ jobs:
       contents: read
       id-token: write
 
+    # Enable detailed debug output to see exactly what is happening
+    env:
+      SYSTEM_DEBUG: true
+      ACTIONS_STEP_DEBUG: true
+
     steps:
       - uses: actions/checkout@v4
 
@@ -29,7 +34,9 @@ jobs:
 
       - name: Composer install
         if: steps.check_files.outputs.files_exists == 'true'
-        run: composer validate --no-check-publish && composer install --prefer-dist --no-progress
+        run: |
+          composer validate --no-check-publish
+          composer install --prefer-dist --no-progress
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -37,6 +44,9 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_53ADF1550C244F7E8C26B817EDD291D4 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_DAF39391396A41DBBB2AAE493A1F4F7F }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_AC04617D80AB444A89FA4285FFDAEC51 }}
+          # Temporary: allows login to succeed even if no subscription is visible
+          # Remove this line once RBAC permissions are fixed
+          allow-no-subscriptions: true
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
@@ -44,3 +54,4 @@ jobs:
           app-name: 'bluesysapp'
           slot-name: 'Production'
           package: .
+          clean: true
