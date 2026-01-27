@@ -484,9 +484,9 @@
     function showCustomerModal(marker) {
 
         // Text fields
-        $('#customerName').text(marker.NAME);
+        $('#customerName').text(marker.AC_NAME);
         $('#customerId').text(marker.ACCOUNT_ID || '');
-        $('#accountType').text(marker.ACCOUNT_TYPE);
+        $('#accountType').text(marker.AC_TYPE);
         $('#adsType').text(marker.ADS_TYPE);
         $('#adsSpecific').text(marker.ADS_SPECIFIC);
         $('#accountCategory').text(marker.STORE_CATEGORY);

@@ -472,7 +472,7 @@ $selected_site = $_SESSION['selected_site'] ?? '';
                 <button id="zoomIn" class="btn btn-sm btn-light">+</button>
                 <button id="zoomOut" class="btn btn-sm btn-light">−</button>
                 <a id="downloadImage" class="btn btn-sm btn-success" download>Download</a>
-                <button class="btn btn-sm btn-danger" data-bs-dismiss="modal">✕</button>
+                <button class="btn btn-sm btn-danger" id="btn_img_close">✕</button>
             </div>
 
             <!-- Image -->
@@ -494,8 +494,11 @@ $selected_site = $_SESSION['selected_site'] ?? '';
             <button id="sidebarToggle"><i class="fas fas fa-bars"></i></button>
         </div>
         <ul class="sidebar-menu">
+
             <li><a href="index.php" class="<?= ($page == "dashboard") ? "active" : "" ?>"> <i class="fas fa-home"></i><span class="menu-text">Dashboard</span></a></li>
             <li><a href="index.php?page=account_monitoring" class="<?= ($page == "account_monitoring" || $page == "account_monitoring_map") ? "active" : "" ?>"><i class="fas fa-building "></i><span class="menu-text">Account's Monitoring</span></a></li>
+            <li><a href="index.php?page=user_dash" class="<?= ($page == "user_trip") || ($page == "user_dash") ? "active" : "" ?>"><i class="fas fa-building "></i><span class="menu-text">Users's Trip</span></a></li>
+
             <!-- <li><a href="#"><i class="fas fa-chart-bar"></i><span class="menu-text">Analytics</span></a></li> -->
             <?php if ($_SESSION['role'] == 'Admin'): ?>
                 <li><a href="index.php?page=user" class="<?= ($page == "user") ? "active" : "" ?>"><i class="fas fa-users"></i><span class="menu-text">Users</span></a></li>
@@ -572,7 +575,7 @@ $selected_site = $_SESSION['selected_site'] ?? '';
 
         $(document).on('click', '.img-thumb', function() {
 
-            const imgSrc = $(this).data('img');
+            const imgSrc = $(this).attr('src');
 
             scale = 1; // reset zoom
 
@@ -612,7 +615,9 @@ $selected_site = $_SESSION['selected_site'] ?? '';
             $('#mainHeader').toggleClass('expanded');
             $(this).find('i').toggleClass('fa-chevron-left fa-chevron-right');
         });
-
+        $("#btn_img_close").click(function() {
+            $('#imageModal').modal('hide');
+        });
         // Mobile Sidebar Toggle
         $('#mobileMenuToggle').click(function() {
             $('#sidebar').toggleClass('mobile-open');
@@ -655,6 +660,7 @@ $selected_site = $_SESSION['selected_site'] ?? '';
                     site_id: site_id
                 },
                 success: function(response) {
+                    alert(response);
                     select.attr("disabled", false);
                     location.reload();
                 },
