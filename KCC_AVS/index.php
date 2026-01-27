@@ -660,6 +660,7 @@ $selected_site = $_SESSION['selected_site'] ?? '';
                     site_id: site_id
                 },
                 success: function(response) {
+                    alert(response);
                     select.attr("disabled", false);
                     location.reload();
                 },
