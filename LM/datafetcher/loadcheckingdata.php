@@ -279,6 +279,43 @@ if (isset($_GET['action']) && $_GET['action'] === 'loadcheckresult') {
     exit;
 }
 
+
+if ($action === 'update_balance') {
+
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    if (empty($data['id']) || !isset($data['BALANCE'])) {
+        echo json_encode(['success' => false, 'message' => 'Invalid data']);
+        exit;
+    }
+
+    $sql = "
+        UPDATE BS_Device
+            SET
+                BALANCE = :BALANCE,
+                LOAD_STATUS = CASE
+                    WHEN BALANCE < 5
+                      OR LAST_LOAD_HISTORY IS NULL
+                      OR LAST_LOAD_HISTORY < DATEADD(MONTH, -6, GETDATE())
+                    THEN 'FOR LOAD'
+                    ELSE 'OK'
+                END
+            WHERE LINEID = :id
+
+    ";
+
+    $stmt = $conn->prepare($sql);
+   $stmt->execute([
+    ':id'      => $data['id'],
+    ':BALANCE' => $data['BALANCE']
+]);
+
+
+    echo json_encode(['success' => true]);
+    exit;
+}
+
+
 $response = [];
 
 try {
