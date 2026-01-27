@@ -44,4 +44,3 @@ jobs:
           app-name: 'bluesysapp'
           slot-name: 'Production'
           package: .
-          clean: true   # ← This removes previous files before deploying the new ones
