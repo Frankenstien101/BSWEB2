@@ -1,12 +1,12 @@
 <?php
 
-
-
 $get_total_accounts = [];
 $get_geotag_status = [];
 $get_audit_compliance = [];
-$selectec_comp = $_SESSION['selected_comp'] ?? '0';
-$selected_site = $_SESSION['selected_site'] ?? '0';
+
+
+$selectec_comp = isset($_SESSION['selected_comp']) ? $_SESSION['selected_comp'] : '0';
+$selected_site = isset($_SESSION['selected_site']) ? $_SESSION['selected_site'] : '0';
 
 $query_accounts = "SELECT ACCOUNT_TYPE, COUNT(*) AS TOTAL from [dbo].[KAVS_ACCOUNTS]
 WHERE  COMPANY_ID=$selectec_comp AND SITE_ID=$selected_site  GROUP BY ACCOUNT_TYPE";
@@ -17,7 +17,7 @@ while ($row = $stmt_accounts->fetch(PDO::FETCH_ASSOC)) {
 }
 
 $query_geotag = "SELECT ACCOUNT_STATUS, COUNT(*) AS TOTAL from [dbo].[KAVS_ACCOUNTS]
-WHERE   COMPANY_ID=$selectec_comp AND SITE_ID=$selected_site  GROUP BY ACCOUNT_STATUS ";
+WHERE   COMPANY_ID=$selectec_comp AND SITE_ID=$selected_site GROUP BY ACCOUNT_STATUS ";
 
 $stmt_geotag = $conn->query($query_geotag);
 while ($row = $stmt_geotag->fetch(PDO::FETCH_ASSOC)) {
