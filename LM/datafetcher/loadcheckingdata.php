@@ -301,7 +301,6 @@ if ($action === 'update_balance') {
                     ELSE 'OK'
                 END
             WHERE LINEID = :id
-
     ";
 
     $stmt = $conn->prepare($sql);
